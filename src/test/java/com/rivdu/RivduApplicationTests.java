@@ -1,4 +1,4 @@
-package com.rivdu.rivdu;
+package com.rivdu;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
