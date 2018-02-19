@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -22,19 +24,24 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "estructura")
+@NamedQueries({
+    @NamedQuery(name = "Estructura.findAll", query = "SELECT e FROM Estructura e")})
 public class Estructura implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -42,20 +49,17 @@ public class Estructura implements Serializable {
     private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idestructura")
     private List<Especificaciones> especificacionesList;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
 
     public Estructura() {
     }
 
-    public Estructura(Integer id) {
+    public Estructura(Long id) {
         this.id = id;
     }
 
-    public Estructura(Integer id, String nombre) {
+    public Estructura(Long id, boolean estado, String nombre) {
         this.id = id;
+        this.estado = estado;
         this.nombre = nombre;
     }
 
@@ -68,7 +72,6 @@ public class Estructura implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Estructura)) {
             return false;
         }

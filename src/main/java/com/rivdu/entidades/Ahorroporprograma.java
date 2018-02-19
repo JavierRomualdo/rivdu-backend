@@ -15,25 +15,28 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "ahorroporprograma")
+@NamedQueries({
+    @NamedQuery(name = "Ahorroporprograma.findAll", query = "SELECT a FROM Ahorroporprograma a")})
 public class Ahorroporprograma implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -43,23 +46,24 @@ public class Ahorroporprograma implements Serializable {
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @JoinColumn(name = "idprograma", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Programas idprograma;
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Ubigeo idubigeo;
+    @JoinColumn(name = "idprograma", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Programas idprograma;
 
     public Ahorroporprograma() {
     }
 
-    public Ahorroporprograma(Integer id) {
+    public Ahorroporprograma(Long id) {
         this.id = id;
     }
 
-    public Ahorroporprograma(Integer id, BigDecimal ahorro) {
+    public Ahorroporprograma(Long id, BigDecimal ahorro, boolean estado) {
         this.id = id;
         this.ahorro = ahorro;
+        this.estado = estado;
     }
 
     @Override

@@ -21,19 +21,20 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "centrocostos")
+@NamedQueries({
+    @NamedQuery(name = "Centrocostos.findAll", query = "SELECT c FROM Centrocostos c")})
 public class Centrocostos implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -47,13 +48,14 @@ public class Centrocostos implements Serializable {
     public Centrocostos() {
     }
 
-    public Centrocostos(Integer id) {
+    public Centrocostos(Long id) {
         this.id = id;
     }
 
-    public Centrocostos(Integer id, String detalle) {
+    public Centrocostos(Long id, String detalle, boolean estado) {
         this.id = id;
         this.detalle = detalle;
+        this.estado = estado;
     }
 
     @Override

@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -22,19 +24,24 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "tipoprofesion")
+@NamedQueries({
+    @NamedQuery(name = "Tipoprofesion.findAll", query = "SELECT t FROM Tipoprofesion t")})
 public class Tipoprofesion implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -42,23 +49,20 @@ public class Tipoprofesion implements Serializable {
     private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idtipoprofesion")
     private List<Responsable> responsableList;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
 
     public Tipoprofesion() {
     }
 
-    public Tipoprofesion(Integer id) {
+    public Tipoprofesion(Long id) {
         this.id = id;
     }
 
-    public Tipoprofesion(Integer id, String nombre) {
+    public Tipoprofesion(Long id, boolean estado, String nombre) {
         this.id = id;
+        this.estado = estado;
         this.nombre = nombre;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -68,7 +72,6 @@ public class Tipoprofesion implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Tipoprofesion)) {
             return false;
         }

@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -23,29 +25,34 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "programas")
+@NamedQueries({
+    @NamedQuery(name = "Programas.findAll", query = "SELECT p FROM Programas p")})
 public class Programas implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "nombre")
-    private String nombre;
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)
-    @Column(name = "codigoET")
-    private String codigoET;
+    @Column(name = "codigoet")
+    private String codigoet;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "correlativocontacto")
+    private String correlativocontacto;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -57,36 +64,33 @@ public class Programas implements Serializable {
     private BigDecimal maximovalor;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "correlativocontacto")
-    private String correlativocontacto;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
-    private List<Responsable> responsableList;
+    @Size(min = 1, max = 50)
+    @Column(name = "nombre")
+    private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
     private List<Ahorroporprograma> ahorroporprogramaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
+    private List<Responsable> responsableList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
     private List<Especificaciones> especificacionesList;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
 
     public Programas() {
     }
 
-    public Programas(Integer id) {
+    public Programas(Long id) {
         this.id = id;
     }
 
-    public Programas(Integer id, String nombre, String codigoET, BigDecimal importe, BigDecimal maximovalor, String correlativocontacto) {
+    public Programas(Long id, String codigoet, String correlativocontacto, boolean estado, BigDecimal importe, BigDecimal maximovalor, String nombre) {
         this.id = id;
-        this.nombre = nombre;
-        this.codigoET = codigoET;
+        this.codigoet = codigoet;
+        this.correlativocontacto = correlativocontacto;
+        this.estado = estado;
         this.importe = importe;
         this.maximovalor = maximovalor;
-        this.correlativocontacto = correlativocontacto;
+        this.nombre = nombre;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -96,7 +100,6 @@ public class Programas implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Programas)) {
             return false;
         }

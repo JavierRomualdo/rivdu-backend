@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -21,47 +23,46 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "oficinaregistral")
+@NamedQueries({
+    @NamedQuery(name = "Oficinaregistral.findAll", query = "SELECT o FROM Oficinaregistral o")})
 public class Oficinaregistral implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
+    @Size(max = 100)
+    @Column(name = "direccion")
+    private String direccion;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "nombre")
     private String nombre;
-    @Size(max = 100)
-    @Column(name = "direccion")
-    private String direccion;
-    @JoinColumn(name = "idempresa", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Empresa idempresa;
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Ubigeo idubigeo;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
 
     public Oficinaregistral() {
     }
 
-    public Oficinaregistral(Integer id) {
+    public Oficinaregistral(Long id) {
         this.id = id;
     }
 
-    public Oficinaregistral(Integer id, String nombre) {
+    public Oficinaregistral(Long id, boolean estado, String nombre) {
         this.id = id;
+        this.estado = estado;
         this.nombre = nombre;
     }
 
@@ -74,7 +75,6 @@ public class Oficinaregistral implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Oficinaregistral)) {
             return false;
         }

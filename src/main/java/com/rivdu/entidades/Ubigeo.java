@@ -16,6 +16,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -24,19 +26,20 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "ubigeo")
+@NamedQueries({
+    @NamedQuery(name = "Ubigeo.findAll", query = "SELECT u FROM Ubigeo u")})
 public class Ubigeo implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 10)
@@ -44,37 +47,41 @@ public class Ubigeo implements Serializable {
     private String codigo;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "estado")
+    private boolean estado;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "nombre")
     private String nombre;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
+//    private List<Oficinaregistral> oficinaregistralList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
+//    private List<Ahorroporprograma> ahorroporprogramaList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
+//    private List<Persona> personaList;
     @JoinColumn(name = "idtipoubigeo", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tipoubigeo idtipoubigeo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
-    private List<Oficinaregistral> oficinaregistralList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
-    private List<Ahorroporprograma> ahorroporprogramaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
-    private List<Empresa> empresaList;
-    
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ubigeo")
+//    private List<Sucursal> sucursalList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
+//    private List<Empresa> empresaList;
 
     public Ubigeo() {
     }
 
-    public Ubigeo(Integer id) {
+    public Ubigeo(Long id) {
         this.id = id;
     }
 
-    public Ubigeo(Integer id, String codigo, String nombre) {
+    public Ubigeo(Long id, String codigo, boolean estado, String nombre) {
         this.id = id;
         this.codigo = codigo;
+        this.estado = estado;
         this.nombre = nombre;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -84,7 +91,6 @@ public class Ubigeo implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Ubigeo)) {
             return false;
         }

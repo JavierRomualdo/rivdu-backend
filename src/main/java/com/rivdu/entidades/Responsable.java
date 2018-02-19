@@ -14,53 +14,57 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "responsable")
+@NamedQueries({
+    @NamedQuery(name = "Responsable.findAll", query = "SELECT r FROM Responsable r")})
 public class Responsable implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "codigoCIP")
-    private int codigoCIP;
-    @JoinColumn(name = "idprograma", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Programas idprograma;
-    @JoinColumn(name = "idpersona", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Persona idpersona;
-    @JoinColumn(name = "idtipoprofesion", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Tipoprofesion idtipoprofesion;
+    @Column(name = "codigocip")
+    private int codigocip;
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
+    @JoinColumn(name = "idpersona", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Persona idpersona;
+    @JoinColumn(name = "idprograma", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Programas idprograma;
+    @JoinColumn(name = "idtipoprofesion", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Tipoprofesion idtipoprofesion;
 
     public Responsable() {
     }
 
-    public Responsable(Integer id) {
+    public Responsable(Long id) {
         this.id = id;
     }
 
-    public Responsable(Integer id, int codigoCIP) {
+    public Responsable(Long id, int codigocip, boolean estado) {
         this.id = id;
-        this.codigoCIP = codigoCIP;
+        this.codigocip = codigocip;
+        this.estado = estado;
     }
 
     @Override
@@ -72,7 +76,6 @@ public class Responsable implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Responsable)) {
             return false;
         }

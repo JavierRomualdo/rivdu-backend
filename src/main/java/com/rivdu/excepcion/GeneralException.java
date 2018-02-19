@@ -9,7 +9,7 @@ public final class GeneralException extends RuntimeException {
         log.error(message+ " a causa de: " +cause);
     }
 
-    public GeneralException(final String causa, final String mensaje, final Logger log) {
+    public GeneralException(final String mensaje, final String causa, final Logger log) {
         super(mensaje);
         log.error(mensaje+ " a causa de: " +causa);
     }

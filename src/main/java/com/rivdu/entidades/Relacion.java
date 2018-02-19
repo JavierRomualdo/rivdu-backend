@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,41 +21,43 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "relacion")
+@NamedQueries({
+    @NamedQuery(name = "Relacion.findAll", query = "SELECT r FROM Relacion r")})
 public class Relacion implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "nombre")
     private String nombre;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
 
     public Relacion() {
     }
 
-    public Relacion(Integer id) {
+    public Relacion(Long id) {
         this.id = id;
     }
 
-    public Relacion(Integer id, String nombre) {
+    public Relacion(Long id, boolean estado, String nombre) {
         this.id = id;
+        this.estado = estado;
         this.nombre = nombre;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -63,7 +67,6 @@ public class Relacion implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Relacion)) {
             return false;
         }

@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,19 +21,20 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "plandecuentas")
+@NamedQueries({
+    @NamedQuery(name = "Plandecuentas.findAll", query = "SELECT p FROM Plandecuentas p")})
 public class Plandecuentas implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 6)
@@ -50,16 +53,17 @@ public class Plandecuentas implements Serializable {
     public Plandecuentas() {
     }
 
-    public Plandecuentas(Integer id) {
+    public Plandecuentas(Long id) {
         this.id = id;
     }
 
-    public Plandecuentas(Integer id, String codigo, String detalle) {
+    public Plandecuentas(Long id, String codigo, String detalle, boolean estado) {
         this.id = id;
         this.codigo = codigo;
         this.detalle = detalle;
+        this.estado = estado;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -69,7 +73,6 @@ public class Plandecuentas implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Plandecuentas)) {
             return false;
         }

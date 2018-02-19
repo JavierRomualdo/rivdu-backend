@@ -15,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,59 +24,61 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
 @Table(name = "especificaciones")
+@NamedQueries({
+    @NamedQuery(name = "Especificaciones.findAll", query = "SELECT e FROM Especificaciones e")})
 public class Especificaciones implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "etapa")
-    private String etapa;
+    private Long id;
     @Size(max = 100)
     @Column(name = "espcificaciones")
     private String espcificaciones;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "estado")
+    private boolean estado;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "estadoconstruccion")
     private Character estadoconstruccion;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "etapa")
+    private String etapa;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
-    @Column(name = "valorM2")
-    private BigDecimal valorM2;
+    @Column(name = "valorm2")
+    private BigDecimal valorm2;
     @JoinColumn(name = "idprograma", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Programas idprograma;
     @JoinColumn(name = "idestructura", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Estructura idestructura;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
-    
+
     public Especificaciones() {
     }
 
-    public Especificaciones(Integer id) {
+    public Especificaciones(Long id) {
         this.id = id;
     }
 
-    public Especificaciones(Integer id, String etapa, Character estadoconstruccion, BigDecimal valorM2) {
+    public Especificaciones(Long id, boolean estado, Character estadoconstruccion, String etapa, BigDecimal valorm2) {
         this.id = id;
-        this.etapa = etapa;
+        this.estado = estado;
         this.estadoconstruccion = estadoconstruccion;
-        this.valorM2 = valorM2;
+        this.etapa = etapa;
+        this.valorm2 = valorm2;
     }
 
     @Override
@@ -86,7 +90,6 @@ public class Especificaciones implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Especificaciones)) {
             return false;
         }
