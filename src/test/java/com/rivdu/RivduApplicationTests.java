@@ -1,6 +1,6 @@
-package pe.limatambo;
+package com.rivdu;
 //@SpringBootTest
-public class LimatamboApplicationTests {
+public class RivduApplicationTests {
 
 //	@Test
 	public void contextLoads() {
