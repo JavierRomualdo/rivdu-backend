@@ -47,8 +47,13 @@ public class Programas implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
-    @Column(name = "correlativocontacto")
-    private String correlativocontacto;
+    @Column(name = "correlativocontrato1")
+    private String correlativocontrato1;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "correlativocontrato2")
+    private String correlativocontrato2;
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
@@ -84,7 +89,7 @@ public class Programas implements Serializable {
     public Programas(Long id, String codigoet, String correlativocontacto, boolean estado, BigDecimal importe, BigDecimal maximovalor, String nombre) {
         this.id = id;
         this.codigoet = codigoet;
-        this.correlativocontacto = correlativocontacto;
+        this.correlativocontrato1 = correlativocontacto;
         this.estado = estado;
         this.importe = importe;
         this.maximovalor = maximovalor;

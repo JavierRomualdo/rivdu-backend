@@ -47,4 +47,9 @@ public class EmpresaServicioImp extends GenericoServicioImpl<Empresa, Long> impl
         return e;
     }
     
+    @Override
+    public Empresa actualizar(Empresa e) throws GeneralException {
+        return empresaDao.actualizar(e);
+    }
+    
 }

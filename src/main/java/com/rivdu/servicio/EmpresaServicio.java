@@ -14,4 +14,5 @@ import com.rivdu.excepcion.GeneralException;
  */
 public interface EmpresaServicio extends GenericoServicio<Empresa, Long>{
     public Empresa validar(String ruc) throws GeneralException;
+    public Empresa actualizar(Empresa entidad) throws GeneralException;
 }

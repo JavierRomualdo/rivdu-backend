@@ -57,6 +57,9 @@ public class Empresa implements Serializable {
     @Size(max = 20)
     @Column(name = "numeropartida")
     private String numeropartida;
+    @Size(max = 50)
+    @Column(name = "oficinaregistral")
+    private String oficinaregistral;
     @Size(max = 255)
     @Column(name = "razonsocial")
     private String razonsocial;
