@@ -58,6 +58,7 @@ public class GenerateTokenForUserFilter extends AbstractAuthenticationProcessing
         respItem.setNombre(tokenUser.getUsuario().getNombre());
         respItem.setUsuarioId(tokenUser.getUsuario().getUserId());
         respItem.setToken(tokenString);
+        respItem.setNombrecompleto(tokenUser.getUsuario().getNombre()+" "+tokenUser.getUsuario().getApellidos());
         resp.setEstadoOperacion(EstadoOperacionEnum.EXITO.getValor());
         resp.setOperacionMensaje("Login Success");
         resp.setItem(respItem);
