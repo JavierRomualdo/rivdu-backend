@@ -21,7 +21,7 @@ import com.rivdu.entidades.Usuario;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.UsuarioServicio;
 import com.rivdu.util.BusquedaPaginada;
-import com.rivdu.util.LimatamboUtil;
+import com.rivdu.util.RivduUtil;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
 /**
@@ -61,7 +61,7 @@ public class UsuarioControlador {
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
-            Integer id = LimatamboUtil.obtenerFiltroComoInteger(parametros, "id");
+            Integer id = RivduUtil.obtenerFiltroComoInteger(parametros, "id");
             Usuario usuario = usuarioServicio.obtener(Usuario.class, id);
             if (usuario!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
@@ -126,7 +126,7 @@ public class UsuarioControlador {
     public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
-            Integer id = LimatamboUtil.obtenerFiltroComoInteger(parametros, "id");
+            Integer id = RivduUtil.obtenerFiltroComoInteger(parametros, "id");
             Usuario unidad = usuarioServicio.obtener(Usuario.class, id);
             unidad.setEstado(Boolean.FALSE);
             unidad = usuarioServicio.actualizar(unidad);
