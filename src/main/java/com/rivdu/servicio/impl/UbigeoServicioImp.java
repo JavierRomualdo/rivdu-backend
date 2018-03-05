@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implements UbigeoServicio {
-   // private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
     
     @Autowired
     private GenericoDao<Ubigeo, Long> ubigeoDao;
@@ -34,6 +33,5 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
         e.setEstado(true);
         return ubigeoDao.insertar(e);
     }
-    
   
 }

@@ -7,15 +7,11 @@ package com.rivdu.servicio.impl;
 
 
 import com.rivdu.dao.GenericoDao;
-import com.rivdu.entidades.Empresa;
 import com.rivdu.entidades.Tipoubigeo;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.UbigeoTipoServicio;
-import com.rivdu.util.Criterio;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.rivdu.util.Criterio;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Service
 @Transactional
 public class UbigeoTipoServicioImp extends GenericoServicioImpl<Tipoubigeo, Long> implements  UbigeoTipoServicio {
+    
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
  
     @Autowired
@@ -40,9 +37,8 @@ public class UbigeoTipoServicioImp extends GenericoServicioImpl<Tipoubigeo, Long
     }
 
     @Override
-    public List<Tipoubigeo>  listar() throws GeneralException {//To change body of generated methods, choose Tools | Templates.
+    public List<Tipoubigeo>  listar() throws GeneralException {
      return  tipoubigeoDao.listarTodosVigentes(Tipoubigeo.class, "estado", true);
-        
     }
      
 }
