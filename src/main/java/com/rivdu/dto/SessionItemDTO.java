@@ -6,7 +6,7 @@ import com.rivdu.entidades.Menu;
 
 @Data
 public class SessionItemDTO {
-
+    private String nombrecompleto;
     private String token;
     private String usuarioId;
     private String nombre;

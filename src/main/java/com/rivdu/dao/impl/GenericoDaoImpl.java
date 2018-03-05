@@ -85,7 +85,7 @@ public class GenericoDaoImpl<Entidad extends Serializable, TipoLlave extends Ser
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Entidad> listarTodosVigentes(Class<Entidad> claseEntidad, String nameColum, String valor) {
+    public List<Entidad> listarTodosVigentes(Class<Entidad> claseEntidad, String nameColum, boolean valor) {
         Criterio filtro = Criterio.forClass(claseEntidad);
         filtro.add(Restrictions.eq(nameColum, valor));
         return listarPorCriteria(filtro);
