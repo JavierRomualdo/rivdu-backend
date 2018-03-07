@@ -19,7 +19,7 @@ import com.rivdu.util.Criterio;
  */
 @Transactional
 public interface GenericoDao <Entidad, TipoLlave> {
-    List<Entidad> listarTodosVigentes(Class<Entidad> claseEntidad, String nameColum, String valor);
+    List<Entidad> listarTodosVigentes(Class<Entidad> claseEntidad, String nameColum, boolean valor);
     Entidad insertar(Entidad entidad);
     Entidad actualizar(Entidad entidad);
     void eliminar(Entidad entidad);
