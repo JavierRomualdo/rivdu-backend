@@ -39,8 +39,4 @@ public class UbigeoTipoServicioImp extends GenericoServicioImpl<Tipoubigeo, Long
     public List<Tipoubigeo>  listar() throws GeneralException {
      return  tipoubigeoDao.listarTodosVigentes(Tipoubigeo.class, "estado", true);
     }
-    public boolean ExisteUbigeo(){
-        
-    return true;
-    }
 }

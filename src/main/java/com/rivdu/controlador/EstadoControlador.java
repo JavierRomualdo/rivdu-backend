@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("estadocivil")
-public class EstadoControlador {
-    
-    private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
+public class EstadoControlador { 
+   private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
+   
    @Autowired
    private EstadoClienteServicio estadoclienteservicio;
 
@@ -85,6 +85,5 @@ public class EstadoControlador {
             resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
             resp.setExtraInfo(id);
             return new ResponseEntity<>(resp, HttpStatus.OK);
-        
     }    
 }

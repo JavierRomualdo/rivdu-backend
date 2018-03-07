@@ -39,6 +39,7 @@ public class EstadoClienteServicioImp extends GenericoServicioImpl<Estadocliente
     public List<Estadocliente> listar() throws GeneralException {
       return  estadocivildao.listarTodosVigentes(Estadocliente.class, "estado", true);
     }
+    
      @Override
     public Estadocliente crear(Estadocliente entidad) throws GeneralException {   
         entidad.setEstado(true);

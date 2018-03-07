@@ -49,5 +49,4 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
         entidad.setEstado(true);
         return ubigeoDao.insertar(entidad);
     }
-    
 }

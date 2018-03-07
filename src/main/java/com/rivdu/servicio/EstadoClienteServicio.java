@@ -15,6 +15,6 @@ import com.rivdu.entidades.Estadocliente;
 public interface EstadoClienteServicio extends GenericoServicio<Estadocliente, Long> {
     public List<Estadocliente> listar() throws GeneralException;
     public Estadocliente crear(Estadocliente entidad) throws GeneralException;
-     public Estadocliente actualizar(Estadocliente entidad) throws GeneralException;
-     public void actualizarEstadoCliente(Long id) throws GeneralException;
+    public Estadocliente actualizar(Estadocliente entidad) throws GeneralException;
+    public void actualizarEstadoCliente(Long id) throws GeneralException;
 }
