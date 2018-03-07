@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author PROPIETARIO
  */
 
-
 @Service
 @Transactional
 public class UbigeoTipoServicioImp extends GenericoServicioImpl<Tipoubigeo, Long> implements  UbigeoTipoServicio {
