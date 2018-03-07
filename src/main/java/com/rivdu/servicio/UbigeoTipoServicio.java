@@ -15,4 +15,5 @@ import java.util.List;
  */
 public interface UbigeoTipoServicio extends GenericoServicio<Tipoubigeo, Long> {
     public List<Tipoubigeo> listar() throws GeneralException;
+    public boolean ExisteUbigeo() throws GeneralException;
 }
