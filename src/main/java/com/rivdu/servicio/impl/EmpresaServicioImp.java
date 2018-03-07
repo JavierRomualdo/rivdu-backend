@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package com.rivdu.servicio.impl;
-
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,7 @@ public class EmpresaServicioImp extends GenericoServicioImpl<Empresa, Long> impl
     public EmpresaServicioImp(GenericoDao<Empresa, Long> genericoHibernate) {
         super(genericoHibernate);
     }
-
+    
     @Override
     public Empresa validar(String ruc) throws GeneralException{
         Criterio filtro;
