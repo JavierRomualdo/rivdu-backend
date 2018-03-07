@@ -17,8 +17,8 @@ import java.util.List;
 public interface IngenieroServicio extends GenericoServicio<Persona, Long>{
 
     public List<Persona> listar() throws GeneralException;
-      public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre);
+    public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre);
     public Persona insertar(Persona entidad) throws GeneralException;
     public Persona actualizar(Persona producto) throws GeneralException;
-    public Persona obtener(Integer id) throws GeneralException;
+    public Persona obtener(Long id) throws GeneralException;
  }

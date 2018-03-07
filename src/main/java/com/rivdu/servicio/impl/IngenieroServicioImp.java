@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.rivdu.dao.GenericoDao;
-import com.rivdu.dao.IngenieroDao;
 import com.rivdu.entidades.Persona;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.IngenieroServicio;
@@ -20,8 +19,6 @@ import com.rivdu.util.Criterio;
 import java.util.List;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 /**
  *
  * @author dev-out-03
@@ -63,7 +60,7 @@ public class IngenieroServicioImp extends GenericoServicioImpl<Persona, Long> im
         busquedaPaginada.validarPaginaActual();
         filtro.calcularDatosParaPaginacion(busquedaPaginada);
         filtro.addOrder(Order.asc("nombre"));
-        List<Persona> p = ingenieroDao.buscarPorCriteriaSinProyecciones(filtro);
+        List<Persona> p = ingenieroDao.buscarPorCriteriaSinProyecciones(filtro);//this is same the method IngSimpl
         busquedaPaginada.setRegistros(p);
         return busquedaPaginada;
     }
@@ -76,14 +73,16 @@ public class IngenieroServicioImp extends GenericoServicioImpl<Persona, Long> im
     }
 
     @Override
-    public Persona actualizar(Persona producto) throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Persona actualizar(Persona entidad) throws GeneralException {
+        return ingenieroDao.actualizar(entidad);
     }
 
     @Override
-    public Persona obtener(Integer id) throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Persona obtener(Long id) throws GeneralException {
+        Persona p=obtener(Persona.class, id);
+        return p;
     }
+
        
     
 }
