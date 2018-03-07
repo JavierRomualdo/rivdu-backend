@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 /**
  *
  * @author Christhian
@@ -34,8 +33,7 @@ public class ProgramasControlador {
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
      
     @Autowired
-    private ProgramasServicio programasServicio;
-    
+    private ProgramasServicio programasServicio; 
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity crear(HttpServletRequest request, @RequestBody Programas entidad) throws GeneralException {
@@ -58,6 +56,4 @@ public class ProgramasControlador {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-    
-    
 }

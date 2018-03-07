@@ -7,12 +7,10 @@ package com.rivdu.servicio;
 
 import com.rivdu.entidades.Programas;
 import com.rivdu.excepcion.GeneralException;
-
 /**
  *
  * @author Christhian
  */
 public interface ProgramasServicio extends GenericoServicio<Programas, Long>{
-    
     public Programas crear(Programas entidad) throws GeneralException;
 }
