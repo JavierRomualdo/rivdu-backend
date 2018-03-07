@@ -14,6 +14,5 @@ import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
 
 public interface UbigeoServicio extends GenericoServicio<Ubigeo, Long>{
-   // public Ubigeo validar(String id) throws GeneralException;
     public Ubigeo crear(Ubigeo entidad) throws GeneralException;
 }
