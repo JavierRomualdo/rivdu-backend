@@ -52,7 +52,6 @@ public class EmpresaControlador {
             throw e;
         }
     }
-    
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity crear(HttpServletRequest request, @RequestBody Empresa entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
@@ -74,5 +73,4 @@ public class EmpresaControlador {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-    
 }
