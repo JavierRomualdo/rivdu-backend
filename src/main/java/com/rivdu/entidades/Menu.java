@@ -8,7 +8,6 @@ package com.rivdu.entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -64,13 +63,10 @@ public class Menu implements Serializable {
     @Size(max = 100)
     @Column(name = "url")
     private String url;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idmenu")
-    private List<Menuopcion> menuopcionList;
     @OneToMany(mappedBy = "idmenupadre")
     private List<Menu> menuList;
-    @JoinColumn(name = "idmenupadre", referencedColumnName = "id")
-    @ManyToOne
-    private Menu idmenupadre;
+    @Column(name = "idmenupadre")
+    private Long idmenupadre;
 
     public Menu() {
     }

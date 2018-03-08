@@ -13,6 +13,6 @@ import com.rivdu.excepcion.GeneralException;
  *
  * @author dev-out-03
  */
-public interface MenuServicio extends GenericoServicio<Menu, Integer>{
-    public List<Menu> listarPorTipoDeUsuario(Long tipousuario) throws GeneralException;
+public interface MenuServicio extends GenericoServicio<Menu, Long>{
+    public List<Menu> listarMenus(String login) throws GeneralException;
 }
