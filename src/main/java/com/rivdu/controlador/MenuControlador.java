@@ -1,43 +1,43 @@
 package com.rivdu.controlador;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import javax.servlet.http.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import com.rivdu.dao.UsuarioDao;
-import com.rivdu.dto.LoginDTO;
-import com.rivdu.entidades.Usuario;
-import com.rivdu.dto.SessionItemDTO;
+import com.rivdu.entidades.Empresa;
+import com.rivdu.entidades.Menu;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.util.SessionResponse;
-import com.rivdu.util.Mensaje;
-import com.rivdu.util.Respuesta.EstadoOperacionEnum;
+import com.rivdu.servicio.MenuServicio;
+import com.rivdu.util.Respuesta;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
+@RequestMapping("menu")
 public class MenuControlador {
     
+    private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
     @Autowired
-    private UsuarioDao usuarioDao;
+    MenuServicio menuServicio;
 
-    @RequestMapping(value = "/menu", method = RequestMethod.POST)
-    public ResponseEntity traerMenu(@RequestBody LoginDTO login, HttpServletRequest request) throws GeneralException {
-        Usuario usuario = usuarioDao.findOneByUserIdAndPassword(login.getUsername(), login.getPassword()).orElse(null);
-        SessionResponse resp = new SessionResponse();
-        SessionItemDTO sessionItem = new SessionItemDTO();
-        if (usuario!=null) {
-            sessionItem.setToken("xxx.xxx.xxx");
-            sessionItem.setUsuarioId(usuario.getUserId());
-            sessionItem.setNombre(usuario.getNombre());
-            resp.setEstadoOperacion(EstadoOperacionEnum.EXITO.getValor());
-            resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-            resp.setItem(sessionItem);
+    @GetMapping("/traer/{login}")
+    public ResponseEntity taerMenus(@PathVariable String login) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            List<Menu> lm = menuServicio.listarMenus(login);
+            if (lm!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje("");
+                resp.setExtraInfo(lm);
+            }else{
+                throw new GeneralException("Usuario No tiene menu asignado", "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
         }
-        else{
-            throw new BadCredentialsException("Usuario o Contraseña Incorreta");
-        }
-        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
 }

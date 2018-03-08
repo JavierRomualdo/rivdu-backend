@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.ReporteServicio;
-import com.rivdu.util.LimatamboUtil;
+import com.rivdu.util.RivduUtil;
 /**
  *
  * @author dev-out-03
@@ -36,11 +36,11 @@ public class ReporteCtrl {
     
     @RequestMapping(value = "/generar",  method = RequestMethod.POST)
     public @ResponseBody String getReporte(@RequestBody Map<String, Object> parameter, HttpServletResponse response) throws ParseException, GeneralException, Exception {   
-        Date inicio = LimatamboUtil.obtenerFiltroComoDate(parameter, "inicio");
-        Date fin = LimatamboUtil.obtenerFiltroComoDate(parameter, "fin");
-        String  report = LimatamboUtil.obtenerFiltroComoString(parameter, "report");
-        String codusu = LimatamboUtil.obtenerFiltroComoString(parameter, "codusu");
-        Integer idPedido = LimatamboUtil.obtenerFiltroComoInteger(parameter, "idPedido");
+        Date inicio = RivduUtil.obtenerFiltroComoDate(parameter, "inicio");
+        Date fin = RivduUtil.obtenerFiltroComoDate(parameter, "fin");
+        String  report = RivduUtil.obtenerFiltroComoString(parameter, "report");
+        String codusu = RivduUtil.obtenerFiltroComoString(parameter, "codusu");
+        Integer idPedido = RivduUtil.obtenerFiltroComoInteger(parameter, "idPedido");
         try {
             if(codusu.toUpperCase() != null){
                 Map parametros = new HashMap();

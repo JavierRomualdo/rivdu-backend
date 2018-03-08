@@ -46,8 +46,6 @@ public class Opcion implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(mappedBy = "idopcion")
-    private List<Menuopcion> menuopcionList;
 
     public Opcion() {
     }

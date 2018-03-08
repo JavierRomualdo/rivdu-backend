@@ -13,5 +13,5 @@ package com.rivdu.servicio;
  * @param <TipoLlave>
  */
 public interface GenericoServicio <Entidad, TipoLlave>{
-    Entidad obtener(Class<Entidad> aClass, TipoLlave id);
+    public Entidad obtener(Class<Entidad> aClass, TipoLlave id);
 }

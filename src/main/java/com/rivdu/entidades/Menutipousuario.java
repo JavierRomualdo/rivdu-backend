@@ -9,6 +9,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -29,6 +31,9 @@ public class Menutipousuario implements Serializable {
     protected MenutipousuarioPK menutipousuarioPK;
     @Column(name = "estado")
     private Boolean estado;
+    @JoinColumn(name = "idmenu", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Menu idmenu;
 
     public Menutipousuario() {
     }
