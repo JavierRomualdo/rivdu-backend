@@ -46,7 +46,7 @@ public class Sucursal implements Serializable {
     private boolean estado;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 300)
     @Column(name = "nombre")
     private String nombre;
     @JoinColumn(name = "idempresa", referencedColumnName = "id")
