@@ -23,7 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.rivdu.enums.TipoFormatoExportacion;
 import com.rivdu.excepcion.GeneralException;
 
-public class LimatamboUtil {
+public class RivduUtil {
     
     private final Logger loggerConstantes = LoggerFactory.getLogger(getClass());
     
@@ -121,8 +121,8 @@ public class LimatamboUtil {
 
     public static Long getDiasTranscurridos(Timestamp desde, Timestamp hasta) {
         Timestamp d1, d2;
-        d1 = LimatamboUtil.obtenerInicioDia(desde);
-        d2 = LimatamboUtil.obtenerInicioDia(hasta);
+        d1 = RivduUtil.obtenerInicioDia(desde);
+        d2 = RivduUtil.obtenerInicioDia(hasta);
         return ((d2.getTime()) - d1.getTime()) / (24 * 60 * 60 * 1000);
     }
 
@@ -420,7 +420,7 @@ public class LimatamboUtil {
 
     public static String castString(Object o) {
         String r = null;
-        if (LimatamboUtil.sonNoNulos(o)) {
+        if (RivduUtil.sonNoNulos(o)) {
             try {
                 r = String.valueOf(o);
             } catch (ClassCastException ex) {
@@ -433,7 +433,7 @@ public class LimatamboUtil {
     public static Long castLong(Object o) {
         Long r = null;
         String s = castString(o);
-        if (LimatamboUtil.esNoNulo(s)) {
+        if (RivduUtil.esNoNulo(s)) {
             try {
                 r = Long.valueOf(s);
             } catch (NumberFormatException ex) {
@@ -460,7 +460,7 @@ public class LimatamboUtil {
         String f;
         Object objetoObtenido = buscar.get(nombrePropiedad);
         f = null;
-        if (LimatamboUtil.sonNoNulos(buscar, objetoObtenido)) {
+        if (RivduUtil.sonNoNulos(buscar, objetoObtenido)) {
             try {
                 f = String.valueOf(objetoObtenido);
             } catch (ClassCastException ex) {
@@ -475,7 +475,7 @@ public class LimatamboUtil {
         Long filtro;
         filtro = null;
         f = obtenerFiltroComoString(buscar, nombrePropiedad);
-        if (LimatamboUtil.esNoNulo(f)) {
+        if (RivduUtil.esNoNulo(f)) {
             try {
                 filtro = Long.valueOf(f);
             } catch (NumberFormatException ex) {
@@ -490,7 +490,7 @@ public class LimatamboUtil {
         Integer filtro;
         filtro = null;
         f = obtenerFiltroComoString(buscar, nombrePropiedad);
-        if (LimatamboUtil.esNoNulo(f)) {
+        if (RivduUtil.esNoNulo(f)) {
             try {
                 filtro = Integer.valueOf(f);
             } catch (NumberFormatException ex) {
@@ -518,7 +518,7 @@ public class LimatamboUtil {
         String fechaCadena;
         try {
             fechaCadena = obtenerFiltroComoString(buscar, nombrePropiedad);
-            date = fechaCadena!= null ? LimatamboUtil.convertirStringToDate(fechaCadena) : null;
+            date = fechaCadena!= null ? RivduUtil.convertirStringToDate(fechaCadena) : null;
         } catch (ParseException | IllegalArgumentException e) {
             date = null;
         }
@@ -530,7 +530,7 @@ public class LimatamboUtil {
         Boolean filtro;
         filtro = null;
         f = obtenerFiltroComoString(buscar, nombrePropiedad);
-        if (LimatamboUtil.esNoNulo(f)) {
+        if (RivduUtil.esNoNulo(f)) {
             try {
                 filtro = Boolean.valueOf(f);
             } catch (NumberFormatException ex) {
@@ -545,7 +545,7 @@ public class LimatamboUtil {
         BigDecimal filtro;
         filtro = null;
         f = obtenerFiltroComoString(buscar, nombrePropiedad);
-        if (LimatamboUtil.esNoNulo(f)) {
+        if (RivduUtil.esNoNulo(f)) {
             try {
                 filtro = new BigDecimal(f);
             } catch (NumberFormatException ex) {

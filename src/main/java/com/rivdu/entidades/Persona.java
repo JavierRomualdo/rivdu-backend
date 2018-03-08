@@ -55,7 +55,7 @@ public class Persona implements Serializable {
     private String direccion;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 7)
+    @Size(min = 1, max = 8)
     @Column(name = "dni")
     private String dni;
     @Basic(optional = false)
@@ -70,13 +70,13 @@ public class Persona implements Serializable {
     @Size(max = 15)
     @Column(name = "telefono")
     private String telefono;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idpersona")
-    private List<Personaempresa> personaempresaList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idpersona")
+//    private List<Personaempresa> personaempresaList;
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Ubigeo idubigeo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idpersona")
-    private List<Responsable> responsableList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idpersona")
+//    private List<Responsable> responsableList;
 
     public Persona() {
     }
