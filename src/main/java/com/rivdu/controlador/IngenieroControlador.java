@@ -61,53 +61,6 @@ public class IngenieroControlador {
             throw e;
         }
     }
-  /*  @GetMapping("/listar")
-    public ResponseEntity listarIngenieros() throws GeneralException{
-            Respuesta resp = new Respuesta();
-        int page = 0;
-        try {
-            Pageable pageRequest = new PageRequest(page,5);
-            Page<Persona> ingenieros=ingenieroServicio.findAll(pageRequest);
-            PaginaRender<Persona> paginaRender = new PaginaRender<Persona>("/listar",ingenieros);
-            List<Persona> lista = ingenieroServicio.listar();
-            if (!lista.isEmpty()) {
-                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                resp.setOperacionMensaje("");
-                resp.setExtraInfo(lista);
-            }else{
-                throw new GeneralException("No se encontraron Ingenieros", "No hay datos", loggerControlador);
-            }
-            return new ResponseEntity<>(resp, HttpStatus.OK);
-        } catch (Exception e) {
-            loggerControlador.error(e.getMessage());
-            throw e;
-        }
-    }
-        @GetMapping("/paginar")
-    public ResponseEntity PaginarIngenieros() throws GeneralException{
-        Respuesta resp = new Respuesta();
-        int page = 0;
-        
-        try {
-            Pageable pageRequest = new PageRequest(page,5);
-            Page<Persona> ingenieros=ingenieroServicio.findAll(pageRequest);
-            PaginaRender<Persona> paginaRender = new PaginaRender<Persona>("/paginar",ingenieros);
-            List<Persona> lista = ingenieroServicio.listar();
-            if (ingenieros != null) {
-                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                resp.setOperacionMensaje("");
-                resp.setExtraInfo(ingenieros);
-            }else{
-                throw new GeneralException("No se encontraron Ingenieros", "No hay datos", loggerControlador);
-            }
-            return new ResponseEntity<>(resp, HttpStatus.OK);
-        } catch (Exception e) {
-            loggerControlador.error(e.getMessage());
-            throw e;
-        }
-    }
-    
-   */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity guardar(HttpServletRequest request, @RequestBody Persona entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
