@@ -48,12 +48,15 @@ public class Tipousuariomenuopcion implements Serializable {
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @JoinColumn(name = "idmenuopcion", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Menuopcion idmenuopcion;
     @JoinColumn(name = "idtipousuario", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tipousuario idtipousuario;
+    @JoinColumn(name = "idmenu", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Menu idmenu;
+    @JoinColumn(name = "idopcion", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Opcion idopcion;
 
     public Tipousuariomenuopcion() {
     }

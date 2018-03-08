@@ -78,7 +78,7 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 90)
-    @Column(name = "userId")
+    @Column(name = "login")
     private String userId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario")
     private List<Usuarioacceso> usuarioaccesoList;
