@@ -12,7 +12,9 @@ package com.rivdu.servicio;
 
 import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
+import com.rivdu.util.BusquedaPaginada;
 
 public interface UbigeoServicio extends GenericoServicio<Ubigeo, Long>{
     public Ubigeo crear(Ubigeo entidad) throws GeneralException;
+    public BusquedaPaginada busquedaPaginada(Ubigeo entidadBuscar, BusquedaPaginada busquedaPaginada, String nombre,String codigo);
 }

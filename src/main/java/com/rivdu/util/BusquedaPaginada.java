@@ -72,31 +72,31 @@ public class BusquedaPaginada implements java.io.Serializable {
     }
 
     public String obtenerFiltroComoString(String nombrePropiedad) {
-        return LimatamboUtil.obtenerFiltroComoString(buscar, nombrePropiedad);
+        return RivduUtil.obtenerFiltroComoString(buscar, nombrePropiedad);
     }
 
     public Long obtenerFiltroComoLong(String nombrePropiedad) {
-        return LimatamboUtil.obtenerFiltroComoLong(buscar, nombrePropiedad);
+        return RivduUtil.obtenerFiltroComoLong(buscar, nombrePropiedad);
     }
 
     public Integer obtenerFiltroComoInteger(String nombrePropiedad) {
-        return LimatamboUtil.obtenerFiltroComoInteger(buscar, nombrePropiedad);
+        return RivduUtil.obtenerFiltroComoInteger(buscar, nombrePropiedad);
     }
 
     public Timestamp obtenerFiltroComoTimestamp(String nombrePropiedad) {
-        return LimatamboUtil.obtenerFiltroComoTimestamp(buscar, nombrePropiedad);
+        return RivduUtil.obtenerFiltroComoTimestamp(buscar, nombrePropiedad);
     }
 
     public Date obtenerFiltroComoDate(String nombrePropiedad) {
-        return LimatamboUtil.obtenerFiltroComoDate(buscar, nombrePropiedad);
+        return RivduUtil.obtenerFiltroComoDate(buscar, nombrePropiedad);
     }
 
     public Boolean obtenerFiltroComoBoolean(String nombrePropiedad) {
-        return LimatamboUtil.obtenerFiltroComoBoolean(buscar, nombrePropiedad);
+        return RivduUtil.obtenerFiltroComoBoolean(buscar, nombrePropiedad);
     }
 
     public BigDecimal obtenerFiltroComoBigDecimal(String nombrePropiedad) {
-        return LimatamboUtil.obtenerFiltroComoBigDecimal(buscar, nombrePropiedad);
+        return RivduUtil.obtenerFiltroComoBigDecimal(buscar, nombrePropiedad);
     }
     
     public List<Long> obtenerFiltroComoListLong(String nombrePropiedad){

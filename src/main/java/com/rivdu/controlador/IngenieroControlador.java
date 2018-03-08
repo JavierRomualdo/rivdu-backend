@@ -5,84 +5,68 @@
  */
 package com.rivdu.controlador;
 
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import com.rivdu.dao.GenericoDao;
+import com.rivdu.entidades.Persona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import com.rivdu.entidades.Usuario;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.UsuarioServicio;
+import com.rivdu.servicio.IngenieroServicio;
 import com.rivdu.util.BusquedaPaginada;
-import com.rivdu.util.RivduUtil;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 /**
  *
  * @author dev-out-03
  */
 @RestController
-@RequestMapping("/usuario")
-public class UsuarioControlador {
+@RequestMapping("/ingeniero")
+public class IngenieroControlador {
     
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
     @Autowired
-    private UsuarioServicio usuarioServicio;
+    private IngenieroServicio ingenieroServicio;
+    @Autowired
+    private GenericoDao<Persona, Long> personadao;
     
-    @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
+    
+        @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
     public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
                                                              @PathVariable("cantidadPorPagina") Long cantidadPorPagina, 
                                                              @RequestBody Map<String, Object> parametros) throws GeneralException{
         try {
-            String dni,nomusu;
+            String dni;
+            String nombre;
             BusquedaPaginada busquedaPaginada = new BusquedaPaginada();
             busquedaPaginada.setBuscar(parametros);
-            Usuario entidadBuscar = new Usuario();
+            Persona entidadBuscar = new Persona();
             dni = busquedaPaginada.obtenerFiltroComoString("dni");
-            nomusu = busquedaPaginada.obtenerFiltroComoString("nomusu");
+            nombre = busquedaPaginada.obtenerFiltroComoString("nombre");
             busquedaPaginada.setPaginaActual(pagina);
             busquedaPaginada.setCantidadPorPagina(cantidadPorPagina);
-            busquedaPaginada = usuarioServicio.busquedaPaginada(entidadBuscar, busquedaPaginada, dni, nomusu);
+            busquedaPaginada = ingenieroServicio.busquedaPaginada(entidadBuscar, busquedaPaginada, dni, nombre);
             return new ResponseEntity<>(busquedaPaginada, HttpStatus.OK);
         } catch (Exception e) {
             loggerControlador.error(e.getMessage());
             throw e;
         }
     }
-    
-    @RequestMapping(value="obtener", method = RequestMethod.POST)
-    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
-        Respuesta resp = new Respuesta();
-        try {
-            Integer id = RivduUtil.obtenerFiltroComoInteger(parametros, "id");
-            Usuario usuario = usuarioServicio.obtener(Usuario.class, id);
-            if (usuario!=null) {
-                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-                resp.setExtraInfo(usuario);
-            }else{
-                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
-            }
-            return new ResponseEntity<>(resp, HttpStatus.OK);
-        } catch (Exception e) {
-            loggerControlador.error(e.getMessage());
-            throw e;
-        }
-    }
-    
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody Usuario entidad) throws GeneralException {
+    public ResponseEntity guardar(HttpServletRequest request, @RequestBody Persona entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if(entidad != null){
             try {
-                Usuario guardado = usuarioServicio.insertar(entidad);
+                Persona guardado = ingenieroServicio.insertar(entidad);
                 if (guardado != null ) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -100,40 +84,18 @@ public class UsuarioControlador {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
     
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Usuario entidad) throws GeneralException {
-        Respuesta resp = new Respuesta();
-        if(entidad != null){
-            try {
-                Usuario guardado = usuarioServicio.actualizar(entidad);
-                if (guardado != null ) {
-                    resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                    resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-                    resp.setExtraInfo(guardado);
-                }else{
-                    throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
-                }
-            } catch (Exception e) {
-                throw e;
-            }
-        }else{
-            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
-        }
-        return new ResponseEntity<>(resp, HttpStatus.OK);
-    }
-    
     @RequestMapping(value="eliminar", method = RequestMethod.POST)
     public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
-            Integer id = RivduUtil.obtenerFiltroComoInteger(parametros, "id");
-            Usuario unidad = usuarioServicio.obtener(Usuario.class, id);
-            unidad.setEstado(Boolean.FALSE);
-            unidad = usuarioServicio.actualizar(unidad);
-            if (unidad.getId()!=null) {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Persona persona = ingenieroServicio.obtener(id);
+            persona.setEstado(Boolean.FALSE);
+            persona = ingenieroServicio.actualizar(persona);
+            if (persona.getId()!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-                resp.setExtraInfo(unidad);
+                resp.setExtraInfo(persona);
             }else{
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
@@ -142,7 +104,49 @@ public class UsuarioControlador {
             loggerControlador.error(e.getMessage());
             throw e;
         }
+    }//fin del metodo eliminar
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Persona entidad) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        if(entidad != null){
+            try {
+                Persona guardado = ingenieroServicio.actualizar(entidad);
+                if (guardado != null ) {
+                    resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                    resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                    resp.setExtraInfo(guardado);
+                }else{
+                    throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
+                }
+                
+            } catch (Exception e) {
+                throw e;
+            }
+        }else{
+            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
+        }
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    
+        @RequestMapping(value="obtener", method = RequestMethod.POST)
+    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Persona persona = ingenieroServicio.obtener(id);
+            if (persona!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(persona);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }//Fin del Metodo obtener:traerparaedicion
+
 }
