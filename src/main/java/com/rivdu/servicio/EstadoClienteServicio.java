@@ -17,4 +17,5 @@ public interface EstadoClienteServicio extends GenericoServicio<Estadocliente, L
     public Estadocliente crear(Estadocliente entidad) throws GeneralException;
     public Estadocliente actualizar(Estadocliente entidad) throws GeneralException;
     public void actualizarEstadoCliente(Long id) throws GeneralException;
+    
 }

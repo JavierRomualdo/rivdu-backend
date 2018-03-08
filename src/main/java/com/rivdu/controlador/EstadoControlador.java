@@ -8,9 +8,11 @@ package com.rivdu.controlador;
 import com.rivdu.entidades.Estadocliente;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.EstadoClienteServicio;
+import com.rivdu.util.LimatamboUtil;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,5 +87,27 @@ public class EstadoControlador {
             resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
             resp.setExtraInfo(id);
             return new ResponseEntity<>(resp, HttpStatus.OK);
-    }    
+    }
+
+  @RequestMapping(value="obtener", method = RequestMethod.POST)
+    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = LimatamboUtil.obtenerFiltroComoLong(parametros, "id");
+            Estadocliente unidad = estadoclienteservicio.obtener(Estadocliente.class, id);
+            if (unidad!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(unidad);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+    
+        
 }

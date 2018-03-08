@@ -26,11 +26,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Transactional
 public class EstadoClienteServicioImp extends GenericoServicioImpl<Estadocliente, Long> implements EstadoClienteServicio{
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private SessionFactory sessionFactory;
     
     @Autowired
     private GenericoDao<Estadocliente, Long> estadocivildao;
+    
+    
     public EstadoClienteServicioImp(GenericoDao<Estadocliente, Long> genericoHibernate) {
         super(genericoHibernate);
     }
@@ -58,4 +61,6 @@ public class EstadoClienteServicioImp extends GenericoServicioImpl<Estadocliente
             query.setParameter("id", id);
             query.executeUpdate();
     }
+
+    
 }
