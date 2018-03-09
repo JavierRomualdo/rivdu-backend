@@ -57,6 +57,7 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
     public BusquedaPaginada busquedaPaginada(Ubigeo entidadBuscar, BusquedaPaginada busquedaPaginada, String nombre, String codigo) {
         Criterio filtro;
         filtro = Criterio.forClass(Ubigeo.class);
+        filtro.add(Restrictions.eq("estado", true));
         if (nombre!= null && !nombre.equals("")) {
             filtro.add(Restrictions.ilike("nombre", '%'+nombre+'%'));
         }
