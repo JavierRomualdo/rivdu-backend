@@ -17,4 +17,6 @@ import com.rivdu.util.BusquedaPaginada;
 public interface UbigeoServicio extends GenericoServicio<Ubigeo, Long>{
     public Ubigeo crear(Ubigeo entidad) throws GeneralException;
     public BusquedaPaginada busquedaPaginada(Ubigeo entidadBuscar, BusquedaPaginada busquedaPaginada, String nombre,String codigo);
+    public Ubigeo obtener(Long id) throws GeneralException;
+    public Ubigeo actualizar(Ubigeo ubigeo) throws GeneralException;
 }

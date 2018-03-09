@@ -67,13 +67,14 @@ public class IngenieroServicioImp extends GenericoServicioImpl<Persona, Long> im
 
     @Override
     public Persona insertar(Persona entidad) throws GeneralException {
-                entidad.setEstado(Boolean.TRUE);
-                entidad = ingenieroDao.insertar(entidad);
-               return entidad;
+        verificarPersonaRepetidad(entidad);
+        entidad.setEstado(true);
+        return ingenieroDao.insertar(entidad);
     }
 
     @Override
     public Persona actualizar(Persona entidad) throws GeneralException {
+        verificarPersonaRepetidad(entidad);
         return ingenieroDao.actualizar(entidad);
     }
 
@@ -83,6 +84,17 @@ public class IngenieroServicioImp extends GenericoServicioImpl<Persona, Long> im
         return p;
     }
 
-       
-    
+    private void verificarPersonaRepetidad(Persona entidad) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Persona.class);
+        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+        if (entidad.getId()!=null) {
+            filtro.add(Restrictions.ne("id", entidad.getId()));
+        }
+        filtro.add(Restrictions.eq("dni", entidad.getDni()));
+        Persona u = ingenieroDao.obtenerPorCriteriaSinProyecciones(filtro);
+        if (u!=null) {
+            throw new GeneralException("Ya existe Ingeniero  con igual D.N.I.", "Guardar retorno nulo", loggerServicio);
+        }
+    }
 }
