@@ -6,6 +6,7 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
+import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.UbigeoServicio;
@@ -57,10 +58,10 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
         Criterio filtro;
         filtro = Criterio.forClass(Ubigeo.class);
         if (nombre!= null && !nombre.equals("")) {
-            filtro.add(Restrictions.ilike("nombre", nombre));
+            filtro.add(Restrictions.ilike("nombre", '%'+nombre+'%'));
         }
         if (codigo!= null && !codigo.equals("")) {
-            filtro.add(Restrictions.ilike("codigo",codigo));
+            filtro.add(Restrictions.ilike("codigo",'%'+codigo+'%'));
         }
         busquedaPaginada.setTotalRegistros(ubigeoDao.cantidadPorCriteria(filtro, "id"));
         busquedaPaginada.calcularCantidadDePaginas();
@@ -70,4 +71,31 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
         busquedaPaginada.setRegistros(ubigeoDao.buscarPorCriteriaSinProyecciones(filtro));
         return busquedaPaginada;
     }
+
+    @Override
+    public Ubigeo obtener(Long id) throws GeneralException {
+        Ubigeo u =obtener(Ubigeo.class, id);
+        return u;
+    }
+
+    @Override
+    public Ubigeo actualizar(Ubigeo ubigeo) throws GeneralException {
+        verificarUbigeoRepetidad(ubigeo);
+        return ubigeoDao.actualizar(ubigeo);
+    }
+
+    private void verificarUbigeoRepetidad(Ubigeo ubigeo) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Ubigeo.class);
+        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+        if (ubigeo.getId()!=null) {
+            filtro.add(Restrictions.ne("id", ubigeo.getId()));
+        }
+        filtro.add(Restrictions.eq("codigo", ubigeo.getCodigo()));
+        Ubigeo u = ubigeoDao.obtenerPorCriteriaSinProyecciones(filtro);
+        if (u!=null) {
+            throw new GeneralException("Ya existe Ubigeo  con igual codigo", "Guardar retorno nulo", loggerServicio);
+        }
+    }
+    
 }
