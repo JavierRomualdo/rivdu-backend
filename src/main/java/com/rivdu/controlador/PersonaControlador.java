@@ -111,7 +111,6 @@ public class PersonaControlador {
             throw e;
         }
     }//fin del metodo eliminar
-
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Persona entidad) throws GeneralException {
         Respuesta resp = new Respuesta();

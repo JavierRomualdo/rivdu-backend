@@ -6,14 +6,11 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
-import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.UbigeoServicio;
 import com.rivdu.util.BusquedaPaginada;
-import com.rivdu.util.Criterio;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import com.rivdu.util.Criterio;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -98,5 +95,4 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
             throw new GeneralException("Ya existe Ubigeo  con igual codigo", "Guardar retorno nulo", loggerServicio);
         }
     }
-    
 }
