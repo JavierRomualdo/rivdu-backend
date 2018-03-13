@@ -12,13 +12,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.rivdu.dao.GenericoDao;
 import com.rivdu.entidades.Persona;
+import com.rivdu.entidades.Personarol;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.IngenieroServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
 import java.util.List;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
+import com.rivdu.servicio.PersonaServicio;
 /**
  *
  * @author dev-out-03
@@ -26,14 +29,14 @@ import org.hibernate.criterion.Restrictions;
 
 @Service
 @Transactional
-public class IngenieroServicioImp extends GenericoServicioImpl<Persona, Long> implements IngenieroServicio {
+public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> implements PersonaServicio {
 
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
     
     @Autowired
     private GenericoDao<Persona, Long> ingenieroDao;
  
-    public IngenieroServicioImp(GenericoDao<Persona, Long> genericoHibernate) {
+    public PersonaServicioImp(GenericoDao<Persona, Long> genericoHibernate) {
         super(genericoHibernate);
     }
 
@@ -45,24 +48,37 @@ public class IngenieroServicioImp extends GenericoServicioImpl<Persona, Long> im
     }
 
     @Override
-    public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre) {
-         Criterio filtro;
-        filtro = Criterio.forClass(Persona.class);
-        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        if (dni!= null) {
-            filtro.add(Restrictions.ilike("dni", '%'+dni+'%'));
+    public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre,Long idrol) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Personarol.class);
+        filtro.createAlias("persona", "p", JoinType.RIGHT_OUTER_JOIN);
+        if (dni!= null && !"".equals(dni)) {
+            filtro.add(Restrictions.ilike("p.dni", '%'+dni+'%'));
         }
-        if (nombre!=null) {
-            filtro.add(Restrictions.ilike("nombre",'%' +nombre+'%'));
+        if (nombre!=null && !"".equals(nombre)) {
+            filtro.add(Restrictions.ilike("p.nombre",'%' +nombre+'%'));
+        }
+        if(idrol>0){
+           filtro.add(Restrictions.eq("personarolPK.idrol", idrol));
         }
         busquedaPaginada.setTotalRegistros(ingenieroDao.cantidadPorCriteria(filtro, "id"));
         busquedaPaginada.calcularCantidadDePaginas();
         busquedaPaginada.validarPaginaActual();
+        
+        filtro.setProjection(Projections.projectionList()
+                .add(Projections.distinct(Projections.property("p.id")))
+                .add(Projections.property("p.id"), "id")
+                .add(Projections.property("p.estado"), "estado")
+                .add(Projections.property("p.apellido"), "apellido")
+                .add(Projections.property("p.direccion"), "direccion")
+                .add(Projections.property("p.nombre"), "nombre")
+                .add(Projections.property("p.dni"), "dni"));
         filtro.calcularDatosParaPaginacion(busquedaPaginada);
-        filtro.addOrder(Order.asc("nombre"));
-        List<Persona> p = ingenieroDao.buscarPorCriteriaSinProyecciones(filtro);//this is same the method IngSimpl
-        busquedaPaginada.setRegistros(p);
-        return busquedaPaginada;
+        filtro.addOrder(Order.asc("p.nombre"));
+        
+       List<Persona> p = ingenieroDao.proyeccionPorCriteria(filtro, Persona.class);//this is same the method IngSimpl
+       busquedaPaginada.setRegistros(p);
+       return busquedaPaginada;
     }
 
     @Override
