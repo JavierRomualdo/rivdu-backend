@@ -6,11 +6,13 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
+import com.rivdu.entidades.Estadocliente;
 import com.rivdu.entidades.Materiales;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.MaterialesServicio;
 import java.util.List;
 import javax.transaction.Transactional;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,7 @@ public class MaterialesServicioImp extends GenericoServicioImpl<Materiales, Long
     
     @Override
     public List<Materiales> listar() throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return  materialesdao.listarTodosVigentes(Materiales.class, "estado", true);
     }
 
     @Override
@@ -55,7 +57,10 @@ public class MaterialesServicioImp extends GenericoServicioImpl<Materiales, Long
 
     @Override
     public void actualizarMateriales(Long id) throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String hql = "UPDATE Materiales SET estado=FALSE WHERE id=:id";
+            Query query = sessionFactory.getCurrentSession().createQuery(hql);
+            query.setParameter("id", id);
+            query.executeUpdate();
     }
     
     

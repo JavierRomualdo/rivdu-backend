@@ -5,9 +5,10 @@
  */
 package com.rivdu.controlador;
 
+import com.rivdu.entidades.Labores;
 import com.rivdu.entidades.Materiales;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.MaterialesServicio;
+import com.rivdu.servicio.LaboresServicio;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
 import java.util.List;
@@ -18,29 +19,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 /**
  *
  * @author Christhian
  */
 @RestController
-@RequestMapping("materiales")
-public class MaterialesControlador {
+@RequestMapping("labores")
+public class LaboresControlador {
+    
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
    
    @Autowired
-   private MaterialesServicio materialesServicio;
+   private LaboresServicio laboresServicio;
    
    @GetMapping ("listar")
     public ResponseEntity show() throws GeneralException{
         Respuesta resp = new Respuesta();
-        List<Materiales> lista;
+        List<Labores> lista;
         try {
-          lista = materialesServicio.listar();
+          lista = laboresServicio.listar();
             if (lista!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje("");
@@ -56,11 +58,11 @@ public class MaterialesControlador {
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody Materiales entidad) throws GeneralException {
+    public ResponseEntity crear(HttpServletRequest request, @RequestBody Labores entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if(entidad != null){
             try {
-                Materiales guardado = materialesServicio.crear(entidad);
+                Labores guardado = laboresServicio.crear(entidad);
                 if (guardado != null ) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -77,17 +79,5 @@ public class MaterialesControlador {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "eliminarEstadoMaterial/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
-        
-        Respuesta resp = new Respuesta();
-            materialesServicio.actualizarMateriales(id);
-            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-            resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-            resp.setExtraInfo(id);
-            return new ResponseEntity<>(resp, HttpStatus.OK);
-    }    
-    
-    
     
 }

@@ -12,10 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,9 +23,9 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "materiales")
-public class Materiales implements Serializable {
-
+@Table(name = "labores")
+public class Labores implements Serializable{
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +37,6 @@ public class Materiales implements Serializable {
     @Size(max = 300)
     @Column(name = "detalle")
     private String detalle;
-    @Size(max = 10)
-    @Column(name = "unidad")
-    private String unidad;
     @Column(name = "costo")
     private long costo;
     @Basic(optional = false)
@@ -51,21 +44,20 @@ public class Materiales implements Serializable {
     @Column(name = "estado")
     private boolean estado;
 
-    public Materiales() {
+     public Labores() {
     }
 
-    public Materiales(Long id) {
+    public Labores(Long id) {
         this.id = id;
     }
 
-    public Materiales(Long id,
-            String detallemateriales, String unidadesmateriales, long costomateriales, boolean estadomateriales) {
+    public Labores(Long id,
+            String detalleLabor, long costoLabor, boolean estadoLabor) {
+        
         this.id = id;
-        this.detalle = detallemateriales;
-        this.unidad = unidadesmateriales;
-        this.costo = costomateriales;
-        this.estado = estadomateriales;
-
+        this.detalle = detalleLabor;
+        this.costo = costoLabor;
+        this.estado = estadoLabor;
     }
 
     @Override
@@ -77,16 +69,16 @@ public class Materiales implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Materiales)) {
+        if (!(object instanceof Labores)) {
             return false;
         }
-        Materiales other = (Materiales) object;
+        Labores other = (Labores) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Materiales[ id=" + id + " ]";
+        return "com.rivdu.entidades.Labores[ id=" + id + " ]";
     }
-
+    
 }
