@@ -14,10 +14,10 @@ import java.util.List;
  *
  * @author dev-out-03
  */
-public interface IngenieroServicio extends GenericoServicio<Persona, Long>{
+public interface PersonaServicio extends GenericoServicio<Persona, Long>{
 
     public List<Persona> listar() throws GeneralException;
-    public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre);
+    public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre,Long idrol );
     public Persona insertar(Persona entidad) throws GeneralException;
     public Persona actualizar(Persona producto) throws GeneralException;
     public Persona obtener(Long id) throws GeneralException;

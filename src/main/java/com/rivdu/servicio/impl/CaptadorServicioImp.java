@@ -8,7 +8,7 @@ package com.rivdu.servicio.impl;
 import com.rivdu.dao.GenericoDao;
 import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Personarol;
-import com.rivdu.enums.CaptadorEnum;
+import com.rivdu.enums.RolEnum;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.CaptadorServicio;
 import com.rivdu.util.BusquedaPaginada;
@@ -53,7 +53,7 @@ public class CaptadorServicioImp extends GenericoServicioImpl<Persona, Long> imp
         filtro = Criterio.forClass(Personarol.class);
         filtro.createAlias("persona", "p");
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        filtro.add(Restrictions.eq("personarolPK.idrol", CaptadorEnum.PARAMETRO_ID_CAPTADOR.getValue()));
+        filtro.add(Restrictions.eq("personarolPK.idrol", RolEnum.PARAMETRO_ID_CAPTADOR.getValue()));
         if (dni!= null) {
             filtro.add(Restrictions.ilike("p.dni", '%'+dni+'%'));
         }
@@ -63,6 +63,7 @@ public class CaptadorServicioImp extends GenericoServicioImpl<Persona, Long> imp
         busquedaPaginada.setTotalRegistros(captadorDao.cantidadPorCriteria(filtro, "id"));
         busquedaPaginada.calcularCantidadDePaginas();
         busquedaPaginada.validarPaginaActual();
+        
         filtro.setProjection(Projections.projectionList()
                 .add(Projections.property("p.id"), "id")
                 .add(Projections.property("p.apellido"), "apellido")
