@@ -84,6 +84,8 @@ public class Empresa implements Serializable {
      @JoinColumn(name = "idgerente", referencedColumnName = "id")
     @ManyToOne(optional = true)
     private Persona idgerente;
+     
+     
 
     public Empresa() {
     }
