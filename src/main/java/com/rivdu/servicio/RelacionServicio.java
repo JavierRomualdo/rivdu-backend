@@ -4,18 +4,18 @@
  * and open the template in the editor.
  */
 package com.rivdu.servicio;
+
+import com.rivdu.entidades.Relacion;
 import com.rivdu.excepcion.GeneralException;
 import java.util.List;
-import com.rivdu.entidades.Estadocliente;
 
 /**
  *
  * @author PROPIETARIO
  */
-public interface EstadoClienteServicio extends GenericoServicio<Estadocliente, Long> {
-    public List<Estadocliente> listar() throws GeneralException;
-    public Estadocliente crear(Estadocliente entidad) throws GeneralException;
-    public Estadocliente actualizar(Estadocliente entidad) throws GeneralException;
+public interface RelacionServicio extends GenericoServicio<Relacion, Long> {
+    public List<Relacion> listar() throws GeneralException;
+    public Relacion crear(Relacion entidad) throws GeneralException;
+    public Relacion actualizar(Relacion entidad) throws GeneralException;
     public void actualizarEstadoCliente(Long id) throws GeneralException;
-    
 }
