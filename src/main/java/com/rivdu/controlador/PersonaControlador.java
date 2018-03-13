@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.IngenieroServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
@@ -25,17 +24,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import com.rivdu.servicio.PersonaServicio;
 /**
  *
  * @author dev-out-03
  */
 @RestController
 @RequestMapping("/ingeniero")
-public class IngenieroControlador {
+public class PersonaControlador {
     
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
     @Autowired
-    private IngenieroServicio ingenieroServicio;
+    private PersonaServicio ingenieroServicio;
     @Autowired
     private GenericoDao<Persona, Long> personadao;
     
@@ -47,14 +47,16 @@ public class IngenieroControlador {
         try {
             String dni;
             String nombre;
+            Long idrol;
             BusquedaPaginada busquedaPaginada = new BusquedaPaginada();
             busquedaPaginada.setBuscar(parametros);
             Persona entidadBuscar = new Persona();
             dni = busquedaPaginada.obtenerFiltroComoString("dni");
             nombre = busquedaPaginada.obtenerFiltroComoString("nombre");
+            idrol=busquedaPaginada.obtenerFiltroComoLong("idrol");
             busquedaPaginada.setPaginaActual(pagina);
             busquedaPaginada.setCantidadPorPagina(cantidadPorPagina);
-            busquedaPaginada = ingenieroServicio.busquedaPaginada(entidadBuscar, busquedaPaginada, dni, nombre);
+            busquedaPaginada = ingenieroServicio.busquedaPaginada(entidadBuscar, busquedaPaginada, dni, nombre,idrol);
             return new ResponseEntity<>(busquedaPaginada, HttpStatus.OK);
         } catch (Exception e) {
             loggerControlador.error(e.getMessage());
@@ -74,7 +76,6 @@ public class IngenieroControlador {
                 }else{
                     throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
                 }
-                
             } catch (Exception e) {
                 throw e;
             }
@@ -90,7 +91,12 @@ public class IngenieroControlador {
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
             Persona persona = ingenieroServicio.obtener(id);
+            if(persona.isEstado()){
             persona.setEstado(Boolean.FALSE);
+            }
+            else{
+            persona.setEstado(Boolean.TRUE);
+            }
             persona = ingenieroServicio.actualizar(persona);
             if (persona.getId()!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
@@ -148,5 +154,4 @@ public class IngenieroControlador {
             throw e;
         }
     }//Fin del Metodo obtener:traerparaedicion
-
 }
