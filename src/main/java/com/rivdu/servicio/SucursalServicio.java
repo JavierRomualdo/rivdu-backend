@@ -12,14 +12,11 @@ import com.rivdu.util.BusquedaPaginada;
  *
  * @author LUIS ORTIZ
  */
-public interface SucursalServicio extends GenericoServicio<Sucursal, Long>{
+public interface SucursalServicio extends GenericoServicio<Sucursal, Long> {
 
     public BusquedaPaginada busquedaPaginada(Sucursal entidadBuscar, BusquedaPaginada busquedaPaginada, String ruc, String nombre);
-
     public Sucursal insertar(Sucursal entidad);
-
     public Sucursal obtener(Long id);
-
     public Sucursal actualizar(Sucursal sucursal);
-    
+
 }

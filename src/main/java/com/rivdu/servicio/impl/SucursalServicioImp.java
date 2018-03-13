@@ -25,27 +25,26 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> implements SucursalServicio{
+public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> implements SucursalServicio {
 
-    
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
-    
     @Autowired
     private GenericoDao<Sucursal, Long> sucursalDao;
- 
+
     public SucursalServicioImp(GenericoDao<Sucursal, Long> genericoHibernate) {
         super(genericoHibernate);
     }
+
     @Override
     public BusquedaPaginada busquedaPaginada(Sucursal entidadBuscar, BusquedaPaginada busquedaPaginada, String ruc, String nombre) {
-         Criterio filtro;
+        Criterio filtro;
         filtro = Criterio.forClass(Sucursal.class);
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        if (nombre!= null) {
-            filtro.add(Restrictions.ilike("ruc", '%'+nombre+'%'));
+        if (nombre != null) {
+            filtro.add(Restrictions.ilike("ruc", '%' + nombre + '%'));
         }
-        if (ruc!=null) {
-            filtro.add(Restrictions.ilike("nombre",'%' +ruc+'%'));
+        if (ruc != null) {
+            filtro.add(Restrictions.ilike("nombre", '%' + ruc + '%'));
         }
         busquedaPaginada.setTotalRegistros(sucursalDao.cantidadPorCriteria(filtro, "id"));
         busquedaPaginada.calcularCantidadDePaginas();
@@ -65,7 +64,7 @@ public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> im
 
     @Override
     public Sucursal obtener(Long id) {
-        Sucursal p=obtener(Sucursal.class, id);
+        Sucursal p = obtener(Sucursal.class, id);
         return p;
     }
 
