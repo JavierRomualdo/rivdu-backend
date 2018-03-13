@@ -73,7 +73,7 @@ public class Persona implements Serializable {
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idpersona")
 //    private List<Personaempresa> personaempresaList;
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Ubigeo idubigeo;
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idpersona")
 //    private List<Responsable> responsableList;
