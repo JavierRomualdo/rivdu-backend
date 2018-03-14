@@ -8,12 +8,18 @@ package com.rivdu.servicio.impl;
 import com.rivdu.dao.GenericoDao;
 import com.rivdu.entidades.Estadocliente;
 import com.rivdu.entidades.Materiales;
+import com.rivdu.entidades.Persona;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.MaterialesServicio;
+import com.rivdu.util.BusquedaPaginada;
+import com.rivdu.util.Criterio;
 import java.util.List;
+import javafx.scene.paint.Material;
 import javax.transaction.Transactional;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +49,25 @@ public class MaterialesServicioImp extends GenericoServicioImpl<Materiales, Long
     public List<Materiales> listar() throws GeneralException {
         return  materialesdao.listarTodosVigentes(Materiales.class, "estado", true);
     }
+    
+    @Override
+    public BusquedaPaginada busquedaPaginada(Materiales entidadBuscar, BusquedaPaginada busquedaPaginada, String detalle) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Materiales.class);
+        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+        if (detalle!=null) {
+            filtro.add(Restrictions.ilike("detalle",'%' +detalle+'%'));
+        }
+        busquedaPaginada.setTotalRegistros(materialesdao.cantidadPorCriteria(filtro, "id"));
+        busquedaPaginada.calcularCantidadDePaginas();
+        busquedaPaginada.validarPaginaActual();
+        filtro.calcularDatosParaPaginacion(busquedaPaginada);
+        filtro.addOrder(Order.asc("detalle"));
+        List<Materiales> p = materialesdao.buscarPorCriteriaSinProyecciones(filtro);//this is same the method IngSimpl
+        busquedaPaginada.setRegistros(p);
+        return busquedaPaginada;
+    }
+    
 
     @Override
     public Materiales crear(Materiales entidad) throws GeneralException {

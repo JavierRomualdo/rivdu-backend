@@ -8,9 +8,11 @@ package com.rivdu.controlador;
 import com.rivdu.entidades.Materiales;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.MaterialesServicio;
+import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,20 +37,40 @@ public class MaterialesControlador {
    @Autowired
    private MaterialesServicio materialesServicio;
    
-   @GetMapping ("listar")
-    public ResponseEntity show() throws GeneralException{
-        Respuesta resp = new Respuesta();
-        List<Materiales> lista;
-        try {
-          lista = materialesServicio.listar();
-            if (lista!=null) {
-                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                resp.setOperacionMensaje("");
-                resp.setExtraInfo(lista);
-            }else{
-                throw new GeneralException("Lista no disponible", "No hay datos", loggerControlador);
-            }
-            return new ResponseEntity<>(resp, HttpStatus.OK);
+   //@GetMapping ("listar")
+    @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
+    public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
+                                                             @PathVariable("cantidadPorPagina") Long cantidadPorPagina, 
+                                                             @RequestBody Map<String, Object> parametros) throws GeneralException{
+    //public ResponseEntity show() throws GeneralException{
+//        Respuesta resp = new Respuesta();
+//        List<Materiales> lista;
+//        try {
+//          lista = materialesServicio.listar();
+//            if (lista!=null) {
+//                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+//                resp.setOperacionMensaje("");
+//                resp.setExtraInfo(lista);
+//            }else{
+//                throw new GeneralException("Lista no disponible", "No hay datos", loggerControlador);
+//            }
+//            return new ResponseEntity<>(resp, HttpStatus.OK);
+//        } catch (Exception e) {
+//            loggerControlador.error(e.getMessage());
+//            throw e;
+//        }
+//    }
+try {
+            
+            String detalle;
+            BusquedaPaginada busquedaPaginada = new BusquedaPaginada();
+            busquedaPaginada.setBuscar(parametros);
+            Materiales entidadBuscar = new Materiales();
+            detalle = busquedaPaginada.obtenerFiltroComoString("detalle");
+            busquedaPaginada.setPaginaActual(pagina);
+            busquedaPaginada.setCantidadPorPagina(cantidadPorPagina);
+            busquedaPaginada = materialesServicio.busquedaPaginada(entidadBuscar, busquedaPaginada, detalle);
+            return new ResponseEntity<>(busquedaPaginada, HttpStatus.OK);
         } catch (Exception e) {
             loggerControlador.error(e.getMessage());
             throw e;
