@@ -93,7 +93,12 @@ public class UbigeoControlador {
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
             Ubigeo ubigeo = ubigeoServicio.obtener(id);
+            if(ubigeo.isEstado()){
             ubigeo.setEstado(Boolean.FALSE);
+            }
+            else{
+            ubigeo.setEstado(Boolean.TRUE);
+            }
             ubigeo = ubigeoServicio.actualizar(ubigeo);
             if (ubigeo.getId()!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());

@@ -91,7 +91,12 @@ public class SucursalesControlador {
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
             Sucursal sucursal = sucursalServicio.obtener(id);
+            if(sucursal.isEstado()){
             sucursal.setEstado(Boolean.FALSE);
+            }
+            else{
+            sucursal.setEstado(Boolean.TRUE);
+            }
             sucursal = sucursalServicio.actualizar(sucursal);
             if (sucursal.getId()!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());

@@ -37,7 +37,6 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
     public Ubigeo crear(Ubigeo entidad) throws GeneralException {
         Criterio filtro;
         filtro = Criterio.forClass(Ubigeo.class);
-        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
         if (entidad.getId()!=null) {
             filtro.add(Restrictions.eq("id", entidad.getId()));
         }
@@ -54,7 +53,6 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
     public BusquedaPaginada busquedaPaginada(Ubigeo entidadBuscar, BusquedaPaginada busquedaPaginada, String nombre, String codigo) {
         Criterio filtro;
         filtro = Criterio.forClass(Ubigeo.class);
-        filtro.add(Restrictions.eq("estado", true));
         if (nombre!= null && !nombre.equals("")) {
             filtro.add(Restrictions.ilike("nombre", '%'+nombre+'%'));
         }
