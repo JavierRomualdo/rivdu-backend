@@ -39,9 +39,8 @@ public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> im
     public BusquedaPaginada busquedaPaginada(Sucursal entidadBuscar, BusquedaPaginada busquedaPaginada, String ruc, String nombre) {
         Criterio filtro;
         filtro = Criterio.forClass(Sucursal.class);
-        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        if (nombre != null) {
-            filtro.add(Restrictions.ilike("ruc", '%' + nombre + '%'));
+        if (nombre!= null) {
+            filtro.add(Restrictions.ilike("ruc", '%'+nombre+'%'));
         }
         if (ruc != null) {
             filtro.add(Restrictions.ilike("nombre", '%' + ruc + '%'));
