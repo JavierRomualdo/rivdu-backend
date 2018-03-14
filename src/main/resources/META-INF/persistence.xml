@@ -47,6 +47,8 @@
     <class>com.rivdu.entidades.Relacion</class>
     <class>com.rivdu.entidades.Estructura</class>
     <class>com.rivdu.entidades.Personaempresa</class>
+    <class>com.rivdu.entidades.Personarol</class>
+    <class>com.rivdu.entidades.Rol</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/limatambo"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

@@ -80,6 +80,12 @@ public class Empresa implements Serializable {
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne(optional = true)
     private Ubigeo idubigeo;
+    
+     @JoinColumn(name = "idgerente", referencedColumnName = "id")
+    @ManyToOne(optional = true)
+    private Persona idgerente;
+     
+     
 
     public Empresa() {
     }

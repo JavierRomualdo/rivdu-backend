@@ -5,12 +5,12 @@
  */
 package com.rivdu.controlador;
 
-import com.rivdu.entidades.Estadocliente;
+import com.rivdu.entidades.Relacion;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.EstadoClienteServicio;
-import com.rivdu.util.RivduUtil;
+import com.rivdu.servicio.RelacionServicio;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -31,20 +31,19 @@ import org.springframework.web.bind.annotation.RestController;
  * @author PROPIETARIO
  */
 @RestController
-@RequestMapping("estadocivil")
-public class EstadoControlador {
-
-    private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
+@RequestMapping("relacion")
+public class RelacionControlador {
+private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private EstadoClienteServicio estadoclienteservicio;
+    private RelacionServicio relacionclienteeservicio;
 
     @GetMapping("listar")
     public ResponseEntity show() throws GeneralException {
         Respuesta resp = new Respuesta();
-        List<Estadocliente> lista;
+        List<Relacion> lista;
         try {
-            lista = estadoclienteservicio.listar();
+            lista = relacionclienteeservicio.listar();
             if (lista != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje("");
@@ -60,15 +59,15 @@ public class EstadoControlador {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody Estadocliente entidad) throws GeneralException {
+    public ResponseEntity crear(HttpServletRequest request, @RequestBody Relacion entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Estadocliente guardado;
+                Relacion guardado;
                 if (entidad.getId() != null) {
-                    guardado = estadoclienteservicio.actualizar(entidad);
+                    guardado = relacionclienteeservicio.actualizar(entidad);
                 } else {
-                    guardado = estadoclienteservicio.crear(entidad);
+                    guardado = relacionclienteeservicio.crear(entidad);
                 }
                 if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
@@ -89,7 +88,7 @@ public class EstadoControlador {
     @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.DELETE)
     public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
         Respuesta resp = new Respuesta();
-        estadoclienteservicio.actualizarEstadoCliente(id);
+        relacionclienteeservicio.actualizarEstadoCliente(id);
         resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
         resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
         resp.setExtraInfo(id);
@@ -101,7 +100,7 @@ public class EstadoControlador {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
-            Estadocliente unidad = estadoclienteservicio.obtener(Estadocliente.class, id);
+            Relacion unidad = relacionclienteeservicio.obtener(Relacion.class, id);
             if (unidad != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -115,5 +114,5 @@ public class EstadoControlador {
             throw e;
         }
     }
-
+    
 }

@@ -12,13 +12,13 @@ import java.util.List;
 
 /**
  *
- * @author dev-out-03
+ * @author PROPIETARIO
  */
-public interface IngenieroServicio extends GenericoServicio<Persona, Long>{
-
+public interface CaptadorServicio extends GenericoServicio<Persona, Long>{
     public List<Persona> listar() throws GeneralException;
     public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre);
     public Persona insertar(Persona entidad) throws GeneralException;
     public Persona actualizar(Persona producto) throws GeneralException;
     public Persona obtener(Long id) throws GeneralException;
- }
+    
+}

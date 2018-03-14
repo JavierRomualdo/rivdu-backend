@@ -5,8 +5,6 @@
  */
 package com.rivdu.controlador;
 
-
-import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Ubigeo;
 import com.rivdu.entidades.Tipoubigeo;
 import com.rivdu.excepcion.GeneralException;
@@ -45,7 +43,12 @@ public class UbigeoControlador {
         Respuesta resp = new Respuesta();
         if(entidad != null){
             try {
-                Ubigeo guardado = ubigeoServicio.crear(entidad);
+                Ubigeo guardado;
+                if(entidad.getId()!=null){
+                    guardado = ubigeoServicio.actualizar(entidad);
+                } else {
+                    guardado = ubigeoServicio.crear(entidad);
+                }
                 if (guardado != null ) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -90,7 +93,12 @@ public class UbigeoControlador {
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
             Ubigeo ubigeo = ubigeoServicio.obtener(id);
+            if(ubigeo.isEstado()){
             ubigeo.setEstado(Boolean.FALSE);
+            }
+            else{
+            ubigeo.setEstado(Boolean.TRUE);
+            }
             ubigeo = ubigeoServicio.actualizar(ubigeo);
             if (ubigeo.getId()!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
@@ -105,4 +113,24 @@ public class UbigeoControlador {
             throw e;
         }
     }//fin del metodo eliminar
+    
+        @RequestMapping(value="obtener", method = RequestMethod.POST)//metódo para editar
+    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Ubigeo ubigeo = ubigeoServicio.obtener(id);
+            if (ubigeo!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(ubigeo);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }//Fin del Metodo obtener:traerparaedicion
 }
