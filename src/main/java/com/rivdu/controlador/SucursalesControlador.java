@@ -33,16 +33,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/sucursal")
 public class SucursalesControlador {
-        private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
+
+    private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
     @Autowired
     private SucursalServicio sucursalServicio;
-    @Autowired
-    private GenericoDao<Sucursal, Long> sucursaldao;
-    
-        @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
-    public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
-                                                             @PathVariable("cantidadPorPagina") Long cantidadPorPagina, 
-                                                             @RequestBody Map<String, Object> parametros) throws GeneralException{
+
+    @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
+    public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina,
+            @PathVariable("cantidadPorPagina") Long cantidadPorPagina,
+            @RequestBody Map<String, Object> parametros) throws GeneralException {
         try {
             String ruc;
             String nombre;
@@ -60,33 +59,32 @@ public class SucursalesControlador {
             throw e;
         }
     }
-    
-        @RequestMapping(method = RequestMethod.POST)
+
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity guardar(HttpServletRequest request, @RequestBody Sucursal entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
-        if(entidad != null){
+        if (entidad != null) {
             try {
                 Sucursal guardado = sucursalServicio.insertar(entidad);
-                if (guardado != null ) {
+                if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                     resp.setExtraInfo(guardado);
-                }else{
+                } else {
                     throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
                 }
-                
+
             } catch (Exception e) {
                 throw e;
             }
-        }else{
+        } else {
             resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-    
-  
-        @RequestMapping(value="eliminar", method = RequestMethod.POST)
-    public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+
+    @RequestMapping(value = "eliminar", method = RequestMethod.POST)
+    public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
@@ -98,11 +96,11 @@ public class SucursalesControlador {
             sucursal.setEstado(Boolean.TRUE);
             }
             sucursal = sucursalServicio.actualizar(sucursal);
-            if (sucursal.getId()!=null) {
+            if (sucursal.getId() != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                 resp.setExtraInfo(sucursal);
-            }else{
+            } else {
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
             return new ResponseEntity<>(resp, HttpStatus.OK);
@@ -111,18 +109,18 @@ public class SucursalesControlador {
             throw e;
         }
     }//fin del metodo eliminar
-    
-        @RequestMapping(value="obtener", method = RequestMethod.POST)
-    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+
+    @RequestMapping(value = "obtener", method = RequestMethod.POST)
+    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
             Sucursal sucursal = sucursalServicio.obtener(id);
-            if (sucursal!=null) {
+            if (sucursal != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                 resp.setExtraInfo(sucursal);
-            }else{
+            } else {
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
             return new ResponseEntity<>(resp, HttpStatus.OK);
@@ -131,25 +129,24 @@ public class SucursalesControlador {
             throw e;
         }
     }//Fin del Metodo obtener:traerparaedicion
-    
-        @RequestMapping(method = RequestMethod.PUT)
+
+    @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Sucursal entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
-        if(entidad != null){
+        if (entidad != null) {
             try {
                 Sucursal guardado = sucursalServicio.actualizar(entidad);
-                if (guardado != null ) {
+                if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                     resp.setExtraInfo(guardado);
-                }else{
+                } else {
                     throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
                 }
-                
             } catch (Exception e) {
                 throw e;
             }
-        }else{
+        } else {
             resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
