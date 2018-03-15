@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rivdu.dao.GenericoDao;
 import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Personarol;
+import com.rivdu.entidades.PersonarolPK;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
@@ -35,6 +36,8 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
     
     @Autowired
     private GenericoDao<Persona, Long> ingenieroDao;
+    @Autowired
+    private GenericoDao<Personarol, PersonarolPK> personarolDao;
  
     public PersonaServicioImp(GenericoDao<Persona, Long> genericoHibernate) {
         super(genericoHibernate);
@@ -51,7 +54,7 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
     public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre,Long idrol) {
         Criterio filtro;
         filtro = Criterio.forClass(Personarol.class);
-        filtro.createAlias("persona", "p", JoinType.RIGHT_OUTER_JOIN);
+        filtro.createAlias("idpersona", "p", JoinType.RIGHT_OUTER_JOIN);
         if (dni!= null && !"".equals(dni)) {
             filtro.add(Restrictions.ilike("p.dni", '%'+dni+'%'));
         }
@@ -83,21 +86,49 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
 
     @Override
     public Persona insertar(Persona entidad) throws GeneralException {
+        
         verificarPersonaRepetidad(entidad);
         entidad.setEstado(true);
+         List<Personarol> personaRoles = entidad.getPersonarolList();
+        entidad.setPersonarolList(null);
+        entidad = ingenieroDao.insertar(entidad);
+        if(personaRoles != null){
+            for (Personarol pm : personaRoles) {
+                PersonarolPK pk = new PersonarolPK(entidad.getId(), pm.getIdrol().getId());
+                pm.setEstado(true);
+                pm.setPersonarolPK(pk);
+                personarolDao.insertar(pm);
+            }
+        }
         return ingenieroDao.insertar(entidad);
     }
 
     @Override
     public Persona actualizar(Persona entidad) throws GeneralException {
         verificarPersonaRepetidad(entidad);
+        List<Personarol> personaroles = entidad.getPersonarolList();
+        if(personaroles != null){
+            personaroles.stream().forEach((pm) -> {
+                personarolDao.actualizar(pm);
+            });
+        }
         return ingenieroDao.actualizar(entidad);
     }
 
     @Override
     public Persona obtener(Long id) throws GeneralException {
         Persona p=obtener(Persona.class, id);
+        for(Personarol pr:p.getPersonarolList()){
+            pr.setIdpersona(null);
+        }
         return p;
+    }
+      private List<Personarol> obtenerVigentes(Long id) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Personarol.class);
+        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+        filtro.add(Restrictions.eq("idpersona", id));
+        return personarolDao.listarFiltroDistinct(filtro);
     }
 
     private void verificarPersonaRepetidad(Persona entidad) {
