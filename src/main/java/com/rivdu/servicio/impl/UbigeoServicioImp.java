@@ -35,16 +35,7 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
     
     @Override
     public Ubigeo crear(Ubigeo entidad) throws GeneralException {
-        Criterio filtro;
-        filtro = Criterio.forClass(Ubigeo.class);
-        if (entidad.getId()!=null) {
-            filtro.add(Restrictions.eq("id", entidad.getId()));
-        }
-        filtro.add(Restrictions.eq("codigo", entidad.getCodigo()));
-        Ubigeo u = ubigeoDao.obtenerPorCriteriaSinProyecciones(filtro);
-        if (u!=null) {
-            throw new GeneralException("Ya existe un ubigeo  con igual codigo.", "Guardar retorno nulo", loggerServicio);
-        }
+        verificarUbigeoRepetidad(entidad);
         entidad.setEstado(true);
         return ubigeoDao.insertar(entidad);
     }

@@ -7,6 +7,7 @@ package com.rivdu.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,16 +40,16 @@ public class Especificaciones implements Serializable {
     @Column(name = "id")
     private Long id;
     @Size(max = 100)
-    @Column(name = "espcificaciones")
-    private String espcificaciones;
+    @Column(name = "especificaciones")
+    private String especificaciones;
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "estadoconstruccion")
-    private Character estadoconstruccion;
+    @Column(name = "categoria")
+    private Character categoria;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -59,9 +60,9 @@ public class Especificaciones implements Serializable {
     @NotNull
     @Column(name = "valorm2")
     private BigDecimal valorm2;
-    @JoinColumn(name = "idprograma", referencedColumnName = "id")
+    /*@JoinColumn(name = "idprograma", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Programas idprograma;
+    private Programas idprograma; */
     @JoinColumn(name = "idestructura", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Estructura idestructura;
@@ -76,7 +77,7 @@ public class Especificaciones implements Serializable {
     public Especificaciones(Long id, boolean estado, Character estadoconstruccion, String etapa, BigDecimal valorm2) {
         this.id = id;
         this.estado = estado;
-        this.estadoconstruccion = estadoconstruccion;
+        this.categoria = estadoconstruccion;
         this.etapa = etapa;
         this.valorm2 = valorm2;
     }
@@ -101,5 +102,5 @@ public class Especificaciones implements Serializable {
     public String toString() {
         return "com.rivdu.entidades.Especificaciones[ id=" + id + " ]";
     }
-    
+
 }
