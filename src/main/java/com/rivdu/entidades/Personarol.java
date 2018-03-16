@@ -16,11 +16,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import lombok.Data;
 
 /**
  *
  * @author PROPIETARIO
  */
+@Data
 @Entity
 @Table(name = "personarol")
 @NamedQueries({
@@ -34,9 +36,12 @@ public class Personarol implements Serializable {
     @NotNull
     @Column(name = "estado")
     private boolean estado;
+    @JoinColumn(name = "idrol", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Rol idrol;
     @JoinColumn(name = "idpersona", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Persona persona;
+    private Persona idpersona;
 
     public Personarol() {
     }
@@ -68,14 +73,6 @@ public class Personarol implements Serializable {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
-    }
-
-    public Persona getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Persona persona) {
-        this.persona = persona;
     }
 
     @Override
