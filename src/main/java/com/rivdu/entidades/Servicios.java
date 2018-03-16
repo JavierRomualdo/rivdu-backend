@@ -8,11 +8,8 @@ package com.rivdu.entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -24,45 +21,48 @@ import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "tipoubigeo")
+@Table(name = "servicios")
 @NamedQueries({
-    @NamedQuery(name = "Tipoubigeo.findAll", query = "SELECT t FROM Tipoubigeo t")})
-public class Tipoubigeo implements Serializable {
+    @NamedQuery(name = "Servicios.findAll", query = "SELECT s FROM Servicios s")})
+public class Servicios implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
+
+    private static final long serialVersionUID = 1L;
+    @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Column(name = "id")
+    private Long id;
+    @Size(max = 255)
     @Column(name = "nombre")
     private String nombre;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idtipoubigeo")
-//    private List<Ubigeo> ubigeoList;
+//    @OneToMany(mappedBy = "idservicio")
+//    private List<Predioservicio> predioservicioList;
 
-    public Tipoubigeo() {
+    public Servicios() {
     }
 
-    public Tipoubigeo(Long id) {
+    public Servicios(Long id) {
         this.id = id;
     }
 
-    public Tipoubigeo(Long id, boolean estado, String nombre) {
-        this.id = id;
-        this.estado = estado;
-        this.nombre = nombre;
-    }
+    
+
+//    public List<Predioservicio> getPredioservicioList() {
+//        return predioservicioList;
+//    }
+//
+//    public void setPredioservicioList(List<Predioservicio> predioservicioList) {
+//        this.predioservicioList = predioservicioList;
+//    }
 
     @Override
     public int hashCode() {
@@ -73,24 +73,17 @@ public class Tipoubigeo implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Tipoubigeo)) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Servicios)) {
             return false;
         }
-        Tipoubigeo other = (Tipoubigeo) object;
+        Servicios other = (Servicios) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Tipoubigeo[ id=" + id + " ]";
+        return "com.rivdu.entidades.Servicios[ id=" + id + " ]";
     }
-
-//    public List<Ubigeo> getUbigeoList() {
-//        return ubigeoList;
-//    }
-//
-//    public void setUbigeoList(List<Ubigeo> ubigeoList) {
-//        this.ubigeoList = ubigeoList;
-//    }
     
 }

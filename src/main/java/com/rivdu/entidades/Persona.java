@@ -34,6 +34,11 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Persona.findAll", query = "SELECT p FROM Persona p")})
 public class Persona implements Serializable {
+
+    @OneToMany(mappedBy = "idpersona")
+    private List<Captador> captadorList;
+    @OneToMany(mappedBy = "idpersona")
+    private List<Personacompra> personacompraList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -114,5 +119,21 @@ public class Persona implements Serializable {
     public String toString() {
         return "com.rivdu.entidades.Persona[ id=" + id + " ]";
     }
+
+//    public List<Captador> getCaptadorList() {
+//        return captadorList;
+//    }
+//
+//    public void setCaptadorList(List<Captador> captadorList) {
+//        this.captadorList = captadorList;
+//    }
+//
+//    public List<Personacompra> getPersonacompraList() {
+//        return personacompraList;
+//    }
+//
+//    public void setPersonacompraList(List<Personacompra> personacompraList) {
+//        this.personacompraList = personacompraList;
+//    }
     
 }
