@@ -63,13 +63,16 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         Servicios[] servicios = entidad.getServicios();
         Predioservicio[] predioservicio = new Predioservicio[servicios.length];
         Captador captador = entidad.getCaptador();
-        Personacompra personacompra = entidad.getPersonacompra();
+        Personacompra [] personacompra = entidad.getPersonacompra();
         
         predio.setEstado(true);
         colindante.setEstado(true);
         
         captador.setEstado(true);
-        personacompra.setEstado(true);
+        for (int i = 0; i < personacompra.length; i++) {
+            personacompra[i].setEstado(true);
+            personacompraDao.insertar(personacompra[i]);
+        }
         
         compraDao.insertar(compra);
         predioDao.insertar(predio);
@@ -83,7 +86,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
             predioservicio[i].setIdservicio(servicios[i]);
         }
         captadorDao.insertar(captador);
-        personacompraDao.insertar(personacompra);
+        
         
         return compra.getId();
     }

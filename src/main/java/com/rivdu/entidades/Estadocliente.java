@@ -31,9 +31,7 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Estadocliente.findAll", query = "SELECT e FROM Estadocliente e")})
 public class Estadocliente implements Serializable {
-
-    @OneToMany(mappedBy = "idestadocliente")
-    private List<Personacompra> personacompraList;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

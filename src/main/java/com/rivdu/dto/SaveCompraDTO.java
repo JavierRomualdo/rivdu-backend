@@ -25,7 +25,7 @@ public class SaveCompraDTO {
     private Colindante colindante;
     private Servicios[] servicios;
     private Captador captador;
-    private Personacompra personacompra;
+    private Personacompra [] personacompra;
 
     public SaveCompraDTO() {
     }
