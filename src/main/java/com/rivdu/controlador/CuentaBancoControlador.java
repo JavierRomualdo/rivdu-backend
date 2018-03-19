@@ -5,12 +5,12 @@
  */
 package com.rivdu.controlador;
 
-import com.rivdu.entidades.Estadocliente;
+import com.rivdu.entidades.Cuentabanco;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.EstadoClienteServicio;
-import com.rivdu.util.RivduUtil;
+import com.rivdu.servicio.CuentaBancoServicio;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -28,23 +28,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author PROPIETARIO
+ * @author LUIS ORTIZ
  */
 @RestController
-@RequestMapping("estadocivil")
-public class EstadoControlador {
-
+@RequestMapping("cuentabanco")
+public class CuentaBancoControlador {
+    
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private EstadoClienteServicio estadoclienteservicio;
-
-    @GetMapping("listar")
+    private CuentaBancoServicio cuentabancoservicio;
+    
+        @GetMapping("listar")
     public ResponseEntity show() throws GeneralException {
         Respuesta resp = new Respuesta();
-        List<Estadocliente> lista;
+        List<Cuentabanco> lista;
         try {
-            lista = estadoclienteservicio.listar();
+            lista = cuentabancoservicio.listar();
             if (lista != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje("");
@@ -57,17 +57,18 @@ public class EstadoControlador {
             loggerControlador.error(e.getMessage());
             throw e;
         }
-    }
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody Estadocliente entidad) throws GeneralException {
+    };
+    
+        @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity crear(HttpServletRequest request, @RequestBody Cuentabanco entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Estadocliente guardado;
+                Cuentabanco guardado;
                 if (entidad.getId() != null) {
-                    guardado = estadoclienteservicio.actualizar(entidad);
+                    guardado = cuentabancoservicio.actualizar(entidad);
                 } else {
-                    guardado = estadoclienteservicio.crear(entidad);
+                    guardado = cuentabancoservicio.crear(entidad);
                 }
                 if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
@@ -84,29 +85,29 @@ public class EstadoControlador {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-
-    @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.GET)
+    
+     @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.GET)
     public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
         Respuesta resp = new Respuesta();
-        Estadocliente estadocliente=estadoclienteservicio.obtener(Estadocliente.class, id);
+        Cuentabanco estadocliente=cuentabancoservicio.obtener(Cuentabanco.class, id);
         if (estadocliente.isEstado()) {
             estadocliente.setEstado(Boolean.FALSE);
         }else{
             estadocliente.setEstado(Boolean.TRUE);
         }
-        estadoclienteservicio.actualizar(estadocliente); 
+        cuentabancoservicio.actualizar(estadocliente); 
         resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
         resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
         resp.setExtraInfo(id);
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "obtener", method = RequestMethod.POST)
+     @RequestMapping(value = "obtener", method = RequestMethod.POST)
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
-            Estadocliente unidad = estadoclienteservicio.obtener(Estadocliente.class, id);
+            Cuentabanco unidad = cuentabancoservicio.obtener(Cuentabanco.class, id);
             if (unidad != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
