@@ -5,12 +5,12 @@
  */
 package com.rivdu.controlador;
 
-import com.rivdu.entidades.Estadocliente;
+import com.rivdu.entidades.Especificaciones;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.EstadoClienteServicio;
-import com.rivdu.util.RivduUtil;
+import com.rivdu.servicio.EspecificacionesServicio;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,23 +28,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author PROPIETARIO
+ * @author LUIS ORTIZ
  */
 @RestController
-@RequestMapping("estadocivil")
-public class EstadoControlador {
-
+@RequestMapping("especificaciones")
+public class EspecificacionesControlador {
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
-
+    
     @Autowired
-    private EstadoClienteServicio estadoclienteservicio;
-
+    private EspecificacionesServicio especificacionesServicio;
+    
     @GetMapping("listar")
     public ResponseEntity show() throws GeneralException {
         Respuesta resp = new Respuesta();
-        List<Estadocliente> lista;
+        List<Especificaciones> lista;
         try {
-            lista = estadoclienteservicio.listar();
+            lista = especificacionesServicio.listar();
             if (lista != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje("");
@@ -58,18 +57,63 @@ public class EstadoControlador {
             throw e;
         }
     }
+    
+    @PostMapping("eliminar")
+    public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp= new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Especificaciones especificacion = especificacionesServicio.obtener(id);
+            if(especificacion.isEstado()){
+            especificacion.setEstado(Boolean.FALSE);
+            }
+            else{
+            especificacion.setEstado(Boolean.TRUE);
+            }
+            especificacion = especificacionesServicio.actualizar(especificacion);
+            if (especificacion.getId()!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(especificacion);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody Estadocliente entidad) throws GeneralException {
+    public ResponseEntity guardar(HttpServletRequest request, @RequestBody Especificaciones entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Estadocliente guardado;
-                if (entidad.getId() != null) {
-                    guardado = estadoclienteservicio.actualizar(entidad);
+                Especificaciones guardado = especificacionesServicio.insertar(entidad);
+                if (guardado != null) {
+                    resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                    resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                    resp.setExtraInfo(guardado);
                 } else {
-                    guardado = estadoclienteservicio.crear(entidad);
+                    throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
                 }
+
+            } catch (Exception e) {
+                throw e;
+            }
+        } else {
+            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
+        }
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
+
+     @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Especificaciones entidad) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        if (entidad != null) {
+            try {
+                Especificaciones guardado = especificacionesServicio.actualizar(entidad);
                 if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -86,26 +130,16 @@ public class EstadoControlador {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
-        Respuesta resp = new Respuesta();
-        estadoclienteservicio.actualizarEstadoCliente(id);
-        resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-        resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-        resp.setExtraInfo(id);
-        return new ResponseEntity<>(resp, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "obtener", method = RequestMethod.POST)
+@RequestMapping(value = "obtener", method = RequestMethod.POST)
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
-            Estadocliente unidad = estadoclienteservicio.obtener(Estadocliente.class, id);
-            if (unidad != null) {
+            Especificaciones especifica = especificacionesServicio.obtener(id);
+            if (especifica != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-                resp.setExtraInfo(unidad);
+                resp.setExtraInfo(especifica);
             } else {
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
@@ -114,6 +148,5 @@ public class EstadoControlador {
             loggerControlador.error(e.getMessage());
             throw e;
         }
-    }
-
+    }//Fin del Metodo obtener:traerparaedicion
 }

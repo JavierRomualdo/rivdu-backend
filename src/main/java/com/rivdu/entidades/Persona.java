@@ -8,9 +8,9 @@ package com.rivdu.entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -80,8 +80,11 @@ public class Persona implements Serializable {
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne(optional = true)
     private Ubigeo idubigeo;
+    @OneToMany(mappedBy = "idpersona", fetch = FetchType.LAZY)
+    private List<Personarol> personarolList;
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idpersona")
 //    private List<Responsable> responsableList;
+    
 
     public Persona() {
     }
@@ -119,21 +122,4 @@ public class Persona implements Serializable {
     public String toString() {
         return "com.rivdu.entidades.Persona[ id=" + id + " ]";
     }
-
-//    public List<Captador> getCaptadorList() {
-//        return captadorList;
-//    }
-//
-//    public void setCaptadorList(List<Captador> captadorList) {
-//        this.captadorList = captadorList;
-//    }
-//
-//    public List<Personacompra> getPersonacompraList() {
-//        return personacompraList;
-//    }
-//
-//    public void setPersonacompraList(List<Personacompra> personacompraList) {
-//        this.personacompraList = personacompraList;
-//    }
-    
 }

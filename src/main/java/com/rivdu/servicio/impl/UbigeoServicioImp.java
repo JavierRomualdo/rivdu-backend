@@ -6,14 +6,11 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
-import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.UbigeoServicio;
 import com.rivdu.util.BusquedaPaginada;
-import com.rivdu.util.Criterio;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import com.rivdu.util.Criterio;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -38,17 +35,7 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
     
     @Override
     public Ubigeo crear(Ubigeo entidad) throws GeneralException {
-        Criterio filtro;
-        filtro = Criterio.forClass(Ubigeo.class);
-        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        if (entidad.getId()!=null) {
-            filtro.add(Restrictions.eq("id", entidad.getId()));
-        }
-        filtro.add(Restrictions.eq("codigo", entidad.getCodigo()));
-        Ubigeo u = ubigeoDao.obtenerPorCriteriaSinProyecciones(filtro);
-        if (u!=null) {
-            throw new GeneralException("Ya existe un ubigeo  con igual codigo.", "Guardar retorno nulo", loggerServicio);
-        }
+        verificarUbigeoRepetidad(entidad);
         entidad.setEstado(true);
         return ubigeoDao.insertar(entidad);
     }
@@ -57,7 +44,6 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
     public BusquedaPaginada busquedaPaginada(Ubigeo entidadBuscar, BusquedaPaginada busquedaPaginada, String nombre, String codigo) {
         Criterio filtro;
         filtro = Criterio.forClass(Ubigeo.class);
-        filtro.add(Restrictions.eq("estado", true));
         if (nombre!= null && !nombre.equals("")) {
             filtro.add(Restrictions.ilike("nombre", '%'+nombre+'%'));
         }
@@ -98,5 +84,4 @@ public class UbigeoServicioImp extends GenericoServicioImpl<Ubigeo, Long> implem
             throw new GeneralException("Ya existe Ubigeo  con igual codigo", "Guardar retorno nulo", loggerServicio);
         }
     }
-    
 }

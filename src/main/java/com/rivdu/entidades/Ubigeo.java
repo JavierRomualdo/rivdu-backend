@@ -6,9 +6,7 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -104,20 +101,5 @@ public class Ubigeo implements Serializable {
         return "com.rivdu.entidades.Ubigeo[ id=" + id + " ]";
     }
 
-//    public List<Persona> getPersonaList() {
-//        return personaList;
-//    }
-//
-//    public void setPersonaList(List<Persona> personaList) {
-//        this.personaList = personaList;
-//    }
-//
-//    public List<Predio> getPredioList() {
-//        return predioList;
-//    }
-//
-//    public void setPredioList(List<Predio> predioList) {
-//        this.predioList = predioList;
-//    }
-    
-}
+ }    
+

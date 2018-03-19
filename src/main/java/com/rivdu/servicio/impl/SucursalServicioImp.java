@@ -6,7 +6,6 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
-import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Sucursal;
 import com.rivdu.servicio.SucursalServicio;
 import com.rivdu.util.BusquedaPaginada;
@@ -26,27 +25,25 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> implements SucursalServicio{
+public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> implements SucursalServicio {
 
-    
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
-    
     @Autowired
     private GenericoDao<Sucursal, Long> sucursalDao;
- 
+
     public SucursalServicioImp(GenericoDao<Sucursal, Long> genericoHibernate) {
         super(genericoHibernate);
     }
+
     @Override
     public BusquedaPaginada busquedaPaginada(Sucursal entidadBuscar, BusquedaPaginada busquedaPaginada, String ruc, String nombre) {
-         Criterio filtro;
+        Criterio filtro;
         filtro = Criterio.forClass(Sucursal.class);
-        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
         if (nombre!= null) {
             filtro.add(Restrictions.ilike("ruc", '%'+nombre+'%'));
         }
-        if (ruc!=null) {
-            filtro.add(Restrictions.ilike("nombre",'%' +ruc+'%'));
+        if (ruc != null) {
+            filtro.add(Restrictions.ilike("nombre", '%' + ruc + '%'));
         }
         busquedaPaginada.setTotalRegistros(sucursalDao.cantidadPorCriteria(filtro, "id"));
         busquedaPaginada.calcularCantidadDePaginas();
@@ -57,5 +54,21 @@ public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> im
         busquedaPaginada.setRegistros(s);
         return busquedaPaginada;
     }
-    
+
+    @Override
+    public Sucursal insertar(Sucursal entidad) {
+        entidad.setEstado(true);
+        return sucursalDao.actualizar(entidad);
+    }
+
+    @Override
+    public Sucursal obtener(Long id) {
+        Sucursal p = obtener(Sucursal.class, id);
+        return p;
+    }
+
+    @Override
+    public Sucursal actualizar(Sucursal entidad) {
+        return sucursalDao.actualizar(entidad);
+    }
 }
