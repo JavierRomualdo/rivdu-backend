@@ -86,10 +86,16 @@ public class EstadoControlador {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.GET)
     public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
         Respuesta resp = new Respuesta();
-        estadoclienteservicio.actualizarEstadoCliente(id);
+        Estadocliente estadocliente=estadoclienteservicio.obtener(Estadocliente.class, id);
+        if (estadocliente.isEstado()) {
+            estadocliente.setEstado(Boolean.FALSE);
+        }else{
+            estadocliente.setEstado(Boolean.TRUE);
+        }
+        estadoclienteservicio.actualizar(estadocliente); 
         resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
         resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
         resp.setExtraInfo(id);
