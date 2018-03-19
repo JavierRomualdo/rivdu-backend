@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rivdu.entidades.Estadocliente;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.EstadoClienteServicio;
+import com.rivdu.util.Criterio;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -40,7 +41,9 @@ public class EstadoClienteServicioImp extends GenericoServicioImpl<Estadocliente
     
     @Override
     public List<Estadocliente> listar() throws GeneralException {
-      return  estadocivildao.listarTodosVigentes(Estadocliente.class, "estado", true);
+        Criterio filtro;
+        filtro =Criterio.forClass(Estadocliente.class);
+        return estadocivildao.buscarPorCriteriaSinProyecciones(filtro);
     }
     
      @Override
@@ -55,10 +58,11 @@ public class EstadoClienteServicioImp extends GenericoServicioImpl<Estadocliente
     }
     
      @Override
-    public void actualizarEstadoCliente(Long id) throws GeneralException {
-            String hql = "UPDATE Estadocliente SET estado=FALSE WHERE id=:id";
+    public void actualizarEstadoCliente(Long id, boolean estado) throws GeneralException {
+            String hql = "UPDATE Estadocliente SET estado=:estado WHERE id=:id";
             Query query = sessionFactory.getCurrentSession().createQuery(hql);
             query.setParameter("id", id);
+            query.setParameter("estado", estado);
             query.executeUpdate();
     }
 

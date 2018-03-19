@@ -43,6 +43,9 @@ public class EmpresaServicioImp extends GenericoServicioImpl<Empresa, Long> impl
         if (e!=null && !e.isEstado()) {
             throw new GeneralException("Esta empresa no esta habilitada", "La empresa fue dada de baja.", loggerServicio);
         }
+        if(e!=null && e.getIdgerente()!=null) {
+            e.getIdgerente().setPersonarolList(null);
+        }
         return e;
     }
     

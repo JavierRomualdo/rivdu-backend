@@ -105,6 +105,7 @@ public class PersonaControlador {
             }else{
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
+            
             return new ResponseEntity<>(resp, HttpStatus.OK);
         } catch (Exception e) {
             loggerControlador.error(e.getMessage());

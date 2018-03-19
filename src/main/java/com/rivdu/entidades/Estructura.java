@@ -47,8 +47,8 @@ public class Estructura implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idestructura")
-    private List<Especificaciones> especificacionesList;
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "idestructura")
+    //private List<Especificaciones> especificacionesList;
 
     public Estructura() {
     }
