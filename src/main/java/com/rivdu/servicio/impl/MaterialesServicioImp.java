@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 /**
  *
  * @author Christhian
@@ -36,15 +35,13 @@ public class MaterialesServicioImp extends GenericoServicioImpl<Materiales, Long
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
     @Autowired
     private SessionFactory sessionFactory;
-    
-    
+   
     @Autowired
     private GenericoDao<Materiales, Long> materialesdao;
     public MaterialesServicioImp(GenericoDao<Materiales, Long> genericoHibernate) {
         super(genericoHibernate);
     }
-    
-    
+   
     @Override
     public List<Materiales> listar() throws GeneralException {
         return  materialesdao.listarTodosVigentes(Materiales.class, "estado", true);
@@ -54,7 +51,6 @@ public class MaterialesServicioImp extends GenericoServicioImpl<Materiales, Long
     public BusquedaPaginada busquedaPaginada(Materiales entidadBuscar, BusquedaPaginada busquedaPaginada, String detalle) {
         Criterio filtro;
         filtro = Criterio.forClass(Materiales.class);
-        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
         if (detalle!=null) {
             filtro.add(Restrictions.ilike("detalle",'%' +detalle+'%'));
         }
@@ -67,8 +63,7 @@ public class MaterialesServicioImp extends GenericoServicioImpl<Materiales, Long
         busquedaPaginada.setRegistros(p);
         return busquedaPaginada;
     }
-    
-
+   
     @Override
     public Materiales crear(Materiales entidad) throws GeneralException {
        entidad.setEstado(true);
@@ -77,7 +72,8 @@ public class MaterialesServicioImp extends GenericoServicioImpl<Materiales, Long
 
     @Override
     public Materiales actualizar(Materiales entidad) throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        return materialesdao.actualizar(entidad);
     }
 
     @Override
@@ -87,7 +83,10 @@ public class MaterialesServicioImp extends GenericoServicioImpl<Materiales, Long
             query.setParameter("id", id);
             query.executeUpdate();
     }
-    
-    
-    
+
+    @Override
+    public Materiales obtener(Long id) throws GeneralException {
+       Materiales p=obtener(Materiales.class, id);
+       return p;
+    }  
 }

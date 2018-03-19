@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
  *
  * @author Christhian
  */
-
 public interface MaterialesServicio extends GenericoServicio<Materiales, Long>{
     public List<Materiales> listar() throws GeneralException;
     public BusquedaPaginada busquedaPaginada(Materiales entidadBuscar, BusquedaPaginada busquedaPaginada,String detalle);
     public Materiales crear(Materiales entidad) throws GeneralException;
     public Materiales actualizar(Materiales entidad) throws GeneralException;
     public void actualizarMateriales(Long id) throws GeneralException;
+    public Materiales obtener(Long id) throws GeneralException;
 }

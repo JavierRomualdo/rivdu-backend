@@ -17,5 +17,5 @@ public interface LaboresServicio extends GenericoServicio<Labores, Long>{
     public Labores crear(Labores entidad) throws GeneralException;
     public Labores actualizar(Labores entidad) throws GeneralException;
     public void actualizarMateriales(Long id) throws GeneralException;
-    
+    public Labores obtener(Long id) throws GeneralException; 
 }

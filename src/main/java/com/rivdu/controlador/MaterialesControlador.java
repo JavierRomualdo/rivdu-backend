@@ -11,6 +11,7 @@ import com.rivdu.servicio.MaterialesServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -42,25 +43,7 @@ public class MaterialesControlador {
     public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
                                                              @PathVariable("cantidadPorPagina") Long cantidadPorPagina, 
                                                              @RequestBody Map<String, Object> parametros) throws GeneralException{
-    //public ResponseEntity show() throws GeneralException{
-//        Respuesta resp = new Respuesta();
-//        List<Materiales> lista;
-//        try {
-//          lista = materialesServicio.listar();
-//            if (lista!=null) {
-//                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-//                resp.setOperacionMensaje("");
-//                resp.setExtraInfo(lista);
-//            }else{
-//                throw new GeneralException("Lista no disponible", "No hay datos", loggerControlador);
-//            }
-//            return new ResponseEntity<>(resp, HttpStatus.OK);
-//        } catch (Exception e) {
-//            loggerControlador.error(e.getMessage());
-//            throw e;
-//        }
-//    }
-try {
+        try {
             
             String detalle;
             BusquedaPaginada busquedaPaginada = new BusquedaPaginada();
@@ -82,7 +65,12 @@ try {
         Respuesta resp = new Respuesta();
         if(entidad != null){
             try {
-                Materiales guardado = materialesServicio.crear(entidad);
+                Materiales guardado;
+                if (entidad.getId() != null) {
+                    guardado = materialesServicio.actualizar(entidad);
+                } else {
+                    guardado = materialesServicio.crear(entidad);
+                }
                 if (guardado != null ) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -99,6 +87,7 @@ try {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
+    //Para eliminar Sin estado
     @RequestMapping(value = "eliminarEstadoMaterial/{id}", method = RequestMethod.DELETE)
     public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
         
@@ -110,6 +99,52 @@ try {
             return new ResponseEntity<>(resp, HttpStatus.OK);
     }    
     
+    //Para eliminar Con estado
+     @RequestMapping(value="eliminarConEstado", method = RequestMethod.POST)
+    public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Materiales materiales = materialesServicio.obtener(id);
+            if(materiales.isEstado()){
+            materiales.setEstado(Boolean.FALSE);
+            }
+            else{
+            materiales.setEstado(Boolean.TRUE);
+            }
+            materiales = materialesServicio.actualizar(materiales);
+            if (materiales.getId()!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(materiales);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
     
-    
+    //Modificar
+    @RequestMapping(value="obtener", method = RequestMethod.POST)
+    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Materiales material = materialesServicio.obtener(id);
+            if (material!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(material);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }//Fin del Metodo obtener:traerparaedicion  
 }

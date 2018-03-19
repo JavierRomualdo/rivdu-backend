@@ -9,6 +9,7 @@ import com.rivdu.dao.GenericoDao;
 import com.rivdu.entidades.Labores;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.LaboresServicio;
+import com.rivdu.util.Criterio;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -35,7 +36,9 @@ public class LaboresServicioImp extends GenericoServicioImpl<Labores, Long> impl
 
     @Override
     public List<Labores> listar() throws GeneralException {
-         return  laboresdao.listarTodosVigentes(Labores.class, "estado", true);
+        Criterio filtro;
+        filtro = Criterio.forClass(Labores.class);
+        return  laboresdao.buscarPorCriteriaConProyecciones(filtro);
     }
 
     @Override
@@ -46,7 +49,7 @@ public class LaboresServicioImp extends GenericoServicioImpl<Labores, Long> impl
 
     @Override
     public Labores actualizar(Labores entidad) throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return laboresdao.actualizar(entidad);
     }
 
     @Override
@@ -54,5 +57,8 @@ public class LaboresServicioImp extends GenericoServicioImpl<Labores, Long> impl
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    
+    public Labores obtener(Long id) throws GeneralException {
+       Labores p=obtener(Labores.class, id);
+       return p;
+    }
 }

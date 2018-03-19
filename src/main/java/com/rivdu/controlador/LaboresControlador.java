@@ -11,7 +11,9 @@ import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.LaboresServicio;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("labores")
 public class LaboresControlador {
     
-    private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
+   private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
    
    @Autowired
    private LaboresServicio laboresServicio;
@@ -62,7 +64,12 @@ public class LaboresControlador {
         Respuesta resp = new Respuesta();
         if(entidad != null){
             try {
-                Labores guardado = laboresServicio.crear(entidad);
+                Labores guardado;
+                if (entidad.getId() != null) {
+                    guardado = laboresServicio.actualizar(entidad);
+                } else {
+                    guardado = laboresServicio.crear(entidad);
+                }
                 if (guardado != null ) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -78,6 +85,51 @@ public class LaboresControlador {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-
     
+    @RequestMapping(value="eliminarConEstado", method = RequestMethod.POST)
+    public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Labores labores = laboresServicio.obtener(id);
+            if(labores.isEstado()){
+            labores.setEstado(Boolean.FALSE);
+            }
+            else{
+            labores.setEstado(Boolean.TRUE);
+            }
+            labores = laboresServicio.actualizar(labores);
+            if (labores.getId()!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(labores);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+    
+     @RequestMapping(value="obtener", method = RequestMethod.POST)
+    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Labores labores = laboresServicio.obtener(id);
+            if (labores!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(labores);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }//Fin del Metodo obtener:traerparaedicion    
 }
