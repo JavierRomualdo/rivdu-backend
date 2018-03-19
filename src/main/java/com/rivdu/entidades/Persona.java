@@ -6,9 +6,11 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -72,8 +75,11 @@ public class Persona implements Serializable {
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne(optional = true)
     private Ubigeo idubigeo;
+    @OneToMany(mappedBy = "idpersona", fetch = FetchType.LAZY)
+    private List<Personarol> personarolList;
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idpersona")
 //    private List<Responsable> responsableList;
+    
 
     public Persona() {
     }
