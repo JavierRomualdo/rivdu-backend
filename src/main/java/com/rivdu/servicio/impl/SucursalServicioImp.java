@@ -51,6 +51,11 @@ public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> im
         filtro.calcularDatosParaPaginacion(busquedaPaginada);
         filtro.addOrder(Order.asc("nombre"));
         List<Sucursal> s = sucursalDao.buscarPorCriteriaSinProyecciones(filtro);//this is same the method IngSimpl
+        for (int i = 0; i < s.size(); i++) {
+            if (s.get(i).getIdempresa()!=null && s.get(i).getIdempresa().getIdgerente()!=null) {
+                s.get(i).getIdempresa().getIdgerente().setPersonarolList(null);
+            }
+        }
         busquedaPaginada.setRegistros(s);
         return busquedaPaginada;
     }
@@ -58,17 +63,28 @@ public class SucursalServicioImp extends GenericoServicioImpl<Sucursal, Long> im
     @Override
     public Sucursal insertar(Sucursal entidad) {
         entidad.setEstado(true);
-        return sucursalDao.actualizar(entidad);
+        Sucursal s = sucursalDao.actualizar(entidad);
+        if(s!=null && s.getIdempresa()!=null && s.getIdempresa().getIdgerente()!=null){
+            s.getIdempresa().getIdgerente().setPersonarolList(null);
+        }
+        return s;
     }
 
     @Override
     public Sucursal obtener(Long id) {
         Sucursal p = obtener(Sucursal.class, id);
+        if(p!=null && p.getIdempresa()!=null && p.getIdempresa().getIdgerente()!=null){
+            p.getIdempresa().getIdgerente().setPersonarolList(null);
+        }
         return p;
     }
 
     @Override
     public Sucursal actualizar(Sucursal entidad) {
-        return sucursalDao.actualizar(entidad);
+        Sucursal s = sucursalDao.actualizar(entidad);
+        if(s!=null && s.getIdempresa()!=null && s.getIdempresa().getIdgerente()!=null){
+            s.getIdempresa().getIdgerente().setPersonarolList(null);
+        }
+        return s;
     }
 }

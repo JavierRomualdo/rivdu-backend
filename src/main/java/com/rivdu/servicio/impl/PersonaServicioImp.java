@@ -113,7 +113,6 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
         }
         return ingenieroDao.actualizar(entidad);
     }
-
     @Override
     public Persona obtener(Long id) throws GeneralException {
         Persona p=obtener(Persona.class, id);

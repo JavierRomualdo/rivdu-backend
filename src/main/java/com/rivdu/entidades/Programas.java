@@ -76,9 +76,8 @@ public class Programas implements Serializable {
     private List<Ahorroporprograma> ahorroporprogramaList;*/
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
     private List<Responsable> responsableList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
-    private List<Especificaciones> especificacionesList;
-    
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
+    //private List<Especificaciones> especificacionesList;
 
     public Programas() {
     }
