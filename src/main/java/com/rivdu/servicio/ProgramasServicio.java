@@ -13,4 +13,7 @@ import com.rivdu.excepcion.GeneralException;
  */
 public interface ProgramasServicio extends GenericoServicio<Programas, Long>{
     public Programas crear(Programas entidad) throws GeneralException;
+    public Programas actualizar(Programas entidad) throws GeneralException;
+    public Programas obtener(Long id) throws GeneralException;
+    
 }
