@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package com.rivdu.entidades;
-
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -47,13 +46,11 @@ public class Responsable implements Serializable {
     @JoinColumn(name = "idpersona", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Persona idpersona;
-    @JoinColumn(name = "idprograma", referencedColumnName = "id")
+    @Column(name = "idprograma")
+    private Long idprograma;
+    @JoinColumn(name = "idrol", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Programas idprograma;
-    @JoinColumn(name = "idtipoprofesion", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Tipoprofesion idtipoprofesion;
-
+    private Rol idrol;
     public Responsable() {
     }
 

@@ -72,8 +72,8 @@ public class Programas implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
-    private List<Ahorroporprograma> ahorroporprogramaList;
+   /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
+    private List<Ahorroporprograma> ahorroporprogramaList;*/
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
     private List<Responsable> responsableList;
     //@OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")

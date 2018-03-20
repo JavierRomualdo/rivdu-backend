@@ -5,12 +5,12 @@
  */
 package com.rivdu.controlador;
 
-import com.rivdu.entidades.Estadocliente;
+import com.rivdu.entidades.Centrocostos;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.EstadoClienteServicio;
-import com.rivdu.util.RivduUtil;
+import com.rivdu.servicio.CentroCostoServicio;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -28,23 +28,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author PROPIETARIO
+ * @author LUIS ORTIZ
  */
 @RestController
-@RequestMapping("estadocivil")
-public class EstadoControlador {
-
-    private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
+@RequestMapping("centrocosto")
+public class CentroCostosControlador {
+    
+      private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private EstadoClienteServicio estadoclienteservicio;
-
+    private CentroCostoServicio centrocostoservicio;
+    
     @GetMapping("listar")
     public ResponseEntity show() throws GeneralException {
         Respuesta resp = new Respuesta();
-        List<Estadocliente> lista;
+        List<Centrocostos> lista;
         try {
-            lista = estadoclienteservicio.listar();
+            lista = centrocostoservicio.listar();
             if (lista != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje("");
@@ -57,17 +57,18 @@ public class EstadoControlador {
             loggerControlador.error(e.getMessage());
             throw e;
         }
-    }
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody Estadocliente entidad) throws GeneralException {
+    };
+    
+        @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity crear(HttpServletRequest request, @RequestBody Centrocostos entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Estadocliente guardado;
+                Centrocostos guardado;
                 if (entidad.getId() != null) {
-                    guardado = estadoclienteservicio.actualizar(entidad);
+                    guardado = centrocostoservicio.actualizar(entidad);
                 } else {
-                    guardado = estadoclienteservicio.crear(entidad);
+                    guardado = centrocostoservicio.crear(entidad);
                 }
                 if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
@@ -84,29 +85,29 @@ public class EstadoControlador {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-
-    @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.GET)
+    
+        @RequestMapping(value = "eliminarestadocosto/{id}", method = RequestMethod.GET)
     public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
         Respuesta resp = new Respuesta();
-        Estadocliente estadocliente=estadoclienteservicio.obtener(Estadocliente.class, id);
+        Centrocostos estadocliente=centrocostoservicio.obtener(Centrocostos.class,id);
         if (estadocliente.isEstado()) {
             estadocliente.setEstado(Boolean.FALSE);
         }else{
             estadocliente.setEstado(Boolean.TRUE);
         }
-        estadoclienteservicio.actualizar(estadocliente); 
+        centrocostoservicio.actualizar(estadocliente); 
         resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
         resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
         resp.setExtraInfo(id);
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "obtener", method = RequestMethod.POST)
+        @RequestMapping(value = "obtener", method = RequestMethod.POST)
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
-            Estadocliente unidad = estadoclienteservicio.obtener(Estadocliente.class, id);
+            Centrocostos unidad = centrocostoservicio.obtener(Centrocostos.class, id);
             if (unidad != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
