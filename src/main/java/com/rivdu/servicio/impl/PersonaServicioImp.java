@@ -86,10 +86,9 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
 
     @Override
     public Persona insertar(Persona entidad) throws GeneralException {
-        
         verificarPersonaRepetidad(entidad);
         entidad.setEstado(true);
-         List<Personarol> personaRoles = entidad.getPersonarolList();
+        List<Personarol> personaRoles = entidad.getPersonarolList();
         entidad.setPersonarolList(null);
         entidad = ingenieroDao.insertar(entidad);
         if(personaRoles != null){

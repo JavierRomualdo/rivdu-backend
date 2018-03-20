@@ -4,12 +4,11 @@
  * and open the template in the editor.
  */
 package com.rivdu.entidades;
+
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,47 +20,39 @@ import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "responsable")
+@Table(name = "captador")
 @NamedQueries({
-    @NamedQuery(name = "Responsable.findAll", query = "SELECT r FROM Responsable r")})
-public class Responsable implements Serializable {
+    @NamedQuery(name = "Captador.findAll", query = "SELECT c FROM Captador c")})
+public class Captador implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "id")
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "codigocip")
-    private int codigocip;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "estado")
     private boolean estado;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "comision")
+    private Double comision;
+    @JoinColumn(name = "idcompra", referencedColumnName = "id")
+    @ManyToOne
+    private Compra idcompra;
     @JoinColumn(name = "idpersona", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Persona idpersona;
-    @Column(name = "idprograma")
-    private Long idprograma;
-    @JoinColumn(name = "idrol", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Rol idrol;
-    public Responsable() {
+
+    public Captador() {
     }
 
-    public Responsable(Long id) {
+    public Captador(Long id) {
         this.id = id;
-    }
-
-    public Responsable(Long id, int codigocip, boolean estado) {
-        this.id = id;
-        this.codigocip = codigocip;
-        this.estado = estado;
     }
 
     @Override
@@ -73,16 +64,17 @@ public class Responsable implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Responsable)) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Captador)) {
             return false;
         }
-        Responsable other = (Responsable) object;
+        Captador other = (Captador) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Responsable[ id=" + id + " ]";
+        return "com.rivdu.entidades.Captador[ id=" + id + " ]";
     }
     
 }

@@ -4,12 +4,11 @@
  * and open the template in the editor.
  */
 package com.rivdu.entidades;
+
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,47 +20,38 @@ import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "responsable")
+@Table(name = "predioservicio")
 @NamedQueries({
-    @NamedQuery(name = "Responsable.findAll", query = "SELECT r FROM Responsable r")})
-public class Responsable implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "codigocip")
-    private int codigocip;
+    @NamedQuery(name = "Predioservicio.findAll", query = "SELECT p FROM Predioservicio p")})
+public class Predioservicio implements Serializable {
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @JoinColumn(name = "idpersona", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Persona idpersona;
-    @Column(name = "idprograma")
-    private Long idprograma;
-    @JoinColumn(name = "idrol", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Rol idrol;
-    public Responsable() {
+    
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id")
+    private Long id;
+    @JoinColumn(name = "idpredio", referencedColumnName = "id")
+    @ManyToOne
+    private Predio idpredio;
+    @JoinColumn(name = "idservicio", referencedColumnName = "id")
+    @ManyToOne
+    private Servicios idservicio;
+
+    public Predioservicio() {
     }
 
-    public Responsable(Long id) {
+    public Predioservicio(Long id) {
         this.id = id;
-    }
-
-    public Responsable(Long id, int codigocip, boolean estado) {
-        this.id = id;
-        this.codigocip = codigocip;
-        this.estado = estado;
     }
 
     @Override
@@ -73,16 +63,17 @@ public class Responsable implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Responsable)) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Predioservicio)) {
             return false;
         }
-        Responsable other = (Responsable) object;
+        Predioservicio other = (Predioservicio) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Responsable[ id=" + id + " ]";
+        return "com.rivdu.entidades.Predioservicio[ id=" + id + " ]";
     }
     
 }
