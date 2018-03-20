@@ -117,5 +117,4 @@ public class Persona implements Serializable {
     public String toString() {
         return "com.rivdu.entidades.Persona[ id=" + id + " ]";
     }
-
 }

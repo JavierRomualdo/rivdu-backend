@@ -6,59 +6,55 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "estadocliente")
+@Table(name = "personacompra")
 @NamedQueries({
-    @NamedQuery(name = "Estadocliente.findAll", query = "SELECT e FROM Estadocliente e")})
-public class Estadocliente implements Serializable {
-    
+    @NamedQuery(name = "Personacompra.findAll", query = "SELECT p FROM Personacompra p")})
+public class Personacompra implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "id")
     private Long id;
+    @JoinColumn(name = "idcompra", referencedColumnName = "id")
+    @ManyToOne
+    private Compra idcompra;
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "nombre")
-    private String nombre;
+    @Column(name = "idpersona")
+    private Long idpersona;
+    @JoinColumn(name = "idrelacion", referencedColumnName = "id")
+    @ManyToOne
+    private Relacion idrelacion;
+    @JoinColumn(name = "idestadocliente", referencedColumnName = "id")
+    @ManyToOne
+    private Estadocliente idestadocliente;
 
-    public Estadocliente() {
+    public Personacompra() {
     }
 
-    public Estadocliente(Long id) {
+    public Personacompra(Long id) {
         this.id = id;
-    }
-
-    public Estadocliente(Long id, boolean estado, String nombre) {
-        this.id = id;
-        this.estado = estado;
-        this.nombre = nombre;
     }
 
     @Override
@@ -70,24 +66,16 @@ public class Estadocliente implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Estadocliente)) {
+        if (!(object instanceof Personacompra)) {
             return false;
         }
-        Estadocliente other = (Estadocliente) object;
+        Personacompra other = (Personacompra) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Estadocliente[ id=" + id + " ]";
+        return "com.rivdu.entidades.Personacompra[ id=" + id + " ]";
     }
-
-//    public List<Personacompra> getPersonacompraList() {
-//        return personacompraList;
-//    }
-//
-//    public void setPersonacompraList(List<Personacompra> personacompraList) {
-//        this.personacompraList = personacompraList;
-//    }
     
 }
