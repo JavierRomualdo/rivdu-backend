@@ -28,12 +28,6 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Personacompra.findAll", query = "SELECT p FROM Personacompra p")})
 public class Personacompra implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -43,9 +37,12 @@ public class Personacompra implements Serializable {
     @JoinColumn(name = "idcompra", referencedColumnName = "id")
     @ManyToOne
     private Compra idcompra;
-    @JoinColumn(name = "idpersona", referencedColumnName = "id")
-    @ManyToOne
-    private Persona idpersona;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
+    @Column(name = "idpersona")
+    private Long idpersona;
     @JoinColumn(name = "idrelacion", referencedColumnName = "id")
     @ManyToOne
     private Relacion idrelacion;
@@ -69,7 +66,6 @@ public class Personacompra implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Personacompra)) {
             return false;
         }

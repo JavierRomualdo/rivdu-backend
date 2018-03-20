@@ -31,9 +31,6 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Relacion.findAll", query = "SELECT r FROM Relacion r")})
 public class Relacion implements Serializable {
-
-    @OneToMany(mappedBy = "idrelacion")
-    private List<Personacompra> personacompraList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

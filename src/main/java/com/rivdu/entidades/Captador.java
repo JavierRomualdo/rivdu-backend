@@ -28,18 +28,16 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Captador.findAll", query = "SELECT c FROM Captador c")})
 public class Captador implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id")
     private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "comision")
     private Double comision;
