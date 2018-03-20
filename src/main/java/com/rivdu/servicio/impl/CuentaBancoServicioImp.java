@@ -12,6 +12,9 @@ import com.rivdu.servicio.CuentaBancoServicio;
 import com.rivdu.util.Criterio;
 import java.util.List;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CuentaBancoServicioImp extends GenericoServicioImpl<Cuentabanco, Long> implements CuentaBancoServicio{
 
+     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
     
     @Autowired
     private SessionFactory sessionFactory;
@@ -49,8 +53,22 @@ public class CuentaBancoServicioImp extends GenericoServicioImpl<Cuentabanco, Lo
 
     @Override
     public Cuentabanco crear(Cuentabanco entidad) {
+        VerificarCuentaRepetidad(entidad);
          entidad.setEstado(true);
         return cuentabancodao.insertar(entidad);
+    }
+
+    private void VerificarCuentaRepetidad(Cuentabanco entidad) {
+       Criterio filtro;
+        filtro = Criterio.forClass(Cuentabanco.class);
+        if (entidad.getId()!=null) {
+            filtro.add(Restrictions.ne("id", entidad.getId()));
+        }
+        filtro.add(Restrictions.eq("numerocuenta", entidad.getNumerocuenta()));
+        Cuentabanco u = cuentabancodao.obtenerPorCriteriaSinProyecciones(filtro);
+        if (u!=null) {
+            throw new GeneralException("Ya existe la cuenta", "Guardar retorno nulo", loggerServicio);
+        } 
     }
     
     
