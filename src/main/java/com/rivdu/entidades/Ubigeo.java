@@ -31,6 +31,7 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Ubigeo.findAll", query = "SELECT u FROM Ubigeo u")})
 public class Ubigeo implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,5 +99,7 @@ public class Ubigeo implements Serializable {
     @Override
     public String toString() {
         return "com.rivdu.entidades.Ubigeo[ id=" + id + " ]";
-    }    
-}
+    }
+
+ }    
+
