@@ -33,19 +33,6 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Compra.findAll", query = "SELECT c FROM Compra c")})
 public class Compra implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
-    @OneToMany(mappedBy = "idcompra")
-    private List<Captador> captadorList;
-    @OneToMany(mappedBy = "idcompra")
-    private List<Personacompra> personacompraList;
-
-    @OneToMany(mappedBy = "idCompra")
-    private List<Predio> predioList;
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -58,6 +45,16 @@ public class Compra implements Serializable {
     @JoinColumn(name = "idpredio", referencedColumnName = "id")
     @ManyToOne
     private Predio idpredio;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
+    @OneToMany(mappedBy = "idcompra")
+    private List<Captador> captadorList;
+    @OneToMany(mappedBy = "idcompra")
+    private List<Personacompra> personacompraList;
+    @OneToMany(mappedBy = "idCompra")
+    private List<Predio> predioList;
 //    @OneToMany(mappedBy = "idcompra")
 //    private List<Captador> captadorList;
 //    @OneToMany(mappedBy = "idcompra")
