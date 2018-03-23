@@ -28,17 +28,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/compra")
 public class CompraControlador {
+
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
     @Autowired
     private CompraServicio compraservicio;
-    
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity crear(HttpServletRequest request, @RequestBody SaveCompraDTO entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
-        if(entidad != null){
+        if (entidad != null) {
             try {
                 long idCompra = compraservicio.insertar(entidad);
-                if(idCompra > 0){
+                if (idCompra > 0) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                     resp.setExtraInfo(idCompra);
@@ -51,5 +52,25 @@ public class CompraControlador {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-    
+
+    @RequestMapping(value = "guardar", method = RequestMethod.POST)
+    public ResponseEntity guardar(HttpServletRequest request, @RequestBody SaveCompraDTO entidad) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        if (entidad != null) {
+            try {
+                Long id = compraservicio.insertar(entidad);
+                if (id > 0) {
+                    resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                    resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                    resp.setExtraInfo(id);
+                }
+            } catch (Exception e) {
+                throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
+            }
+        } else {
+            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
+        }
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
+
 }

@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,8 +37,8 @@ import lombok.Data;
 public class Compra implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id")
     private Long id;
     @Column(name = "fecha")
@@ -52,9 +54,7 @@ public class Compra implements Serializable {
     @OneToMany(mappedBy = "idcompra")
     private List<Captador> captadorList;
     @OneToMany(mappedBy = "idcompra")
-    private List<Personacompra> personacompraList;
-    @OneToMany(mappedBy = "idCompra")
-    private List<Predio> predioList;
+    private List<Personacompra> personacosmpraList;
 //    @OneToMany(mappedBy = "idcompra")
 //    private List<Captador> captadorList;
 //    @OneToMany(mappedBy = "idcompra")

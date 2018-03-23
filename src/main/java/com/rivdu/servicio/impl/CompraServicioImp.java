@@ -38,7 +38,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     @Autowired
     private GenericoDao<Colindante, Long> colindanteDao;
     @Autowired
-    private GenericoDao<Servicios, Long> servicioDao;
+    private GenericoDao<Predioservicio, Long> predioservicioDao;
     @Autowired
     private GenericoDao<Captador, Long> captadorDao;
     @Autowired
@@ -55,39 +55,31 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     @Override
-    public long insertar(SaveCompraDTO entidad) throws GeneralException {
-        
+   public long insertar(SaveCompraDTO entidad) throws GeneralException {
         Compra compra = entidad.getCompra();
         Predio predio = entidad.getPredio();
         Colindante colindante = entidad.getColindante();
         Servicios[] servicios = entidad.getServicios();
-        Predioservicio[] predioservicio = new Predioservicio[servicios.length];
         Captador captador = entidad.getCaptador();
         Personacompra [] personacompra = entidad.getPersonacompra();
-        
-        predio.setEstado(true);
-        colindante.setEstado(true);
-        
-        captador.setEstado(true);
-        for (int i = 0; i < personacompra.length; i++) {
-            personacompra[i].setEstado(true);
-            personacompraDao.insertar(personacompra[i]);
+        Personacompra [] personacompra2 = entidad.getPersonacompra2();
+        predio = guardarPredio(predio);
+        if(predio!=null){
+            compra = guardarcompra(compra, predio);
+        } else {
+           throw new GeneralException("No existe predio", "No existe predio", loggerServicio);
         }
-        
-        compraDao.insertar(compra);
-        predioDao.insertar(predio);
-        colindanteDao.insertar(colindante);
-        
-        for (int i = 0; i < servicios.length; i++) {
-            servicios[i].setEstado(true);
-            servicioDao.insertar(servicios[i]);
-            predioservicio[i] = new Predioservicio();
-            predioservicio[i].setIdpredio(predio);
-            predioservicio[i].setIdservicio(servicios[i]);
+        if (servicios!=null && servicios.length>0) {
+           guardarPredioServicio(servicios, predio); 
         }
-        captadorDao.insertar(captador);
-        
-        
+        if(personacompra!=null && personacompra.length>0){
+           guardarPersonaCompra(personacompra, compra); 
+        }
+        if(personacompra2!=null && personacompra2.length>0){
+            guardarPersonaCompra(personacompra2, compra);
+        }
+        guardarCaptador(captador, compra);
+        guardarColindante(colindante, compra, predio);
         return compra.getId();
     }
 
@@ -99,5 +91,57 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     @Override
     public Compra obtener(Long id) throws GeneralException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Predio guardarPredio(Predio predio) {
+        if(predio!=null){
+            predio.setEstado(true);
+            return predioDao.insertar(predio);
+        } else{
+            return null;
+        }
+    }
+
+    private Compra guardarcompra(Compra compra, Predio predio) {
+        if(compra==null){
+            compra = new Compra();
+        }
+        compra.setIdpredio(predio);
+        compra.setEstado(true);
+        return compraDao.insertar(compra);
+    }
+
+    private void guardarPredioServicio(Servicios[] servicios, Predio predio) {
+        for (Servicios servicio : servicios) {
+            Predioservicio ps = new Predioservicio();
+            ps.setEstado(true);
+            ps.setIdpredio(predio);
+            ps.setIdservicio(servicio);
+            predioservicioDao.insertar(ps);
+        }
+    }
+
+    private void guardarPersonaCompra(Personacompra[] personacompra, Compra compra) {
+        for (Personacompra personacompra1 : personacompra) {
+            personacompra1.setIdcompra(compra.getId());
+            personacompra1.setEstado(true);
+            personacompraDao.insertar(personacompra1);
+        }
+    }
+
+    private void guardarCaptador(Captador captador, Compra compra) {
+        if(captador!=null){
+            captador.setEstado(true);
+            captador.setIdcompra(compra);
+            captadorDao.insertar(captador);
+        }
+    }
+
+    private void guardarColindante(Colindante colindante, Compra compra, Predio predio) {
+        if(colindante!=null){
+            colindante.setIdpredio(predio);
+            colindante.setEstado(true);
+            colindanteDao.insertar(colindante);
+        }
     }
 }
