@@ -38,7 +38,7 @@ public class Personarol implements Serializable {
     private boolean estado;
     @JoinColumn(name = "idrol", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Rol idrol;
+    private     Rol idrol;
     @JoinColumn(name = "idpersona", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Persona idpersona;
