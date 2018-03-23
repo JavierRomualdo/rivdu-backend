@@ -54,7 +54,7 @@ public class EspecificacionesServicioImp extends GenericoServicioImpl<Especifica
 
     @Override
     public Especificaciones insertar(Especificaciones entidad) {
-                entidad.setEstado(true);
+        entidad.setEstado(true);
         return especificacionesDao.actualizar(entidad);
     }
 }

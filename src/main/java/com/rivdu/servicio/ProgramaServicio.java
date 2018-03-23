@@ -6,8 +6,8 @@
 package com.rivdu.servicio;
 
 import com.rivdu.entidades.Programas;
-import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
+import java.util.List;
 
 /**
  *
@@ -16,5 +16,7 @@ import com.rivdu.excepcion.GeneralException;
 public interface ProgramaServicio extends GenericoServicio<Programas, Long>{
     
     public Programas crear(Programas entidad) throws GeneralException;
+    public List<Programas> listar() throws GeneralException;
+    
     
 }
