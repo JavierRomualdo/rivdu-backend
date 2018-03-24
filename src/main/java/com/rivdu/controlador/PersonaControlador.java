@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.rivdu.servicio.PersonaServicio;
+import org.springframework.web.bind.annotation.GetMapping;
 /**
  *
  * @author dev-out-03
@@ -154,4 +155,25 @@ public class PersonaControlador {
             throw e;
         }
     }//Fin del Metodo obtener:traerparaedicion
+    
+    
+    @RequestMapping(value="validarDni", method = RequestMethod.POST)
+    public ResponseEntity show(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            String dni = RivduUtil.obtenerFiltroComoString(parametros, "dni");
+            Persona e = ingenieroServicio.validarDni(dni);
+            if (e!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje("");
+                resp.setExtraInfo(e);
+            }else{
+                throw new GeneralException("La Persona no se encuentra Registrada en el Sistema", "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
 }
