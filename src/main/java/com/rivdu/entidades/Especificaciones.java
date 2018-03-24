@@ -7,7 +7,6 @@ package com.rivdu.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +32,7 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Especificaciones.findAll", query = "SELECT e FROM Especificaciones e")})
 public class Especificaciones implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,9 +60,7 @@ public class Especificaciones implements Serializable {
     @NotNull
     @Column(name = "valorm2")
     private BigDecimal valorm2;
-    /*@JoinColumn(name = "idprograma", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Programas idprograma; */
+    
     @JoinColumn(name = "idestructura", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Estructura idestructura;
@@ -102,5 +100,4 @@ public class Especificaciones implements Serializable {
     public String toString() {
         return "com.rivdu.entidades.Especificaciones[ id=" + id + " ]";
     }
-
 }

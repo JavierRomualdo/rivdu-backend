@@ -34,15 +34,15 @@ public class Personacompra implements Serializable {
     @NotNull
     @Column(name = "id")
     private Long id;
-    @JoinColumn(name = "idcompra", referencedColumnName = "id")
-    @ManyToOne
-    private Compra idcompra;
+    @Column(name = "idcompra")
+    private Long idcompra;
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @Column(name = "idpersona")
-    private Long idpersona;
+    @JoinColumn(name = "idpersona", referencedColumnName = "id")
+    @ManyToOne
+    private Persona idpersona;
     @JoinColumn(name = "idrelacion", referencedColumnName = "id")
     @ManyToOne
     private Relacion idrelacion;
