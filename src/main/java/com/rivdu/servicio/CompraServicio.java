@@ -5,6 +5,7 @@
  */
 package com.rivdu.servicio;
 
+import com.rivdu.dto.CompraDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Compra;
 import com.rivdu.excepcion.GeneralException;
@@ -16,8 +17,7 @@ import java.util.List;
  */
 public interface CompraServicio extends GenericoServicio<Compra, Long> {
     
-    public List<Compra> listar() throws GeneralException;
-//    public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String dni, String nombre);
+    public List<CompraDTO> listar() throws GeneralException;
     public long insertar(SaveCompraDTO entidad) throws GeneralException;
     public Compra actualizar(Compra producto) throws GeneralException;
     public Compra obtener(Long id) throws GeneralException;
