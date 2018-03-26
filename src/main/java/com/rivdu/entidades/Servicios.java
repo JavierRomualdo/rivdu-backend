@@ -10,8 +10,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -23,43 +21,48 @@ import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "estadocliente")
+@Table(name = "servicios")
 @NamedQueries({
-    @NamedQuery(name = "Estadocliente.findAll", query = "SELECT e FROM Estadocliente e")})
-public class Estadocliente implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
+    @NamedQuery(name = "Servicios.findAll", query = "SELECT s FROM Servicios s")})
+public class Servicios implements Serializable {
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
+
+    private static final long serialVersionUID = 1L;
+    @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Column(name = "id")
+    private Long id;
+    @Size(max = 255)
     @Column(name = "nombre")
     private String nombre;
+//    @OneToMany(mappedBy = "idservicio")
+//    private List<Predioservicio> predioservicioList;
 
-    public Estadocliente() {
+    public Servicios() {
     }
 
-    public Estadocliente(Long id) {
+    public Servicios(Long id) {
         this.id = id;
     }
 
-    public Estadocliente(Long id, boolean estado, String nombre) {
-        this.id = id;
-        this.estado = estado;
-        this.nombre = nombre;
-    }
+    
+
+//    public List<Predioservicio> getPredioservicioList() {
+//        return predioservicioList;
+//    }
+//
+//    public void setPredioservicioList(List<Predioservicio> predioservicioList) {
+//        this.predioservicioList = predioservicioList;
+//    }
 
     @Override
     public int hashCode() {
@@ -70,24 +73,17 @@ public class Estadocliente implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Estadocliente)) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Servicios)) {
             return false;
         }
-        Estadocliente other = (Estadocliente) object;
+        Servicios other = (Servicios) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Estadocliente[ id=" + id + " ]";
+        return "com.rivdu.entidades.Servicios[ id=" + id + " ]";
     }
-
-//    public List<Personacompra> getPersonacompraList() {
-//        return personacompraList;
-//    }
-//
-//    public void setPersonacompraList(List<Personacompra> personacompraList) {
-//        this.personacompraList = personacompraList;
-//    }
     
 }

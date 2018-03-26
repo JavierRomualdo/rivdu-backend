@@ -9,55 +9,56 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author Javier Romualdo
  */
-@Data
 @Entity
-@Table(name = "tipoubigeo")
+@Table(name = "status")
 @NamedQueries({
-    @NamedQuery(name = "Tipoubigeo.findAll", query = "SELECT t FROM Tipoubigeo t")})
-public class Tipoubigeo implements Serializable {
+    @NamedQuery(name = "Status.findAll", query = "SELECT s FROM Status s")})
+public class Status implements Serializable {
+
+    @Column(name = "estado")
+    private Boolean estado;
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "id")
     private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
+    @Size(max = 0)
     @Column(name = "nombre")
     private String nombre;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idtipoubigeo")
-//    private List<Ubigeo> ubigeoList;
 
-    public Tipoubigeo() {
+    public Status() {
     }
 
-    public Tipoubigeo(Long id) {
+    public Status(Long id) {
         this.id = id;
     }
 
-    public Tipoubigeo(Long id, boolean estado, String nombre) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
-        this.estado = estado;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
@@ -70,15 +71,28 @@ public class Tipoubigeo implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Tipoubigeo)) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Status)) {
             return false;
         }
-        Tipoubigeo other = (Tipoubigeo) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        Status other = (Status) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Tipoubigeo[ id=" + id + " ]";
+        return "com.rivdu.entidades.Status[ id=" + id + " ]";
     }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+    
 }

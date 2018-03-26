@@ -6,7 +6,6 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,14 +23,19 @@ import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "especificaciones")
+@Table(name = "colindante")
 @NamedQueries({
-    @NamedQuery(name = "Especificaciones.findAll", query = "SELECT e FROM Especificaciones e")})
-public class Especificaciones implements Serializable {
+    @NamedQuery(name = "Colindante.findAll", query = "SELECT c FROM Colindante c")})
+public class Colindante implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -39,45 +43,42 @@ public class Especificaciones implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @Size(max = 100)
-    @Column(name = "especificaciones")
-    private String especificaciones;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "categoria")
-    private Character categoria;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "etapa")
-    private String etapa;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "valorm2")
-    private BigDecimal valorm2;
-    
-    @JoinColumn(name = "idestructura", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Estructura idestructura;
+    @Column(name = "area")
+    private Double area;
+    @Size(max = 30)
+    @Column(name = "frente1")
+    private String frente1;
+    @Size(max = 30)
+    @Column(name = "frente2")
+    private String frente2;
+    @Size(max = 30)
+    @Column(name = "derecha1")
+    private String derecha1;
+    @Size(max = 30)
+    @Column(name = "derecha2")
+    private String derecha2;
+    @Size(max = 30)
+    @Column(name = "izquierda1")
+    private String izquierda1;
+    @Size(max = 30)
+    @Column(name = "izquierda2")
+    private String izquierda2;
+    @Size(max = 30)
+    @Column(name = "fondo1")
+    private String fondo1;
+    @Size(max = 30)
+    @Column(name = "fondo2")
+    private String fondo2;
+    @JoinColumn(name = "idpredio", referencedColumnName = "id")
+    @ManyToOne
+    private Predio idpredio;
 
-    public Especificaciones() {
+    public Colindante() {
     }
 
-    public Especificaciones(Long id) {
+    public Colindante(Long id) {
         this.id = id;
-    }
-
-    public Especificaciones(Long id, boolean estado, Character estadoconstruccion, String etapa, BigDecimal valorm2) {
-        this.id = id;
-        this.estado = estado;
-        this.categoria = estadoconstruccion;
-        this.etapa = etapa;
-        this.valorm2 = valorm2;
     }
 
     @Override
@@ -89,15 +90,17 @@ public class Especificaciones implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Especificaciones)) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Colindante)) {
             return false;
         }
-        Especificaciones other = (Especificaciones) object;
+        Colindante other = (Colindante) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Especificaciones[ id=" + id + " ]";
+        return "com.rivdu.entidades.Colindante[ id=" + id + " ]";
     }
+    
 }
