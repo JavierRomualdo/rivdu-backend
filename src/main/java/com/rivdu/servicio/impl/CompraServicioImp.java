@@ -6,6 +6,7 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
+import com.rivdu.dto.CompraDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Captador;
 import com.rivdu.entidades.Colindante;
@@ -16,6 +17,8 @@ import com.rivdu.entidades.Predioservicio;
 import com.rivdu.entidades.Servicios;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.CompraServicio;
+import com.rivdu.util.Criterio;
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +53,24 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     @Override
-    public List<Compra> listar() throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<CompraDTO> listar() throws GeneralException {
+        List<CompraDTO> lc = new ArrayList<>();
+        Criterio filtro;
+        filtro=Criterio.forClass(Compra.class);
+        List<Compra> rpt = compraDao.buscarPorCriteriaSinProyecciones(filtro);
+        for (Compra rpt1 : rpt) {
+            CompraDTO c = new CompraDTO();
+            c.setId(rpt1.getId());
+            for (Personacompra personacosmpraList : rpt1.getPersonacosmpraList()) {
+                personacosmpraList.getIdpersona().setPersonarolList(null);
+                personacosmpraList.getIdpersona().setIdubigeo(null);
+                if(personacosmpraList.getIdrelacion()==null){
+                    c.setTitular(personacosmpraList.getIdpersona());
+                }
+            }
+            lc.add(c);
+        }
+        return lc;
     }
 
     @Override
@@ -143,5 +162,13 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
             colindante.setEstado(true);
             colindanteDao.insertar(colindante);
         }
+    }
+
+    private void limpiarCaptador(Captador captador) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void limpiarPersonacompra(Personacompra[] personacompra) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
