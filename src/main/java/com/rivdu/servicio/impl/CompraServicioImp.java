@@ -11,14 +11,17 @@ import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Captador;
 import com.rivdu.entidades.Colindante;
 import com.rivdu.entidades.Compra;
+import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Personacompra;
 import com.rivdu.entidades.Predio;
 import com.rivdu.entidades.Predioservicio;
 import com.rivdu.entidades.Servicios;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.CompraServicio;
+import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +66,6 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
             c.setId(rpt1.getId());
             for (Personacompra personacosmpraList : rpt1.getPersonacosmpraList()) {
                 personacosmpraList.getIdpersona().setPersonarolList(null);
-                personacosmpraList.getIdpersona().setIdubigeo(null);
                 if(personacosmpraList.getIdrelacion()==null){
                     c.setTitular(personacosmpraList.getIdpersona());
                 }
@@ -109,7 +111,8 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
 
     @Override
     public Compra obtener(Long id) throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Compra compra=obtener(Compra.class, id);
+        return compra;
     }
 
     private Predio guardarPredio(Predio predio) {
@@ -126,6 +129,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
             compra = new Compra();
         }
         compra.setIdpredio(predio);
+        compra.setFecha(new Date());
         compra.setEstado(true);
         return compraDao.insertar(compra);
     }
@@ -169,6 +173,11 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     private void limpiarPersonacompra(Personacompra[] personacompra) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String propietario, String correlativo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
