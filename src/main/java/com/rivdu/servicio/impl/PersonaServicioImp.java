@@ -118,6 +118,7 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
         Persona p=obtener(Persona.class, id);
         for(Personarol pr:p.getPersonarolList()){
             pr.setIdpersona(null);
+            
         }
         return p;
     }
@@ -141,5 +142,20 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
         if (u!=null) {
             throw new GeneralException("Ya existe Ingeniero  con igual D.N.I.", "Guardar retorno nulo", loggerServicio);
         }
+    }
+
+    @Override
+    public Persona validarDni(String dni) throws GeneralException {
+     
+        Criterio filtro;
+        filtro = Criterio.forClass(Persona.class);
+        filtro.add(Restrictions.eq("dni", dni));
+        Persona e = ingenieroDao.obtenerPorCriteriaSinProyecciones(filtro);
+        if (e!=null && !e.getPersonarolList().isEmpty()) {
+            for (Personarol personarolList : e.getPersonarolList()) {
+                personarolList.setIdpersona(null);
+           }
+        }
+        return e;
     }
 }
