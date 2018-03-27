@@ -168,8 +168,11 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         if (correlativo!= null && !correlativo.equals("")) {
             filtro.add(Restrictions.ilike("c.correlativo1",'%'+correlativo+'%'));
         }
+        busquedaPaginada.setTotalRegistros(compraDao.cantidadPorCriteria(filtro, "c.id"));
+        busquedaPaginada.calcularCantidadDePaginas();
+        busquedaPaginada.validarPaginaActual();
         filtro.setProjection(Projections.projectionList()
-                .add(Projections.distinct(Projections.property("p.id")))
+                .add(Projections.distinct(Projections.property("c.id")))
                 .add(Projections.property("c.id"), "id")
                 .add(Projections.property("p.nombre"), "nombre")
                 .add(Projections.property("p.apellido"), "apellido")
