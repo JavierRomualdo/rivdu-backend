@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -53,12 +54,8 @@ public class Compra implements Serializable {
     private boolean estado;
     @OneToMany(mappedBy = "idcompra")
     private List<Captador> captadorList;
-    @OneToMany(mappedBy = "idcompra")
-    private List<Personacompra> personacosmpraList;
-//    @OneToMany(mappedBy = "idcompra")
-//    private List<Captador> captadorList;
-//    @OneToMany(mappedBy = "idcompra")
-//    private List<Personacompra> personacompraList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
+    private List<Compraexpediente> compraexpedienteList;
 
     public Compra() {
     }
@@ -66,23 +63,7 @@ public class Compra implements Serializable {
     public Compra(Long id) {
         this.id = id;
     }
-    
-//    public List<Captador> getCaptadorList() {
-//        return captadorList;
-//    }
-//
-//    public void setCaptadorList(List<Captador> captadorList) {
-//        this.captadorList = captadorList;
-//    }
-//
-//    public List<Personacompra> getPersonacompraList() {
-//        return personacompraList;
-//    }
-//
-//    public void setPersonacompraList(List<Personacompra> personacompraList) {
-//        this.personacompraList = personacompraList;
-//    }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;
@@ -92,7 +73,6 @@ public class Compra implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Compra)) {
             return false;
         }

@@ -23,6 +23,9 @@ import com.rivdu.util.Criterio;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,27 +58,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         super(genericoHibernate);
     }
 
-    @Override
-    public List<CompraDTO> listar() throws GeneralException {
-        List<CompraDTO> lc = new ArrayList<>();
-        Criterio filtro;
-        filtro=Criterio.forClass(Compra.class);
-        List<Compra> rpt = compraDao.buscarPorCriteriaSinProyecciones(filtro);
-        for (Compra rpt1 : rpt) {
-            CompraDTO c = new CompraDTO();
-            c.setId(rpt1.getId());
-            for (Personacompra personacosmpraList : rpt1.getPersonacosmpraList()) {
-                personacosmpraList.getIdpersona().setPersonarolList(null);
-                if(personacosmpraList.getIdrelacion()==null){
-                    c.setTitular(personacosmpraList.getIdpersona());
-                }
-            }
-            lc.add(c);
-        }
-        return lc;
-    }
-
-    @Override
+   @Override
    public long insertar(SaveCompraDTO entidad) throws GeneralException {
         Compra compra = entidad.getCompra();
         Predio predio = entidad.getPredio();
@@ -146,7 +129,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
 
     private void guardarPersonaCompra(Personacompra[] personacompra, Compra compra) {
         for (Personacompra personacompra1 : personacompra) {
-            personacompra1.setIdcompra(compra.getId());
+            personacompra1.setIdcompra(compra);
             personacompra1.setEstado(true);
             personacompraDao.insertar(personacompra1);
         }
@@ -168,16 +151,35 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         }
     }
 
-    private void limpiarCaptador(Captador captador) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void limpiarPersonacompra(Personacompra[] personacompra) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
-    public BusquedaPaginada busquedaPaginada(Persona entidadBuscar, BusquedaPaginada busquedaPaginada, String propietario, String correlativo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public BusquedaPaginada busquedaPaginada(Compra entidadBuscar, BusquedaPaginada busquedaPaginada, String clientenombre, String clientedoc, String correlativo) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Personacompra.class);
+        filtro.createAlias("idpersona", "p");
+        filtro.createAlias("idcompra", "c");
+        filtro.add(Restrictions.eq("c.estado", true));
+        filtro.add(Restrictions.isNull("idrelacion"));
+        if (clientenombre!= null && !clientenombre.equals("")) {
+            filtro.add(Restrictions.ilike("p.nombre", '%'+clientenombre+'%'));
+        }
+        if (clientedoc!= null && !clientedoc.equals("")) {
+            filtro.add(Restrictions.ilike("p.dni", '%'+clientedoc+'%'));
+        }
+        if (correlativo!= null && !correlativo.equals("")) {
+            filtro.add(Restrictions.ilike("c.correlativo1",'%'+correlativo+'%'));
+        }
+        filtro.setProjection(Projections.projectionList()
+                .add(Projections.distinct(Projections.property("p.id")))
+                .add(Projections.property("c.id"), "id")
+                .add(Projections.property("p.nombre"), "nombre")
+                .add(Projections.property("p.apellido"), "apellido")
+                .add(Projections.property("p.dni"), "dni")
+                .add(Projections.property("p.nombre"), "persona")
+                .add(Projections.property("c.fecha"), "fecharegistro"));
+        filtro.calcularDatosParaPaginacion(busquedaPaginada);
+        filtro.addOrder(Order.asc("c.id"));
+        busquedaPaginada.setRegistros(compraDao.proyeccionPorCriteria(filtro, CompraDTO.class));
+        return busquedaPaginada;
     }
+
 }

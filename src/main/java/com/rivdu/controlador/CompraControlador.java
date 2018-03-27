@@ -8,7 +8,6 @@ package com.rivdu.controlador;
 import com.rivdu.dto.CompraDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Compra;
-import com.rivdu.entidades.Persona;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.CompraServicio;
 import com.rivdu.util.BusquedaPaginada;
@@ -81,41 +80,21 @@ public class CompraControlador {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "listar", method = RequestMethod.GET)
-    public ResponseEntity listar(HttpServletRequest request) throws GeneralException {
-        Respuesta rsp = new Respuesta();
-        List<CompraDTO> lista;
-        try {
-            lista = compraservicio.listar();
-            if (lista != null) {
-                rsp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                rsp.setOperacionMensaje(" ");
-                rsp.setExtraInfo(lista);
-            } else {
-                throw new GeneralException("Lista no disponible", "No hay datos", loggerControlador);
-            }
-            return new ResponseEntity<>(rsp, HttpStatus.OK);
-        } catch (Exception e) {
-            loggerControlador.error(e.getMessage());
-            throw e;
-        }
-    };
-
     @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
     public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
                                                              @PathVariable("cantidadPorPagina") Long cantidadPorPagina, 
                                                              @RequestBody Map<String, Object> parametros) throws GeneralException{
         try {
-            String propietario;
-            String correlativo;
+            String clientenombre,clientedoc,correlativo;
             BusquedaPaginada busquedaPaginada = new BusquedaPaginada();
             busquedaPaginada.setBuscar(parametros);
-            Persona entidadBuscar = new Persona();
-            propietario = busquedaPaginada.obtenerFiltroComoString("propietario");
+            Compra entidadBuscar = new Compra();
+            clientenombre = busquedaPaginada.obtenerFiltroComoString("clientenombre");
+            clientedoc = busquedaPaginada.obtenerFiltroComoString("clientedoc");
             correlativo = busquedaPaginada.obtenerFiltroComoString("correlativo");
             busquedaPaginada.setPaginaActual(pagina);
             busquedaPaginada.setCantidadPorPagina(cantidadPorPagina);
-            busquedaPaginada = compraservicio.busquedaPaginada(entidadBuscar, busquedaPaginada, propietario, correlativo);
+            busquedaPaginada = compraservicio.busquedaPaginada(entidadBuscar, busquedaPaginada, clientenombre,clientedoc,correlativo);
             return new ResponseEntity<>(busquedaPaginada, HttpStatus.OK);
         } catch (Exception e) {
             loggerControlador.error(e.getMessage());
