@@ -29,7 +29,6 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Tipoubigeo.findAll", query = "SELECT t FROM Tipoubigeo t")})
 public class Tipoubigeo implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +44,6 @@ public class Tipoubigeo implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "nombre")
     private String nombre;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idtipoubigeo")
-//    private List<Ubigeo> ubigeoList;
 
     public Tipoubigeo() {
     }
