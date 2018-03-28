@@ -5,7 +5,7 @@
  */
 package com.rivdu.servicio.impl;
 
-import com.rivdu.dao.GenericoDao;
+
 import com.rivdu.entidades.Personarol;
 import com.rivdu.entidades.Programas;
 import com.rivdu.entidades.Responsable;
@@ -13,9 +13,15 @@ import com.rivdu.entidades.Programaespecificacion;
 import com.rivdu.entidades.ProgramaespecificacionPK;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.ProgramasServicio;
+import com.rivdu.dao.GenericoDao;
+import com.rivdu.entidades.Especificaciones;
 import com.rivdu.util.Criterio;
 import java.util.List;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ProgramasServicioImp extends GenericoServicioImpl<Programas, Long> implements ProgramasServicio {
-
+    
+    private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
     @Autowired
     private GenericoDao<Programas, Long> programasDao;
 
@@ -35,6 +42,8 @@ public class ProgramasServicioImp extends GenericoServicioImpl<Programas, Long> 
     private GenericoDao<Responsable, Long> responsableDao;
     @Autowired
     private GenericoDao<Programaespecificacion, Long> programaespecificacionDAO;
+    @Autowired
+    private GenericoDao<Especificaciones, Long> especificacionesDAO;
 
     public ProgramasServicioImp(GenericoDao<Programas, Long> genericoHibernate) {
         super(genericoHibernate);
@@ -59,12 +68,9 @@ public class ProgramasServicioImp extends GenericoServicioImpl<Programas, Long> 
             es.setEstado(true);
             es.setProgramaespecificacionPK(pk);
             programaespecificacionDAO.insertar(es);
-
         }
-
         return entidad;
     }
-
     @Override
     public List<Programas> listar() throws GeneralException {
         Criterio filtro;
@@ -78,27 +84,15 @@ public class ProgramasServicioImp extends GenericoServicioImpl<Programas, Long> 
         return programasDao.proyeccionPorCriteria(filtro, Programas.class);
     }
 
-
     @Override
     public Programas actualizar(Programas entidad) throws GeneralException {
-        List<Responsable> responsables = entidad.getResponsableList();
-        List<Programaespecificacion> proespecificciones=entidad.getProgramaespecificacionesList();
-        if(responsables != null){
-            responsables.stream().forEach((pm) -> {
-                responsableDao.actualizar(pm);
-            });
-        }
-        if(proespecificciones != null){
-            proespecificciones.stream().forEach((pe) -> {
-                programaespecificacionDAO.actualizar(pe);
-            });
-        }
-        
         return programasDao.actualizar(entidad);
     }
     @Override
     public Programas obtener(Long id) throws GeneralException {
      Programas p=obtener(Programas.class, id);
+     List<Responsable> responsables = obtenerResposablesActivos(id);
+     p.setResponsableList(responsables);
         for(Responsable re:p.getResponsableList()){
             List<Personarol> pr = re.getIdpersona().getPersonarolList();
             for (int i = 0; i < pr.size(); i++) {
@@ -111,4 +105,13 @@ public class ProgramasServicioImp extends GenericoServicioImpl<Programas, Long> 
         return p;   
     }
 
+    private List<Responsable> obtenerResposablesActivos(Long id) {
+       //To change body of generated methods, choose Tools | Templates.ie
+      Criterio filtro;
+      filtro = Criterio.forClass(Responsable.class);
+      filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+      filtro.add(Restrictions.eq("idprograma", id));
+      List<Responsable> responsables=  responsableDao.listarPorCriteriaProyeccion(filtro);
+      return responsables;
+    }
 }
