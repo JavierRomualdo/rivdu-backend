@@ -67,7 +67,6 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
         busquedaPaginada.setTotalRegistros(ingenieroDao.cantidadPorCriteria(filtro, "id"));
         busquedaPaginada.calcularCantidadDePaginas();
         busquedaPaginada.validarPaginaActual();
-        
         filtro.setProjection(Projections.projectionList()
                 .add(Projections.distinct(Projections.property("p.id")))
                 .add(Projections.property("p.id"), "id")
