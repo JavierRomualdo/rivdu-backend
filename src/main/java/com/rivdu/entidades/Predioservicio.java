@@ -6,31 +6,35 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "estadocliente")
+@Table(name = "predioservicio")
 @NamedQueries({
-    @NamedQuery(name = "Estadocliente.findAll", query = "SELECT e FROM Estadocliente e")})
-public class Estadocliente implements Serializable {
+    @NamedQuery(name = "Predioservicio.findAll", query = "SELECT p FROM Predioservicio p")})
+public class Predioservicio implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
     
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,27 +42,18 @@ public class Estadocliente implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "nombre")
-    private String nombre;
+    @JoinColumn(name = "idpredio", referencedColumnName = "id")
+    @ManyToOne
+    private Predio idpredio;
+    @JoinColumn(name = "idservicio", referencedColumnName = "id")
+    @ManyToOne
+    private Servicios idservicio;
 
-    public Estadocliente() {
+    public Predioservicio() {
     }
 
-    public Estadocliente(Long id) {
+    public Predioservicio(Long id) {
         this.id = id;
-    }
-
-    public Estadocliente(Long id, boolean estado, String nombre) {
-        this.id = id;
-        this.estado = estado;
-        this.nombre = nombre;
     }
 
     @Override
@@ -70,24 +65,17 @@ public class Estadocliente implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Estadocliente)) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Predioservicio)) {
             return false;
         }
-        Estadocliente other = (Estadocliente) object;
+        Predioservicio other = (Predioservicio) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Estadocliente[ id=" + id + " ]";
+        return "com.rivdu.entidades.Predioservicio[ id=" + id + " ]";
     }
-
-//    public List<Personacompra> getPersonacompraList() {
-//        return personacompraList;
-//    }
-//
-//    public void setPersonacompraList(List<Personacompra> personacompraList) {
-//        this.personacompraList = personacompraList;
-//    }
     
 }

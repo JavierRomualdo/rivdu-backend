@@ -6,16 +6,16 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -23,62 +23,54 @@ import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "menu")
+@Table(name = "predio")
 @NamedQueries({
-    @NamedQuery(name = "Menu.findAll", query = "SELECT m FROM Menu m")})
-public class Menu implements Serializable {
+    @NamedQuery(name = "Predio.findAll", query = "SELECT p FROM Predio p")})
+public class Predio implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado")
+    private boolean estado;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "estado")
-    private boolean estado;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "icono")
-    private String icono;
+    @Size(max = 20)
+    @Column(name = "partida")
+    private String partida;
+    @Size(max = 200)
+    @Column(name = "ubicacion")
+    private String ubicacion;
+    @Size(max = 10)
+    @Column(name = "mz")
+    private String mz;
+    @Size(max = 10)
+    @Column(name = "lote")
+    private String lote;
+    @Size(max = 10)
+    @Column(name = "sublote")
+    private String sublote;
     @Size(max = 50)
-    @Column(name = "iconoherramienta")
-    private String iconoherramienta;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "nombre")
-    private String nombre;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "orden")
-    private short orden;
-    @Size(max = 100)
-    @Column(name = "url")
-    private String url;
-    @OneToMany(mappedBy = "idmenupadre")
-    private List<Menu> menuList;
-    @Column(name = "idmenupadre")
-    private Long idmenupadre;
+    @Column(name = "frente")
+    private String frente;
+    @Size(max = 20)
+    @Column(name = "codigosnip")
+    private String codigosnip;
+    @JoinColumn(name = "idubigeo", referencedColumnName = "id")
+    @ManyToOne
+    private Ubigeo idubigeo;
 
-    public Menu() {
+    public Predio() {
     }
 
-    public Menu(Long id) {
+    public Predio(Long id) {
         this.id = id;
-    }
-
-    public Menu(Long id, boolean estado, String icono, String nombre, short orden) {
-        this.id = id;
-        this.estado = estado;
-        this.icono = icono;
-        this.nombre = nombre;
-        this.orden = orden;
     }
 
     @Override
@@ -90,16 +82,16 @@ public class Menu implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Menu)) {
+        if (!(object instanceof Predio)) {
             return false;
         }
-        Menu other = (Menu) object;
+        Predio other = (Predio) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Menu[ id=" + id + " ]";
+        return "com.rivdu.entidades.Predio[ id=" + id + " ]";
     }
     
 }

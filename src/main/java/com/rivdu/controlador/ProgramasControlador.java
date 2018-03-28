@@ -5,10 +5,7 @@
  */
 package com.rivdu.controlador;
 
-import com.rivdu.entidades.Estadocliente;
-import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Programas;
-import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.ProgramasServicio;
 import com.rivdu.util.Mensaje;

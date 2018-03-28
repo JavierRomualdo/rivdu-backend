@@ -6,81 +6,64 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Data;
 
 /**
  *
- * @author MarioMario
+ * @author javie
  */
 @Data
 @Entity
-@Table(name = "menu")
+@Table(name = "compra")
 @NamedQueries({
-    @NamedQuery(name = "Menu.findAll", query = "SELECT m FROM Menu m")})
-public class Menu implements Serializable {
+    @NamedQuery(name = "Compra.findAll", query = "SELECT c FROM Compra c")})
+public class Compra implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
+    @Column(name = "fecha")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
+    @JoinColumn(name = "idpredio", referencedColumnName = "id")
+    @ManyToOne
+    private Predio idpredio;
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "icono")
-    private String icono;
-    @Size(max = 50)
-    @Column(name = "iconoherramienta")
-    private String iconoherramienta;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "nombre")
-    private String nombre;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "orden")
-    private short orden;
-    @Size(max = 100)
-    @Column(name = "url")
-    private String url;
-    @OneToMany(mappedBy = "idmenupadre")
-    private List<Menu> menuList;
-    @Column(name = "idmenupadre")
-    private Long idmenupadre;
+    @OneToMany(mappedBy = "idcompra")
+    private List<Captador> captadorList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
+    private List<Compraexpediente> compraexpedienteList;
 
-    public Menu() {
+    public Compra() {
     }
 
-    public Menu(Long id) {
+    public Compra(Long id) {
         this.id = id;
     }
-
-    public Menu(Long id, boolean estado, String icono, String nombre, short orden) {
-        this.id = id;
-        this.estado = estado;
-        this.icono = icono;
-        this.nombre = nombre;
-        this.orden = orden;
-    }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;
@@ -90,16 +73,15 @@ public class Menu implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Menu)) {
+        if (!(object instanceof Compra)) {
             return false;
         }
-        Menu other = (Menu) object;
+        Compra other = (Compra) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Menu[ id=" + id + " ]";
+        return "com.rivdu.entidades.Compra[ id=" + id + " ]";
     }
-    
 }
