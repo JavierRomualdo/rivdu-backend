@@ -5,7 +5,6 @@
  */
 package com.rivdu.controlador;
 
-import com.rivdu.dto.CompraDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Compra;
 import com.rivdu.excepcion.GeneralException;
@@ -14,7 +13,6 @@ import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
 import com.rivdu.util.RivduUtil;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
