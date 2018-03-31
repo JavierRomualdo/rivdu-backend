@@ -15,16 +15,22 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.Data;
 
 /**
  *
  * @author Javier Romualdo
  */
+@Data
 @Entity
 @Table(name = "proyecto")
 @NamedQueries({
     @NamedQuery(name = "Proyecto.findAll", query = "SELECT p FROM Proyecto p")})
 public class Proyecto implements Serializable {
+
+    @Size(max = 50)
+    @Column(name = "codigo")
+    private String codigo;
 
     @Column(name = "estado")
     private Boolean estado;
@@ -44,22 +50,6 @@ public class Proyecto implements Serializable {
 
     public Proyecto(Long id) {
         this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     @Override
@@ -86,17 +76,4 @@ public class Proyecto implements Serializable {
     public String toString() {
         return "com.rivdu.entidades.Proyecto[ id=" + id + " ]";
     }
-
-    public Boolean getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
-    }
-
-    public boolean setEstado() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
