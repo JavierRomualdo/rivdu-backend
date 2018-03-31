@@ -21,4 +21,5 @@ public interface PersonaServicio extends GenericoServicio<Persona, Long>{
     public Persona insertar(Persona entidad) throws GeneralException;
     public Persona actualizar(Persona producto) throws GeneralException;
     public Persona obtener(Long id) throws GeneralException;
+    public Persona validarDni(String dni) throws GeneralException;
  }
