@@ -6,9 +6,9 @@
 package com.rivdu.controlador;
 
 import com.rivdu.dto.CompraDTO;
+import com.rivdu.dto.ExpedientesDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Compra;
-import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.CompraServicio;
 import com.rivdu.util.BusquedaPaginada;
@@ -120,6 +120,27 @@ public class CompraControlador {
             loggerControlador.error(e.getMessage());
             throw e;
         }
-    };
-
+    }
+    
+    @RequestMapping(value = "expedienteslist/{id}", method = RequestMethod.GET)
+    public ResponseEntity listarExpedientes(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
+        Respuesta rsp = new Respuesta();
+        List<ExpedientesDTO> lista;
+        try {
+            lista = compraservicio.listarExpedientes(id);
+            if (lista != null) {
+                rsp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                rsp.setOperacionMensaje("");
+                rsp.setExtraInfo(lista);
+            } else {
+                throw new GeneralException("Lista no disponible", "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(rsp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+    
+    
 }
