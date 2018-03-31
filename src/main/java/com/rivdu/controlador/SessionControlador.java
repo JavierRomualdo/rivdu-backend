@@ -48,4 +48,9 @@ public class SessionControlador {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/files", method = RequestMethod.POST)
+    public ResponseEntity filesyes(HttpServletRequest request) throws GeneralException {
+        return new ResponseEntity<>("Yes", HttpStatus.OK);
+    }
 }
