@@ -7,26 +7,30 @@ package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
 import com.rivdu.dto.CompraDTO;
+import com.rivdu.dto.ExpedienteChildrenDTO;
+import com.rivdu.dto.ExpedientesDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Captador;
 import com.rivdu.entidades.Colindante;
 import com.rivdu.entidades.Compra;
-import com.rivdu.entidades.Persona;
+import com.rivdu.entidades.Compraexpediente;
+import com.rivdu.entidades.CompraexpedientePK;
 import com.rivdu.entidades.Personacompra;
 import com.rivdu.entidades.Predio;
 import com.rivdu.entidades.Predioservicio;
 import com.rivdu.entidades.Servicios;
+import com.rivdu.entidades.Tipoexpediente;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.CompraServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +57,11 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     private GenericoDao<Captador, Long> captadorDao;
     @Autowired
     private GenericoDao<Personacompra, Long> personacompraDao;
+    @Autowired
+    private GenericoDao<Tipoexpediente, Long> tipoExpedientesDao;
+    @Autowired
+    private GenericoDao<Compraexpediente, CompraexpedientePK> compraExpedienteDao;
     
- 
     public CompraServicioImp(GenericoDao<Compra, Long> genericoHibernate) {
         super(genericoHibernate);
     }
@@ -172,8 +179,9 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         Criterio filtro;
         filtro = Criterio.forClass(Personacompra.class);
         filtro.createAlias("idpersona", "p");
-        filtro.createAlias("idcompra", "c");
+        filtro.createAlias("idcompra", "c", JoinType.RIGHT_OUTER_JOIN);
         filtro.add(Restrictions.eq("c.estado", true));
+        filtro.add(Restrictions.eq("estado", true));
         filtro.add(Restrictions.isNull("idrelacion"));
         if (clientenombre!= null && !clientenombre.equals("")) {
             filtro.add(Restrictions.ilike("p.nombre", '%'+clientenombre+'%'));
@@ -226,4 +234,41 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public List<ExpedientesDTO> listarExpedientes(Long id) {
+        List<ExpedientesDTO> lista = listarCarpetas();
+        for (int i = 0; i < lista.size(); i++) {
+            lista.get(i).setIdcompra(id);
+            obtenerDocumentos(lista.get(i), id);
+        }
+        return lista;
+    }
+
+    private List<ExpedientesDTO> listarCarpetas() {
+        Criterio filtro;
+        filtro = Criterio.forClass(Tipoexpediente.class);
+        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+        filtro.setProjection(Projections.projectionList()
+                .add(Projections.property("id"), "id")
+                .add(Projections.property("nombre"), "label"));
+        return tipoExpedientesDao.proyeccionPorCriteria(filtro, ExpedientesDTO.class);
+    }
+
+    private void obtenerDocumentos(ExpedientesDTO get, Long id) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Compraexpediente.class);
+        filtro.createAlias("compra", "c");
+        filtro.createAlias("expediente", "e");
+        filtro.createAlias("e.idtipoexpediente", "te");
+        filtro.add(Restrictions.eq("estado", true));
+        filtro.add(Restrictions.eq("c.id", id));
+        filtro.add(Restrictions.eq("te.id", get.getId()));
+        filtro.setProjection(Projections.projectionList()
+                .add(Projections.property("e.id"), "id")
+                .add(Projections.property("e.nombre"), "nombre")
+                .add(Projections.property("e.contenttype"), "contenttype")
+                .add(Projections.property("e.tipofile"), "tipo"));
+        get.setChildren(compraExpedienteDao.proyeccionPorCriteria(filtro, ExpedienteChildrenDTO.class));
+    }
+    
 }

@@ -6,15 +6,12 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
-import com.rivdu.entidades.Estadocliente;
 import com.rivdu.entidades.Materiales;
-import com.rivdu.entidades.Persona;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.MaterialesServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
 import java.util.List;
-import javafx.scene.paint.Material;
 import javax.transaction.Transactional;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;

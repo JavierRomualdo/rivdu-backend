@@ -6,6 +6,7 @@
 package com.rivdu.servicio;
 
 import com.rivdu.dto.CompraDTO;
+import com.rivdu.dto.ExpedientesDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Compra;
 import com.rivdu.excepcion.GeneralException;
@@ -22,4 +23,5 @@ public interface CompraServicio extends GenericoServicio<Compra, Long> {
     public Compra actualizar(Compra producto) throws GeneralException;
     public SaveCompraDTO obtener(Long id) throws GeneralException;
     public BusquedaPaginada busquedaPaginada(Compra entidadBuscar, BusquedaPaginada busquedaPaginada, String clientenombre, String clientedoc, String correlativo);
+    public List<ExpedientesDTO> listarExpedientes(Long id);
 }
