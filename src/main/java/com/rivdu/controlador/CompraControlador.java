@@ -5,6 +5,7 @@
  */
 package com.rivdu.controlador;
 
+import com.rivdu.dto.CompraDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Compra;
 import com.rivdu.excepcion.GeneralException;
@@ -105,7 +106,7 @@ public class CompraControlador {
       Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
-            Compra compra = compraservicio.obtener(id);
+            SaveCompraDTO compra = compraservicio.obtener(id);
             if (compra!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);

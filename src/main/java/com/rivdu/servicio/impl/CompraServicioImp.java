@@ -23,6 +23,7 @@ import com.rivdu.util.Criterio;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -93,9 +94,24 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     @Override
-    public Compra obtener(Long id) throws GeneralException {
-        Compra compra=obtener(Compra.class, id);
-        return compra;
+    public SaveCompraDTO obtener(Long id) throws GeneralException {
+        SaveCompraDTO compradto = new SaveCompraDTO();
+        Compra compra = obtenerCompra(id);
+        if(compra!=null){
+            Captador c = obtenerCaptador(compra.getId());
+            Predio p = compra.getIdpredio();
+            if(p!=null){
+                Colindante colindante = obtenerColindante(p.getId());
+                Servicios[] ps = obtenerPrediosServicios(p.getId());
+                compradto.setColindante(colindante);
+                compradto.setServicios(ps);
+            }
+            List<Personacompra> pclist = listarPersonasCompra(compra.getId());
+            compradto.setCompra(compra);
+            compradto.setPredio(p);
+            compradto.setCaptador(c);
+        }
+        return compradto;
     }
 
     private Predio guardarPredio(Predio predio) {
@@ -183,6 +199,31 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         filtro.addOrder(Order.asc("c.id"));
         busquedaPaginada.setRegistros(compraDao.proyeccionPorCriteria(filtro, CompraDTO.class));
         return busquedaPaginada;
+    }
+
+    private Compra obtenerCompra(Long id) {
+        Compra comp=obtener(Compra.class, id);
+        return comp;
+    }
+
+    private Colindante obtenerColindante(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Servicios[] obtenerPrediosServicios(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Captador obtenerCaptador(Long id) {
+        Captador cap=new Captador();
+        if (Objects.equals(id, cap.getId())) {
+            cap.getNombre();
+        }
+        return cap;
+    }
+
+    private List<Personacompra> listarPersonasCompra(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

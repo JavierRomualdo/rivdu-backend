@@ -16,9 +16,10 @@ import java.util.List;
  *
  * @author javie
  */
+
 public interface CompraServicio extends GenericoServicio<Compra, Long> {
     public long insertar(SaveCompraDTO entidad) throws GeneralException;
     public Compra actualizar(Compra producto) throws GeneralException;
-    public Compra obtener(Long id) throws GeneralException;
+    public SaveCompraDTO obtener(Long id) throws GeneralException;
     public BusquedaPaginada busquedaPaginada(Compra entidadBuscar, BusquedaPaginada busquedaPaginada, String clientenombre, String clientedoc, String correlativo);
 }
