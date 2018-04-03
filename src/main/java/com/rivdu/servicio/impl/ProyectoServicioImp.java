@@ -6,7 +6,6 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
-import com.rivdu.entidades.Materiales;
 import com.rivdu.entidades.Proyecto;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.ProyectoServicio;
@@ -17,6 +16,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,15 @@ public class ProyectoServicioImp extends GenericoServicioImpl<Proyecto, Long> im
    
     @Override
     public List<Proyecto> listar() throws GeneralException {
-        return  proyectodao.listarTodosVigentes(Proyecto.class, "estado", true);
+        Criterio filtro;
+        filtro =Criterio.forClass(Proyecto.class);
+        filtro.setProjection(Projections.projectionList()
+                .add(Projections.property("id"), "id")
+                .add(Projections.property("estado"),"estado")
+                .add(Projections.property("nombre"), "nombre")
+                .add(Projections.property("codigo"), "codigo"));
+        return proyectodao.proyeccionPorCriteria(filtro, Proyecto.class);
+        //return  proyectodao.listarTodosVigentes(Proyecto.class, "estado", true);
     }
     
     @Override
