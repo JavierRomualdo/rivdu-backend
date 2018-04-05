@@ -26,6 +26,7 @@ public class SaveCompraDTO {
     private Servicios[] servicios;
     private Captador captador;
     private Personacompra [] personacompra;
+    private Personacompra [] personacompra2;
 
     public SaveCompraDTO() {
     }

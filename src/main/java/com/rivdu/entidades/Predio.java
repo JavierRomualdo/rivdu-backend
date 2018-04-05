@@ -6,16 +6,16 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -31,20 +31,14 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Predio.findAll", query = "SELECT p FROM Predio p")})
 public class Predio implements Serializable {
-
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-
-    @JoinColumn(name = "idCompra", referencedColumnName = "id")
-    @ManyToOne
-    private Compra idCompra;
-
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id")
     private Long id;
     @Size(max = 20)
@@ -68,15 +62,9 @@ public class Predio implements Serializable {
     @Size(max = 20)
     @Column(name = "codigosnip")
     private String codigosnip;
-//    @OneToMany(mappedBy = "idpredio")
-//    private List<Predioservicio> predioservicioList;
-//    @OneToMany(mappedBy = "idpredio")
-//    private List<Compra> compraList;
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne
     private Ubigeo idubigeo;
-//    @OneToMany(mappedBy = "idpredio")
-//    private List<Colindante> colindanteList;
 
     public Predio() {
     }
@@ -84,22 +72,6 @@ public class Predio implements Serializable {
     public Predio(Long id) {
         this.id = id;
     }
-
-//    public List<Predioservicio> getPredioservicioList() {
-//        return predioservicioList;
-//    }
-//
-//    public void setPredioservicioList(List<Predioservicio> predioservicioList) {
-//        this.predioservicioList = predioservicioList;
-//    }
-//
-//    public List<Compra> getCompraList() {
-//        return compraList;
-//    }
-//
-//    public void setCompraList(List<Compra> compraList) {
-//        this.compraList = compraList;
-//    }
 
     @Override
     public int hashCode() {
@@ -110,7 +82,6 @@ public class Predio implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Predio)) {
             return false;
         }

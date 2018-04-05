@@ -31,7 +31,6 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Ubigeo.findAll", query = "SELECT u FROM Ubigeo u")})
 public class Ubigeo implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,19 +51,9 @@ public class Ubigeo implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "nombre")
     private String nombre;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
-//    private List<Oficinaregistral> oficinaregistralList;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
-//    private List<Ahorroporprograma> ahorroporprogramaList;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
-//    private List<Persona> personaList;
     @JoinColumn(name = "idtipoubigeo", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tipoubigeo idtipoubigeo;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ubigeo")
-//    private List<Sucursal> sucursalList;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idubigeo")
-//    private List<Empresa> empresaList;
 
     public Ubigeo() {
     }
@@ -100,6 +89,6 @@ public class Ubigeo implements Serializable {
     public String toString() {
         return "com.rivdu.entidades.Ubigeo[ id=" + id + " ]";
     }
-
+    
  }    
 

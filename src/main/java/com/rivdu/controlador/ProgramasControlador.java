@@ -126,4 +126,27 @@ public class ProgramasControlador {
             throw e;
         }
     }//Fin del Metodo obtener:traerparaedicion
+    
+        @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Programas entidad) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        if(entidad != null){
+            try {
+                Programas guardado = programasServicio.actualizar(entidad);
+                if (guardado != null ) {
+                    resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                    resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                    resp.setExtraInfo(guardado);
+                }else{
+                    throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
+                }
+                
+            } catch (Exception e) {
+                throw e;
+            }
+        }else{
+            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
+        }
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
 }

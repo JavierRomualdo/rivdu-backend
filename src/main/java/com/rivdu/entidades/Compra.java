@@ -9,8 +9,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,13 +38,16 @@ import lombok.Data;
 public class Compra implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id")
     private Long id;
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
+    @Column(name = "fechatransferencia")
+    @Temporal(TemporalType.DATE)
+    private Date fechatransferencia;
     @JoinColumn(name = "idpredio", referencedColumnName = "id")
     @ManyToOne
     private Predio idpredio;
@@ -51,14 +57,8 @@ public class Compra implements Serializable {
     private boolean estado;
     @OneToMany(mappedBy = "idcompra")
     private List<Captador> captadorList;
-    @OneToMany(mappedBy = "idcompra")
-    private List<Personacompra> personacompraList;
-    @OneToMany(mappedBy = "idCompra")
-    private List<Predio> predioList;
-//    @OneToMany(mappedBy = "idcompra")
-//    private List<Captador> captadorList;
-//    @OneToMany(mappedBy = "idcompra")
-//    private List<Personacompra> personacompraList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
+    private List<Compraexpediente> compraexpedienteList;
 
     public Compra() {
     }
@@ -66,23 +66,7 @@ public class Compra implements Serializable {
     public Compra(Long id) {
         this.id = id;
     }
-    
-//    public List<Captador> getCaptadorList() {
-//        return captadorList;
-//    }
-//
-//    public void setCaptadorList(List<Captador> captadorList) {
-//        this.captadorList = captadorList;
-//    }
-//
-//    public List<Personacompra> getPersonacompraList() {
-//        return personacompraList;
-//    }
-//
-//    public void setPersonacompraList(List<Personacompra> personacompraList) {
-//        this.personacompraList = personacompraList;
-//    }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;
@@ -92,7 +76,6 @@ public class Compra implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Compra)) {
             return false;
         }
