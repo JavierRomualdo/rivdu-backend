@@ -40,9 +40,9 @@ public class Usuarioacceso implements Serializable {
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @JoinColumn(name = "idtipousuario", referencedColumnName = "id")
+    @JoinColumn(name = "idrol", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Tipousuario idtipousuario;
+    private Rol idrol;
     @JoinColumn(name = "idusuario", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Usuario idusuario;

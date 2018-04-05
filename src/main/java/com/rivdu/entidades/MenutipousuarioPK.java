@@ -25,22 +25,22 @@ public class MenutipousuarioPK implements Serializable {
     private long idmenu;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idtipousuario")
-    private long idtipousuario;
+    @Column(name = "idrol")
+    private long idrol;
 
     public MenutipousuarioPK() {
     }
 
-    public MenutipousuarioPK(long idmenu, long idtipousuario) {
+    public MenutipousuarioPK(long idmenu, long idrol) {
         this.idmenu = idmenu;
-        this.idtipousuario = idtipousuario;
+        this.idrol = idrol;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) idmenu;
-        hash += (int) idtipousuario;
+        hash += (int) idrol;
         return hash;
     }
 
@@ -53,12 +53,12 @@ public class MenutipousuarioPK implements Serializable {
         if (this.idmenu != other.idmenu) {
             return false;
         }
-        return this.idtipousuario == other.idtipousuario;
+        return this.idrol == other.idrol;
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.MenutipousuarioPK[ idmenu=" + idmenu + ", idtipousuario=" + idtipousuario + " ]";
+        return "com.rivdu.entidades.MenutipousuarioPK[ idmenu=" + idmenu + ", idrol=" + idrol + " ]";
     }
     
 }

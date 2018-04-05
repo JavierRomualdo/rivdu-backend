@@ -61,8 +61,8 @@ public class UsuarioControlador {
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
-            Integer id = RivduUtil.obtenerFiltroComoInteger(parametros, "id");
-            Usuario usuario = usuarioServicio.obtener(Usuario.class, id);
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Usuario usuario = usuarioServicio.obtener(id);
             if (usuario!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -126,16 +126,41 @@ public class UsuarioControlador {
     public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
-            Integer id = RivduUtil.obtenerFiltroComoInteger(parametros, "id");
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
             Usuario unidad = usuarioServicio.obtener(Usuario.class, id);
+            if(unidad.getEstado()== true){
             unidad.setEstado(Boolean.FALSE);
+            }
+            else{
+            unidad.setEstado(Boolean.TRUE);
+            }
             unidad = usuarioServicio.actualizar(unidad);
             if (unidad.getId()!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-                resp.setExtraInfo(unidad);
+                resp.setExtraInfo(unidad.getId());
             }else{
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+    
+    @RequestMapping(value="validarDni", method = RequestMethod.POST)
+    public ResponseEntity show(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            String dni = RivduUtil.obtenerFiltroComoString(parametros, "dni");
+            Usuario e = usuarioServicio.validarDni(dni);
+            if (e!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje("");
+                resp.setExtraInfo(e);
+            }else{
+                throw new GeneralException("La Persona no se encuentra Registrada en el Sistema", "No hay datos", loggerControlador);
             }
             return new ResponseEntity<>(resp, HttpStatus.OK);
         } catch (Exception e) {
