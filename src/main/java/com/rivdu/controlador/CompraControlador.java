@@ -78,8 +78,30 @@ public class CompraControlador {
             resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
+    };
+    
+    @RequestMapping(value = "actualizar", method = RequestMethod.PUT)
+    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody SaveCompraDTO entidad) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        if (entidad != null) {
+            try {
+                Compra guardado = compraservicio.actualizar(entidad);
+                if (guardado != null) {
+                    resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                    resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                    resp.setExtraInfo(guardado);
+                } else {
+                    throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
+                }
+            } catch (Exception e) {
+                throw e;
+            }
+        } else {
+            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
+        }
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-
+    
     @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
     public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
                                                              @PathVariable("cantidadPorPagina") Long cantidadPorPagina, 
@@ -141,4 +163,6 @@ public class CompraControlador {
             throw e;
         }
     }
+    
+    
 }

@@ -42,9 +42,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implements CompraServicio {
-    
+
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
-    
+
     @Autowired
     private GenericoDao<Compra, Long> compraDao;
     @Autowired
@@ -61,33 +61,33 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     private GenericoDao<Tipoexpediente, Long> tipoExpedientesDao;
     @Autowired
     private GenericoDao<Compraexpediente, CompraexpedientePK> compraExpedienteDao;
-    
+
     public CompraServicioImp(GenericoDao<Compra, Long> genericoHibernate) {
         super(genericoHibernate);
     }
 
-   @Override
-   public long insertar(SaveCompraDTO entidad) throws GeneralException {
+    @Override
+    public long insertar(SaveCompraDTO entidad) throws GeneralException {
         Compra compra = entidad.getCompra();
         Predio predio = entidad.getPredio();
         Colindante colindante = entidad.getColindante();
         Servicios[] servicios = entidad.getServicios();
         Captador captador = entidad.getCaptador();
-        Personacompra [] personacompra = entidad.getPersonacompra();
-        Personacompra [] personacompra2 = entidad.getPersonacompra2();
+        List<Personacompra> personacompra = entidad.getPersonacompra();
+        List<Personacompra> personacompra2 = entidad.getPersonacompra2();
         predio = guardarPredio(predio);
-        if(predio!=null){
+        if (predio != null) {
             compra = guardarcompra(compra, predio);
         } else {
-           throw new GeneralException("No existe predio", "No existe predio", loggerServicio);
+            throw new GeneralException("No existe predio", "No existe predio", loggerServicio);
         }
-        if (servicios!=null && servicios.length>0) {
-           guardarPredioServicio(servicios, predio); 
+        if (servicios != null && servicios.length > 0) {
+            guardarPredioServicio(servicios, predio);
         }
-        if(personacompra!=null && personacompra.length>0){
-           guardarPersonaCompra(personacompra, compra); 
+        if (personacompra != null && personacompra.size() > 0) {
+            guardarPersonaCompra(personacompra, compra);
         }
-        if(personacompra2!=null && personacompra2.length>0){
+        if (personacompra2 != null && personacompra2.size() > 0) {
             guardarPersonaCompra(personacompra2, compra);
         }
         guardarCaptador(captador, compra);
@@ -95,43 +95,54 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         return compra.getId();
     }
 
-    @Override
-    public Compra actualizar(Compra producto) throws GeneralException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   /* @Override*/
+    /*public Compra actualizar(Compra producto) throws GeneralException {
+    /*    Compra compra = entidad.getCompra();
+        Predio predio = entidad.getPredio();
+        Colindante colindante = entidad.getColindante();
+        Servicios[] servicios = entidad.getServicios();
+        Captador captador = entidad.getCaptador();
+        List<Personacompra> personacompra = entidad.getPersonacompra();
+        List<Personacompra> personacompra2 = entidad.getPersonacompra2();*/
+    //    return null;
+    
 
     @Override
     public SaveCompraDTO obtener(Long id) throws GeneralException {
         SaveCompraDTO compradto = new SaveCompraDTO();
         Compra compra = obtenerCompra(id);
-        if(compra!=null){
+        if (compra != null) {
+            compra.setCompraexpedienteList(null);
             Captador c = obtenerCaptador(compra.getId());
             Predio p = compra.getIdpredio();
-            if(p!=null){
+            if (p != null) {
                 Colindante colindante = obtenerColindante(p.getId());
-                Servicios[] ps = obtenerPrediosServicios(p.getId());
+               // Servicios[] ps = obtenerPrediosServicios(p.getId());
                 compradto.setColindante(colindante);
-                compradto.setServicios(ps);
+              //  compradto.setServicios(ps);
             }
             List<Personacompra> pclist = listarPersonasCompra(compra.getId());
+            List<Personacompra> pclist2 = listarPersonasCompra2(compra.getId());
             compradto.setCompra(compra);
             compradto.setPredio(p);
             compradto.setCaptador(c);
+            compradto.setPersonacompra(pclist);
+            compradto.setPersonacompra2(pclist2);
         }
         return compradto;
     }
 
     private Predio guardarPredio(Predio predio) {
-        if(predio!=null){
+        if (predio != null) {
             predio.setEstado(true);
             return predioDao.insertar(predio);
-        } else{
+        } else {
             return null;
         }
     }
 
     private Compra guardarcompra(Compra compra, Predio predio) {
-        if(compra==null){
+        if (compra == null) {
             compra = new Compra();
         }
         compra.setIdpredio(predio);
@@ -150,7 +161,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         }
     }
 
-    private void guardarPersonaCompra(Personacompra[] personacompra, Compra compra) {
+    private void guardarPersonaCompra(List<Personacompra> personacompra, Compra compra) {
         for (Personacompra personacompra1 : personacompra) {
             personacompra1.setIdcompra(compra);
             personacompra1.setEstado(true);
@@ -159,19 +170,21 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     private void guardarCaptador(Captador captador, Compra compra) {
-        if(captador!=null){
+        if (captador != null) {
             captador.setEstado(true);
-            captador.setIdcompra(compra);
+            captador.setIdcompra(compra.getId());
             captadorDao.insertar(captador);
         }
     }
 
     private void guardarColindante(Colindante colindante, Compra compra, Predio predio) {
-        if(colindante!=null){
-            colindante.setIdpredio(predio);
-            colindante.setEstado(true);
-            colindanteDao.insertar(colindante);
+        if (colindante == null) {
+            colindante = new Colindante();
         }
+        colindante.setIdpredio(predio);
+        colindante.setEstado(true);
+        colindanteDao.insertar(colindante);
+
     }
 
     @Override
@@ -183,14 +196,14 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         filtro.add(Restrictions.eq("c.estado", true));
         filtro.add(Restrictions.eq("estado", true));
         filtro.add(Restrictions.isNull("idrelacion"));
-        if (clientenombre!= null && !clientenombre.equals("")) {
-            filtro.add(Restrictions.ilike("p.nombre", '%'+clientenombre+'%'));
+        if (clientenombre != null && !clientenombre.equals("")) {
+            filtro.add(Restrictions.ilike("p.nombre", '%' + clientenombre + '%'));
         }
-        if (clientedoc!= null && !clientedoc.equals("")) {
-            filtro.add(Restrictions.ilike("p.dni", '%'+clientedoc+'%'));
+        if (clientedoc != null && !clientedoc.equals("")) {
+            filtro.add(Restrictions.ilike("p.dni", '%' + clientedoc + '%'));
         }
-        if (correlativo!= null && !correlativo.equals("")) {
-            filtro.add(Restrictions.ilike("c.correlativo1",'%'+correlativo+'%'));
+        if (correlativo != null && !correlativo.equals("")) {
+            filtro.add(Restrictions.ilike("c.correlativo1", '%' + correlativo + '%'));
         }
         busquedaPaginada.setTotalRegistros(compraDao.cantidadPorCriteria(filtro, "c.id"));
         busquedaPaginada.calcularCantidadDePaginas();
@@ -210,28 +223,41 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     private Compra obtenerCompra(Long id) {
-        Compra comp=obtener(Compra.class, id);
+        Compra comp = obtener(Compra.class, id);
         return comp;
     }
 
-    private Colindante obtenerColindante(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Colindante obtenerColindante(Long idpredio) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Colindante.class);
+        filtro.add(Restrictions.eq("idpredio.id", idpredio));
+        Colindante col = colindanteDao.obtenerPorCriteriaSinProyecciones(filtro);
+        return col;
     }
 
     private Servicios[] obtenerPrediosServicios(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private Captador obtenerCaptador(Long id) {
-        Captador cap=new Captador();
-        if (Objects.equals(id, cap.getId())) {
-            cap.getNombre();
-        }
+    private Captador obtenerCaptador(Long idcompra) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Captador.class);
+        filtro.add(Restrictions.eq("idcompra", idcompra));
+        Captador cap = captadorDao.obtenerPorCriteriaSinProyecciones(filtro);
         return cap;
     }
 
     private List<Personacompra> listarPersonasCompra(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       Criterio filtro;
+       filtro =Criterio.forClass(Personacompra.class);
+       filtro.add(Restrictions.isNull("idrelacion.id"));
+       filtro.add(Restrictions.eq("idcompra.id", id));
+       filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+       List<Personacompra> ps = personacompraDao.buscarPorCriteriaSinProyecciones(filtro);
+       ps.stream().forEach((p) -> {
+           p.getIdpersona().setPersonarolList(null);
+        });
+        return ps;
     }
 
     @Override
@@ -270,5 +296,44 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
                 .add(Projections.property("e.tipofile"), "tipo"));
         get.setChildren(compraExpedienteDao.proyeccionPorCriteria(filtro, ExpedienteChildrenDTO.class));
     }
-    
+
+    private List<Personacompra> listarPersonasCompra2(Long id) {
+        Criterio filtro;
+       filtro =Criterio.forClass(Personacompra.class);
+       filtro.add(Restrictions.isNotNull("idrelacion.id"));
+       filtro.add(Restrictions.eq("idcompra.id", id));
+       filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+       List<Personacompra> ps= personacompraDao.buscarPorCriteriaSinProyecciones(filtro);
+       ps.stream().forEach((p) -> {
+           p.getIdpersona().setPersonarolList(null);
+        });
+       
+       return ps;
+}
+
+    @Override
+    public Compra actualizar(SaveCompraDTO entidad) {
+        Compra compra = entidad.getCompra();
+        Predio predio = entidad.getPredio();
+        Colindante colindante = entidad.getColindante();
+        Servicios[] servicios = entidad.getServicios();
+        Captador captador = entidad.getCaptador();
+        List<Personacompra> personacompra = entidad.getPersonacompra();
+        List<Personacompra> personacompra2 = entidad.getPersonacompra2();
+        
+        
+        compra = compraDao.actualizar(compra);
+        predioDao.actualizar(predio);
+        colindanteDao.actualizar(colindante);
+        captadorDao.actualizar(captador);
+        personacompra.stream().forEach((personacompra1) -> {
+            personacompraDao.actualizar(personacompra1);
+        });
+        
+        personacompra2.stream().forEach((personacompra21) -> {
+            personacompraDao.actualizar(personacompra21);
+        });
+        
+        return compra;
+    }
 }
