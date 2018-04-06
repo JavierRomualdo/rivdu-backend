@@ -37,7 +37,6 @@ public class Empresa implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 100)
     @Column(name = "email")
     private String email;
@@ -71,12 +70,6 @@ public class Empresa implements Serializable {
     @Size(max = 100)
     @Column(name = "urbanizacion")
     private String urbanizacion;
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name="idempresa")
-//    private List<Sucursal> sucursalList;
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name="idempresa")
-//    private List<Usuario> usuarioList;
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne(optional = true)
     private Ubigeo idubigeo;

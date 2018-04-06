@@ -123,5 +123,5 @@ public class Usuario implements Serializable {
     public String toString() {
         return "com.rivdu.entidades.Usuario[ id=" + id + " ]";
     }
-    
+
 }

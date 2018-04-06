@@ -1,9 +1,21 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.rivdu.dto;
 
-import java.util.Date;
-
-public class CompraDTO {
-
+/**
+ *
+ * @author PROPIETARIO
+ */
+import java.util.*;
+        
+public class VentaDTO {
+    
+    public VentaDTO(){
+    
+    }
     private Long id;
     private String nombre;
     private String apellido;
@@ -11,11 +23,8 @@ public class CompraDTO {
     private String serie;
     private String correlativo;
     private Date fecharegistro;
-    private Date fechacompra;
+    private Date fechaventa;
     private String persona;
-
-    public CompraDTO() {
-    }
 
     public Long getId() {
         return id;
@@ -73,12 +82,12 @@ public class CompraDTO {
         this.fecharegistro = fecharegistro;
     }
 
-    public Date getFechacompra() {
-        return fechacompra;
+    public Date getFechaventa() {
+        return fechaventa;
     }
 
-    public void setFechacompra(Date fechacompra) {
-        this.fechacompra = fechacompra;
+    public void setFechaventa(Date fechaventa) {
+        this.fechaventa = fechaventa;
     }
 
     public String getPersona() {
@@ -86,6 +95,6 @@ public class CompraDTO {
     }
 
     public void setPersona(String persona) {
-        this.persona = this.nombre + " " +this.apellido+ " - " +this.dni;
+        this.persona = persona;
     }
 }
