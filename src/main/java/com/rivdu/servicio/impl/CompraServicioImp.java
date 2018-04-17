@@ -26,7 +26,6 @@ import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
