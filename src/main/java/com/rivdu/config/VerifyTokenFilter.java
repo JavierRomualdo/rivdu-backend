@@ -14,7 +14,7 @@ import com.rivdu.security.TokenUtil;
 /*
 This filter checks if there is a token in the Request service header and the token is not expired
 it is applied to all the routes which are protected
-*/
+ */
 public class VerifyTokenFilter extends GenericFilterBean {
 
     private final TokenUtil tokenUtil;
@@ -25,22 +25,19 @@ public class VerifyTokenFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest  request  = (HttpServletRequest)  req;
+        HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         try {
             Optional<Authentication> authentication = tokenUtil.verifyToken(request);
             if (authentication.isPresent()) {
-              SecurityContextHolder.getContext().setAuthentication(authentication.get());
-            }
-            else{
-              SecurityContextHolder.getContext().setAuthentication(null);
+                SecurityContextHolder.getContext().setAuthentication(authentication.get());
+            } else {
+                SecurityContextHolder.getContext().setAuthentication(null);
             }
             filterChain.doFilter(req, res);
-        }
-        catch (JwtException e) {
+        } catch (JwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-        finally {
+        } finally {
             SecurityContextHolder.getContext().setAuthentication(null);
             return;  // always return void
         }
