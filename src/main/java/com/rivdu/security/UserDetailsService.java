@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.rivdu.dao.UsuarioDao;
 
 import com.rivdu.entidades.Usuario;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
@@ -18,14 +19,13 @@ public class UserDetailsService implements org.springframework.security.core.use
     private final AccountStatusUserDetailsChecker detailsChecker = new AccountStatusUserDetailsChecker();
 
     @Override
-    public final TokenUser loadUserByUsername(String username) throws UsernameNotFoundException, DisabledException {
+    public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DisabledException {
 
         final Usuario user = usuarioDao.findOneByUserId(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         TokenUser currentUser;
-        if (user.getEstado()){
+        if (user.getEstado()) {
             currentUser = new TokenUser(user);
-        }
-        else{
+        } else {
             throw new DisabledException("User is not activated (Disabled User)");
         }
         detailsChecker.check(currentUser);

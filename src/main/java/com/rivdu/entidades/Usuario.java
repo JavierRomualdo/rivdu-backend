@@ -72,7 +72,7 @@ public class Usuario implements Serializable {
     private String nombre;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 32)
+    @Size(min = 1, max = 120)
     @Column(name = "clave")
     private String password;
     @Basic(optional = false)
