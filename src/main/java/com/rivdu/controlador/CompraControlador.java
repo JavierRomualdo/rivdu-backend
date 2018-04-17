@@ -5,7 +5,7 @@
  */
 package com.rivdu.controlador;
 
-import com.rivdu.dto.CompraDTO;
+import com.rivdu.dao.GenericoDao;
 import com.rivdu.dto.ExpedientesDTO;
 import com.rivdu.dto.SaveCompraDTO;
 import com.rivdu.entidades.Compra;
@@ -14,6 +14,7 @@ import com.rivdu.servicio.CompraServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,9 @@ public class CompraControlador {
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
     @Autowired
     private CompraServicio compraservicio;
+    
+    @Autowired
+    private GenericoDao<Compra,Long> compraDao;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity crear(HttpServletRequest request, @RequestBody SaveCompraDTO entidad) throws GeneralException {
@@ -78,7 +82,56 @@ public class CompraControlador {
             resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
+    };
+    
+    @RequestMapping(value = "actualizar", method = RequestMethod.PUT)
+    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody SaveCompraDTO entidad) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        if (entidad != null) {
+            try {
+                Compra guardado = compraservicio.actualizar(entidad);
+                if (guardado != null) {
+                    resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                    resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                    resp.setExtraInfo(guardado);
+                } else {
+                    throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
+                }
+            } catch (Exception e) {
+                throw e;
+            }
+        } else {
+            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
+        }
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "eliminar", method = RequestMethod.POST)
+    public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Compra compra = compraDao.obtener(Compra.class, id);
+            if(compra.isEstado()){
+            compra.setEstado(Boolean.FALSE);
+            }
+            else{
+            compra.setEstado(Boolean.TRUE);
+            }
+            compra = compraDao.actualizar(compra);
+            if (compra.getId() != null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(compra.getId());
+            } else {
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }//fin del metodo eliminar
 
     @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
     public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
@@ -101,21 +154,21 @@ public class CompraControlador {
             throw e;
         }
     }
-    
-    @RequestMapping(value = "listar", method = RequestMethod.GET)
-    public ResponseEntity listar(HttpServletRequest request) throws GeneralException {
-        Respuesta rsp = new Respuesta();
-        List<CompraDTO> lista;
+
+    @RequestMapping(value = "obtener", method = RequestMethod.POST)
+    public ResponseEntity Obtener(HttpServletRequest request,@RequestBody Map<String, Object> parametros) throws GeneralException {
+      Respuesta resp = new Respuesta();
         try {
-            lista = compraservicio.listar();
-            if (lista != null) {
-                rsp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                rsp.setOperacionMensaje(" ");
-                rsp.setExtraInfo(lista);
-            } else {
-                throw new GeneralException("Lista no disponible", "No hay datos", loggerControlador);
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            SaveCompraDTO compra = compraservicio.obtener(id);
+            if (compra!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(compra);
+            }else{
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
-            return new ResponseEntity<>(rsp, HttpStatus.OK);
+            return new ResponseEntity<>(resp, HttpStatus.OK);
         } catch (Exception e) {
             loggerControlador.error(e.getMessage());
             throw e;
