@@ -15,8 +15,10 @@ import com.rivdu.util.BusquedaPaginada;
  */
 public interface UsuarioServicio extends GenericoServicio<Usuario, Long>{
     public BusquedaPaginada busquedaPaginada(Usuario entidadBuscar, BusquedaPaginada busquedaPaginada, String numdoc, String nomusu);
+    public Usuario show(String username) throws GeneralException;
     public Usuario insertar(Usuario entidad) throws GeneralException;
     public Usuario obtener(long id) throws GeneralException;
     public Usuario actualizar(Usuario unidad) throws GeneralException;
     public Usuario validarDni(String dni) throws GeneralException;
+    public boolean validarNuevaPassword(String username, String passwordTipeada) throws GeneralException;
 }

@@ -24,6 +24,7 @@ import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.RivduUtil;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import org.springframework.web.bind.annotation.GetMapping;
 /**
  *
  * @author dev-out-03
@@ -31,17 +32,17 @@ import com.rivdu.util.Respuesta;
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioControlador {
-    
+
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
     @Autowired
     private UsuarioServicio usuarioServicio;
-    
+
     @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
-    public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
-                                                             @PathVariable("cantidadPorPagina") Long cantidadPorPagina, 
-                                                             @RequestBody Map<String, Object> parametros) throws GeneralException{
+    public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina,
+            @PathVariable("cantidadPorPagina") Long cantidadPorPagina,
+            @RequestBody Map<String, Object> parametros) throws GeneralException {
         try {
-            String dni,nomusu;
+            String dni, nomusu;
             BusquedaPaginada busquedaPaginada = new BusquedaPaginada();
             busquedaPaginada.setBuscar(parametros);
             Usuario entidadBuscar = new Usuario();
@@ -56,9 +57,9 @@ public class UsuarioControlador {
             throw e;
         }
     }
-    
-    @RequestMapping(value="obtener", method = RequestMethod.POST)
-    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+
+    @RequestMapping(value = "obtener", method = RequestMethod.POST)
+    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
@@ -67,7 +68,7 @@ public class UsuarioControlador {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                 resp.setExtraInfo(usuario);
-            }else{
+            } else {
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
             return new ResponseEntity<>(resp, HttpStatus.OK);
@@ -76,54 +77,54 @@ public class UsuarioControlador {
             throw e;
         }
     }
-    
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity crear(HttpServletRequest request, @RequestBody Usuario entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
-        if(entidad != null){
+        if (entidad != null) {
             try {
                 Usuario guardado = usuarioServicio.insertar(entidad);
-                if (guardado != null ) {
+                if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                     resp.setExtraInfo(guardado);
-                }else{
+                } else {
                     throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
                 }
-                
+
             } catch (Exception e) {
                 throw e;
             }
-        }else{
+        } else {
             resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-    
+
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Usuario entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
-        if(entidad != null){
+        if (entidad != null) {
             try {
                 Usuario guardado = usuarioServicio.actualizar(entidad);
-                if (guardado != null ) {
+                if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                     resp.setExtraInfo(guardado);
-                }else{
+                } else {
                     throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
                 }
             } catch (Exception e) {
                 throw e;
             }
-        }else{
+        } else {
             resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-    
-    @RequestMapping(value="eliminar", method = RequestMethod.POST)
-    public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
+
+    @RequestMapping(value = "eliminar", method = RequestMethod.POST)
+    public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
@@ -135,7 +136,7 @@ public class UsuarioControlador {
             unidad.setEstado(Boolean.TRUE);
             }
             unidad = usuarioServicio.actualizar(unidad);
-            if (unidad.getId()!=null) {
+            if (unidad.getId() != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                 resp.setExtraInfo(unidad.getId());
@@ -169,5 +170,42 @@ public class UsuarioControlador {
         }
     }
 
-    
+    @GetMapping("show/{username}")
+    public ResponseEntity show(@PathVariable String username) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        try {
+            Usuario u = usuarioServicio.show(username);
+            if (u != null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje("");
+                resp.setExtraInfo(u);
+            } else {
+                throw new GeneralException("Usuario no registrado", "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @GetMapping("validarPassword/{username}/{passwordTipeada}")
+    public ResponseEntity validarPassword(@PathVariable String username, @PathVariable String passwordTipeada) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        try {
+            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+            if (usuarioServicio.validarNuevaPassword(username, passwordTipeada)) {
+                resp.setExtraInfo(true);
+                resp.setOperacionMensaje("");
+            } else {
+                resp.setExtraInfo(false);
+                resp.setOperacionMensaje("La contraseña ingresada no coincide con la actual");
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+
 }

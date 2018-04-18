@@ -55,8 +55,6 @@ public class Compra implements Serializable {
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @OneToMany(mappedBy = "idcompra")
-    private List<Captador> captadorList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
     private List<Compraexpediente> compraexpedienteList;
 
