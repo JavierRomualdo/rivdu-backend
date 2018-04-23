@@ -32,4 +32,5 @@ public interface GenericoDao <Entidad, TipoLlave> {
     public List<Entidad> listarPorCriteriaProyeccion(Criterio filtro);
     List<Entidad> listarFiltroDistinct(Criterio filtro);
     List<Entidad> buscarPorCriteriaConProyecciones(Criterio filtro);
+    
 }

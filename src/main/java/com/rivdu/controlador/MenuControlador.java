@@ -3,7 +3,6 @@ package com.rivdu.controlador;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.rivdu.entidades.Empresa;
 import com.rivdu.entidades.Menu;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.MenuServicio;
