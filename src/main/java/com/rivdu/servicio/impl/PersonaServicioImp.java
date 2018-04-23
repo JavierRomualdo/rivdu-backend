@@ -71,7 +71,8 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
                 .add(Projections.distinct(Projections.property("p.id")))
                 .add(Projections.property("p.id"), "id")
                 .add(Projections.property("p.estado"), "estado")
-                .add(Projections.property("p.apellido"), "apellido")
+                .add(Projections.property("p.appaterno"), "appaterno")
+                .add(Projections.property("p.apmaterno"), "apmaterno")
                 .add(Projections.property("p.direccion"), "direccion")
                 .add(Projections.property("p.nombre"), "nombre")
                 .add(Projections.property("p.dni"), "dni"));

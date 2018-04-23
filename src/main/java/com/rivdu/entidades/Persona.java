@@ -44,9 +44,14 @@ public class Persona implements Serializable {
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "apellido")
-    private String apellido;
+    @Size(min = 1, max = 30)
+    @Column(name = "apmaterno")
+    private String apmaterno;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 30)
+    @Column(name = "appaterno")
+    private String appaterno;
     @Size(max = 50)
     @Column(name = "correo")
     private String correo;
@@ -89,9 +94,10 @@ public class Persona implements Serializable {
         this.id = id;
     }
 
-    public Persona(Long id, String apellido, String direccion, String dni, boolean estado, String nombre) {
+    public Persona(Long id, String app, String apm, String direccion, String dni, boolean estado, String nombre) {
         this.id = id;
-        this.apellido = apellido;
+        this.appaterno = app;
+        this.apmaterno = apm;
         this.direccion = direccion;
         this.dni = dni;
         this.estado = estado;
