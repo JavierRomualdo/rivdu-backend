@@ -54,6 +54,12 @@ public class Ubigeo implements Serializable {
     @JoinColumn(name = "idtipoubigeo", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tipoubigeo idtipoubigeo;
+    /*ADICIONALES*/
+    private String departamento;
+    private String provincia;
+    private String distrito;
+    private String centro;
+    
 
     public Ubigeo() {
     }
