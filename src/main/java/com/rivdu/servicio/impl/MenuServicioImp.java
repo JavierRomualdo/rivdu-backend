@@ -58,12 +58,12 @@ public class MenuServicioImp extends GenericoServicioImpl<Menu, Long> implements
         Criterio filtro;
         filtro = Criterio.forClass(Usuarioacceso.class);
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        filtro.createAlias("idtipousuario", "tipousuario");
+        filtro.createAlias("idrol", "rol");
         filtro.createAlias("idusuario", "usuario");
         filtro.add(Restrictions.eq("usuario.userId", login));
         List<Usuarioacceso> ua = usuarioAccesoDao.buscarPorCriteriaSinProyecciones(filtro);
         for (int i = 0; i < ua.size(); i++) {
-            ids.add(ua.get(i).getIdtipousuario().getId());
+            ids.add(ua.get(i).getIdrol().getId());
         }
         return ids;
     }
@@ -74,7 +74,7 @@ public class MenuServicioImp extends GenericoServicioImpl<Menu, Long> implements
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
         filtro.createAlias("idmenu", "menu");
         filtro.add(Restrictions.isNull("menu.idmenupadre"));
-        filtro.add(Restrictions.in("menutipousuarioPK.idtipousuario",ids));
+        filtro.add(Restrictions.in("menutipousuarioPK.idrol",ids));
         filtro.setProjection(Projections.projectionList()
                 .add(Projections.distinct(Projections.property("menutipousuarioPK.idmenu")))
                 .add(Projections.property("menu.id"), "id")
@@ -97,7 +97,7 @@ public class MenuServicioImp extends GenericoServicioImpl<Menu, Long> implements
             filtro.add(Restrictions.eq("estado", Boolean.TRUE));
             filtro.createAlias("idmenu", "menu");
             filtro.add(Restrictions.eq("menu.idmenupadre",lm.get(i).getId()));
-            filtro.add(Restrictions.in("menutipousuarioPK.idtipousuario",ids));
+            filtro.add(Restrictions.in("menutipousuarioPK.idrol",ids));
             filtro.setProjection(Projections.projectionList()
                 .add(Projections.distinct(Projections.property("menutipousuarioPK.idmenu")))
                 .add(Projections.property("menu.id"), "id")

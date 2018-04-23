@@ -52,6 +52,9 @@ public class Expediente implements Serializable {
     @Size(max = 50)
     @Column(name = "tipofile")
     private String tipofile;
+    @Size(max = 150)
+    @Column(name = "contenttype")
+    private String contenttype;
     @Column(name = "estado")
     private Boolean estado;
     @JoinColumn(name = "idtipoexpediente", referencedColumnName = "id")

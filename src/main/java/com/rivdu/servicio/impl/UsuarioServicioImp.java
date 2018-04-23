@@ -13,57 +13,89 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.rivdu.dao.GenericoDao;
+import com.rivdu.entidades.Personarol;
+import com.rivdu.entidades.PersonarolPK;
 import com.rivdu.entidades.Usuario;
+import com.rivdu.entidades.Usuarioacceso;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.UsuarioServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
+import java.util.List;
+import org.hibernate.criterion.Projections;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 /**
  *
  * @author dev-out-03
  */
-
 @Service
 @Transactional
-public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Integer> implements UsuarioServicio {
+public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Long> implements UsuarioServicio {
 
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
     
     @Autowired
-    private GenericoDao<Usuario, Integer> usuarioDao;
+    private GenericoDao<Usuario, Long> usuarioDao;
+    @Autowired
+    private GenericoDao<Personarol, PersonarolPK> personarolDao;
 
-    public UsuarioServicioImp(GenericoDao<Usuario, Integer> genericoHibernate) {
+    public UsuarioServicioImp(GenericoDao<Usuario, Long> genericoHibernate) {
         super(genericoHibernate);
     }
-
+    
     @Override
     public BusquedaPaginada busquedaPaginada(Usuario entidadBuscar, BusquedaPaginada busquedaPaginada, String numdoc, String nomusu) {
         Criterio filtro;
         filtro = Criterio.forClass(Usuario.class);
-        //filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        if (numdoc!= null && !numdoc.equals("")) {
-            filtro.add(Restrictions.ilike("dni", '%'+numdoc+'%'));
+        if (numdoc != null && !numdoc.equals("")) {
+            filtro.add(Restrictions.ilike("dni", '%' + numdoc + '%'));
         }
         busquedaPaginada.setTotalRegistros(usuarioDao.cantidadPorCriteria(filtro, "id"));
         busquedaPaginada.calcularCantidadDePaginas();
         busquedaPaginada.validarPaginaActual();
+        
+        filtro.setProjection(Projections.projectionList()
+                .add(Projections.property("id"),"id")
+                .add(Projections.property("userId"),"userId")
+                .add(Projections.property("dni"),"dni")
+                .add(Projections.property("nombre"),"nombre")
+                .add(Projections.property("estado"),"estado"));
+          
         filtro.calcularDatosParaPaginacion(busquedaPaginada);
         filtro.addOrder(Order.desc("id"));
-        busquedaPaginada.setRegistros(usuarioDao.buscarPorCriteriaSinProyecciones(filtro));
+        List<Usuario> u = usuarioDao.proyeccionPorCriteria(filtro, Usuario.class);
+        busquedaPaginada.setRegistros(u);
         return busquedaPaginada;
     }
-
+    
     @Override
-    public Usuario insertar(Usuario entidad) throws GeneralException{
+    public Usuario show(String username) throws GeneralException {
+        Criterio filtro;
+        filtro = Criterio.forClass(Usuario.class);
+        filtro.add(Restrictions.eq("userId", username));
+        Usuario u = usuarioDao.obtenerPorCriteriaSinProyecciones(filtro);
+        
+        if (u == null && !u.getEstado()) {
+            throw new GeneralException("Este usuario no esta habilitado", "El usuario fue dado de baja.", loggerServicio);
+        }
+        if (u.getIdempresa() != null) {
+            u.getIdempresa().setIdgerente(null);
+        }
+        u.setUsuarioaccesoList(null);
+        return u;
+    }
+    
+    @Override
+    public Usuario insertar(Usuario entidad) throws GeneralException {
         Criterio filtro;
         filtro = Criterio.forClass(Usuario.class);
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        if (entidad.getId()!=null) {
+        if (entidad.getId() != null) {
             filtro.add(Restrictions.eq("id", entidad.getId()));
         }
         filtro.add(Restrictions.eq("userId", entidad.getUserId()));
         Usuario u = usuarioDao.obtenerPorCriteriaSinProyecciones(filtro);
-        if (u!=null) {
+        if (u != null) {
             throw new GeneralException("Guardar retorno nulo", "Ya existe un usuario con igual nombre.", loggerServicio);
         }
         entidad.setEstado(Boolean.TRUE);
@@ -73,7 +105,49 @@ public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Integer> i
     
     @Override
     public Usuario actualizar(Usuario u) throws GeneralException {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        u.setPassword(encoder.encode(u.getPassword()));
         return usuarioDao.actualizar(u);
+    }
+
+    @Override
+    public Usuario obtener(long id) throws GeneralException {
+        Usuario u=obtener(Usuario.class,id);
+        if(u!=null){
+            for(Usuarioacceso pr:u.getUsuarioaccesoList()){
+                pr.getIdusuario().setUsuarioaccesoList(null);
+            }
+            if(u.getIdempresa()!=null){
+                 u.getIdempresa().setIdgerente(null);
+            }
+            
+        }
+        return u;
+    }
+
+    @Override
+    public Usuario validarDni(String dni) throws GeneralException {
+        Criterio filtro;
+        filtro = Criterio.forClass(Usuario.class);
+        filtro.add(Restrictions.eq("dni", dni));
+        Usuario e = usuarioDao.obtenerPorCriteriaSinProyecciones(filtro);
+        if (e!=null && !e.getUsuarioaccesoList().isEmpty()) {
+            for (Usuarioacceso personarolList : e.getUsuarioaccesoList()) {
+                personarolList.setIdusuario(null);
+           }
+        }
+        return e;
+    }
+    
+    @Override
+    public boolean validarNuevaPassword(String username, String passwordTipeada) throws GeneralException {
+        Usuario usuario = this.show(username);
+        if (usuario != null) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            return encoder.matches(passwordTipeada, usuario.getPassword());
+        }
+        return false;
+        
     }
     
 }

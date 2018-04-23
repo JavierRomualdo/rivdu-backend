@@ -64,7 +64,7 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
         if(idrol>0){
            filtro.add(Restrictions.eq("personarolPK.idrol", idrol));
         }
-        busquedaPaginada.setTotalRegistros(ingenieroDao.cantidadPorCriteria(filtro, "id"));
+        busquedaPaginada.setTotalRegistros(ingenieroDao.cantidadPorCriteria(filtro, "p.id"));
         busquedaPaginada.calcularCantidadDePaginas();
         busquedaPaginada.validarPaginaActual();
         filtro.setProjection(Projections.projectionList()

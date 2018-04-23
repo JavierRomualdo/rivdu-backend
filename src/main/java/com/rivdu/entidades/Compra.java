@@ -45,6 +45,9 @@ public class Compra implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
+    @Column(name = "fechatransferencia")
+    @Temporal(TemporalType.DATE)
+    private Date fechatransferencia;
     @JoinColumn(name = "idpredio", referencedColumnName = "id")
     @ManyToOne
     private Predio idpredio;
@@ -52,8 +55,6 @@ public class Compra implements Serializable {
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    @OneToMany(mappedBy = "idcompra")
-    private List<Captador> captadorList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
     private List<Compraexpediente> compraexpedienteList;
 

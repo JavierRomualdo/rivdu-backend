@@ -11,6 +11,7 @@ import com.rivdu.entidades.Compra;
 import com.rivdu.entidades.Personacompra;
 import com.rivdu.entidades.Predio;
 import com.rivdu.entidades.Servicios;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -25,8 +26,8 @@ public class SaveCompraDTO {
     private Colindante colindante;
     private Servicios[] servicios;
     private Captador captador;
-    private Personacompra [] personacompra;
-    private Personacompra [] personacompra2;
+    private List<Personacompra> personacompra;
+    private List<Personacompra> personacompra2;
 
     public SaveCompraDTO() {
     }

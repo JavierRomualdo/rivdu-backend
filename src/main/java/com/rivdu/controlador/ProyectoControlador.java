@@ -109,26 +109,38 @@ public class ProyectoControlador {
     }
 
     //Para eliminar Sin estado
-    @RequestMapping(value = "eliminarEstadoProyecto/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
-        
+    @RequestMapping(value="eliminar", method = RequestMethod.PUT)
+    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Proyecto entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
-            proyectoServicio.actualizarProyecto(id);
-            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-            resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-            resp.setExtraInfo(id);
-            return new ResponseEntity<>(resp, HttpStatus.OK);
+        if(entidad != null){
+            try {
+                Proyecto guardado = proyectoServicio.actualizar(entidad);
+                if (guardado != null ) {
+                    resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                    resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                    resp.setExtraInfo(guardado);
+                }else{
+                    throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
+                }
+                
+            } catch (Exception e) {
+                throw e;
+            }
+        }else{
+            resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());
+        }
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }    
     
     //Para eliminar Con estado
-     @RequestMapping(value="eliminarConEstado", method = RequestMethod.POST)
+     @RequestMapping(value="eliminarconestado", method = RequestMethod.POST)
     public ResponseEntity eliminar(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
             Proyecto proyecto = proyectoServicio.obtener(id);
             if(proyecto.getEstado()){
-            proyecto.setEstado(Boolean.FALSE);
+                proyecto.setEstado(Boolean.FALSE);
             }
             else{
             proyecto.setEstado(Boolean.TRUE);
@@ -147,7 +159,6 @@ public class ProyectoControlador {
             throw e;
         }
     }
-    
     //Modificar
     @RequestMapping(value="obtener", method = RequestMethod.POST)
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{

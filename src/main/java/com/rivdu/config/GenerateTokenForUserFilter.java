@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.*;
 import com.rivdu.dto.SessionItemDTO;
 import com.rivdu.security.TokenUser;
 import com.rivdu.security.TokenUtil;
-import com.rivdu.servicio.MenuServicio;
 import com.rivdu.util.Respuesta.EstadoOperacionEnum;
 import com.rivdu.util.SessionResponse;
 
@@ -34,23 +33,22 @@ public class GenerateTokenForUserFilter extends AbstractAuthenticationProcessing
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException, JSONException {
-        try{
+        try {
             String jsonString = IOUtils.toString(request.getInputStream(), "UTF-8");
             JSONObject userJSON = new JSONObject(jsonString);
             String username = userJSON.getString("username");
             String password = userJSON.getString("password");
             final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
             return getAuthenticationManager().authenticate(authToken); // This will take to successfulAuthentication or faliureAuthentication function
-        }
-        catch( JSONException | AuthenticationException e){
+        } catch (JSONException | AuthenticationException e) {
             throw new AuthenticationServiceException(e.getMessage());
         }
     }
 
     @Override
-    protected void successfulAuthentication ( HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication authToken) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication authToken) throws IOException, ServletException {
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        TokenUser tokenUser = (TokenUser)authToken.getPrincipal();
+        TokenUser tokenUser = (TokenUser) authToken.getPrincipal();
         SessionResponse resp = new SessionResponse();
         SessionItemDTO respItem = new SessionItemDTO();
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -58,7 +56,7 @@ public class GenerateTokenForUserFilter extends AbstractAuthenticationProcessing
         respItem.setNombre(tokenUser.getUsuario().getNombre());
         respItem.setUsuarioId(tokenUser.getUsuario().getUserId());
         respItem.setToken(tokenString);
-        respItem.setNombrecompleto(tokenUser.getUsuario().getNombre()+" "+tokenUser.getUsuario().getApellidos());
+        respItem.setNombrecompleto(tokenUser.getUsuario().getNombre() + " " + tokenUser.getUsuario().getApellidos());
         resp.setEstadoOperacion(EstadoOperacionEnum.EXITO.getValor());
         resp.setOperacionMensaje("Login Success");
         resp.setItem(respItem);

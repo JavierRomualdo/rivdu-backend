@@ -47,11 +47,8 @@ public class Tipousuario implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idtipousuario")
-    private List<Usuarioacceso> usuarioaccesoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idtipousuario")
-    private List<Tipousuariomenuopcion> tipousuariomenuopcionList;
-
+ 
+    
     public Tipousuario() {
     }
 
