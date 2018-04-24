@@ -8,6 +8,7 @@ import com.rivdu.servicio.PlanCuentaServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import com.rivdu.util.RivduUtil;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -84,11 +85,27 @@ public class PlanCuentaControlador {
             throw e;
         }
     }
+
+    //metodo para btener datos de plan cuentas 
+   @RequestMapping(value = "obtener", method = RequestMethod.POST)
+    public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            Plandecuentas unidad =plancuentaservicio.obtener(Plandecuentas.class, id);
+            if (unidad != null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(unidad);
+            } else {
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
 }
 
-//    @RequestMapping(method = RequestMethod.POST)
-//    public ResponseEntity crear(HttpServletRequest request, @RequestBody Plandecuentas entidad){
-//        Respuesta resp = new Respuesta();
-//       
-//    }
 

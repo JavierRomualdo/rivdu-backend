@@ -86,7 +86,7 @@ public class CentroCostosControlador {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
     
-        @RequestMapping(value = "eliminarestadocosto/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "eliminarestadocosto/{id}", method = RequestMethod.GET)
     public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
         Respuesta resp = new Respuesta();
         Centrocostos estadocliente=centrocostoservicio.obtener(Centrocostos.class,id);
@@ -102,7 +102,7 @@ public class CentroCostosControlador {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-        @RequestMapping(value = "obtener", method = RequestMethod.POST)
+    @RequestMapping(value = "obtener", method = RequestMethod.POST)
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
