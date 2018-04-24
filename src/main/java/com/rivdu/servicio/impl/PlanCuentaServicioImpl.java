@@ -51,7 +51,7 @@ public class PlanCuentaServicioImpl extends GenericoServicioImpl<Plandecuentas, 
         filtro = Criterio.forClass(Plandecuentas.class);
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
         if (plancuenta.getId() != null) {
-            //filtro.add(Restrictions.ne("id", plancuenta.getCodigo());
+            filtro.add(Restrictions.ne("id", plancuenta.getCodigo()));
         }
         filtro.add(Restrictions.eq("codigo", plancuenta.getCodigo()));
         Plandecuentas u = plandecuentadao.obtenerPorCriteriaSinProyecciones(filtro);
