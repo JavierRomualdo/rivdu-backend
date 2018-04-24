@@ -1,15 +1,14 @@
 package com.rivdu.servicio;
 import com.rivdu.entidades.Plandecuentas;
-import java.util.List;
+import com.rivdu.util.BusquedaPaginada;
 
 /**
  *
  * @author PCQUISPE
  */
-public interface PlanCuentaServicio  extends GenericoServicio<PlanCuentaServicio, Long>{
+public interface PlanCuentaServicio  extends GenericoServicio<Plandecuentas, Long>{
      
-    public Plandecuentas actualizar(PlanCuentaServicio entidad);
-    public Plandecuentas crear(PlanCuentaServicio entidad);
-    public List<PlanCuentaServicio> listar();
-
+    public Plandecuentas actualizar(Plandecuentas entidad);
+    public Plandecuentas crear(Plandecuentas entidad);
+     public BusquedaPaginada busquedaPaginada(Plandecuentas entidadBuscar, BusquedaPaginada busquedaPaginada, String codigo);
 }

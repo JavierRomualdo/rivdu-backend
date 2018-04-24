@@ -54,7 +54,7 @@ public class CuentaBancoServicioImp extends GenericoServicioImpl<Cuentabanco, Lo
     @Override
     public Cuentabanco crear(Cuentabanco entidad) {
         VerificarCuentaRepetidad(entidad);
-         entidad.setEstado(true);
+        entidad.setEstado(true);
         return cuentabancodao.insertar(entidad);
     }
 
