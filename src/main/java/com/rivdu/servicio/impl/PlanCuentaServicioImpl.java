@@ -33,14 +33,13 @@ public class PlanCuentaServicioImpl extends GenericoServicioImpl<Plandecuentas, 
 
     @Override
     public Plandecuentas actualizar(Plandecuentas entidad) {
-      //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.verificarCuentaRepetidad(entidad);
         return plandecuentadao.actualizar(entidad);
    
     }
 
     @Override
     public Plandecuentas crear(Plandecuentas entidad) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         verificarCuentaRepetidad(entidad);
         entidad.setEstado(true);
         return plandecuentadao.insertar(entidad);
@@ -51,19 +50,18 @@ public class PlanCuentaServicioImpl extends GenericoServicioImpl<Plandecuentas, 
         filtro = Criterio.forClass(Plandecuentas.class);
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
         if (plancuenta.getId() != null) {
-            filtro.add(Restrictions.ne("id", plancuenta.getCodigo()));
+            filtro.add(Restrictions.ne("id", plancuenta.getId()));
         }
         filtro.add(Restrictions.eq("codigo", plancuenta.getCodigo()));
         Plandecuentas u = plandecuentadao.obtenerPorCriteriaSinProyecciones(filtro);
         if (u != null) {
-            throw new GeneralException("Ya codigo", "Guardar retorno nulo", loggerServicio);
+            throw new GeneralException("codigo existente", "Guardar retorno nulo", loggerServicio);
         }
     }
     
     //buscar por crterios
     @Override
     public BusquedaPaginada busquedaPaginada(Plandecuentas entidadBuscar, BusquedaPaginada busquedaPaginada, String codigo) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         Criterio filtro;
         filtro = Criterio.forClass(Plandecuentas.class);
         if (codigo != null && !codigo.equals("")) {
