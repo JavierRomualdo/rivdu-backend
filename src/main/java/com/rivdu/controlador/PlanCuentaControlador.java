@@ -106,6 +106,22 @@ public class PlanCuentaControlador {
             throw e;
         }
     }
+    //cambiar estado de cuenta
+    @RequestMapping(value = "eliminarestadocuenta/{id}", method = RequestMethod.GET)
+    public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        Plandecuentas estadocuenta=plancuentaservicio.obtener(Plandecuentas.class, id);
+        if (estadocuenta.isEstado()) {
+            estadocuenta.setEstado(Boolean.FALSE);
+        }else{
+            estadocuenta.setEstado(Boolean.TRUE);
+        }
+        plancuentaservicio.actualizar(estadocuenta); 
+        resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+        resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+        resp.setExtraInfo(id);
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
 }
 
 
