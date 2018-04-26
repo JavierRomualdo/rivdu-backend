@@ -5,6 +5,7 @@
  */
 package com.rivdu.servicio;
 
+import com.rivdu.dto.UsuarioEdicionDTO;
 import com.rivdu.entidades.Usuario;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.util.BusquedaPaginada;
@@ -21,4 +22,5 @@ public interface UsuarioServicio extends GenericoServicio<Usuario, Long>{
     public Usuario actualizar(Usuario unidad) throws GeneralException;
     public Usuario validarDni(String dni) throws GeneralException;
     public boolean validarNuevaPassword(String username, String passwordTipeada) throws GeneralException;
+    public UsuarioEdicionDTO obtenerParaEdicion(Long id) throws GeneralException;
 }

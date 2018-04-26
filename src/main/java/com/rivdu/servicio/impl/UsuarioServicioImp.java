@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.rivdu.dao.GenericoDao;
+import com.rivdu.dto.UsuarioEdicionDTO;
+import com.rivdu.entidades.Persona;
 import com.rivdu.entidades.Personarol;
 import com.rivdu.entidades.PersonarolPK;
 import com.rivdu.entidades.Usuario;
@@ -37,7 +39,7 @@ public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Long> impl
     @Autowired
     private GenericoDao<Usuario, Long> usuarioDao;
     @Autowired
-    private GenericoDao<Personarol, PersonarolPK> personarolDao;
+    private GenericoDao<Usuarioacceso, Long> usuarioAccesoDao;
 
     public UsuarioServicioImp(GenericoDao<Usuario, Long> genericoHibernate) {
         super(genericoHibernate);
@@ -74,13 +76,13 @@ public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Long> impl
         filtro = Criterio.forClass(Usuario.class);
         filtro.add(Restrictions.eq("userId", username));
         Usuario u = usuarioDao.obtenerPorCriteriaSinProyecciones(filtro);
-        
-        if (u == null && !u.getEstado()) {
+        if (u == null || !u.getEstado()) {
             throw new GeneralException("Este usuario no esta habilitado", "El usuario fue dado de baja.", loggerServicio);
         }
-        if (u.getIdempresa() != null) {
-            u.getIdempresa().setIdgerente(null);
-        }
+        if(u.getIdempresa()!=null && u.getIdempresa().getIdgerente()!=null){
+                Persona g = new Persona(u.getIdempresa().getIdgerente().getId());
+                u.getIdempresa().setIdgerente(g);
+            }
         u.setUsuarioaccesoList(null);
         return u;
     }
@@ -100,7 +102,16 @@ public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Long> impl
         }
         entidad.setEstado(Boolean.TRUE);
         entidad.setCambiarclave(Boolean.TRUE);
-        return usuarioDao.insertar(entidad);
+        List<Usuarioacceso> uaList = entidad.getUsuarioaccesoList();
+        entidad.setUsuarioaccesoList(null);
+        usuarioDao.insertar(entidad);
+        for (int i = 0; i < uaList.size(); i++) {
+            Usuario usuario = new Usuario(entidad.getId());
+            uaList.get(i).setIdusuario(usuario);
+            uaList.get(i).setEstado(true);
+            usuarioAccesoDao.insertar(uaList.get(i));
+        }
+        return entidad;
     }
     
     @Override
@@ -117,8 +128,9 @@ public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Long> impl
             for(Usuarioacceso pr:u.getUsuarioaccesoList()){
                 pr.getIdusuario().setUsuarioaccesoList(null);
             }
-            if(u.getIdempresa()!=null){
-                 u.getIdempresa().setIdgerente(null);
+            if(u.getIdempresa()!=null && u.getIdempresa().getIdgerente()!=null){
+                Persona g = new Persona(u.getIdempresa().getIdgerente().getId());
+                u.getIdempresa().setIdgerente(g);
             }
             
         }
@@ -126,15 +138,43 @@ public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Long> impl
     }
 
     @Override
+    public UsuarioEdicionDTO obtenerParaEdicion(Long id) throws GeneralException {
+        UsuarioEdicionDTO uedto = new UsuarioEdicionDTO();
+        Usuario u = obtener(Usuario.class, id);
+        if(u!=null){
+            List<Usuarioacceso> uaList = u.getUsuarioaccesoList();
+            uaList.stream().forEach((pr) -> {
+                Usuario us = new Usuario(id);
+                pr.setIdusuario(us);
+            });
+            u.setUsuarioaccesoList(null);
+            if(u.getIdempresa()!=null && u.getIdempresa().getIdgerente()!=null){
+                Persona g = new Persona(u.getIdempresa().getIdgerente().getId());
+                u.getIdempresa().setIdgerente(g);
+            }
+            uedto.setUsuarioaccesoList(uaList);
+        }
+        uedto.setUsuario(u);
+        return uedto;
+    }
+    
+    @Override
     public Usuario validarDni(String dni) throws GeneralException {
         Criterio filtro;
         filtro = Criterio.forClass(Usuario.class);
         filtro.add(Restrictions.eq("dni", dni));
         Usuario e = usuarioDao.obtenerPorCriteriaSinProyecciones(filtro);
         if (e!=null && !e.getUsuarioaccesoList().isEmpty()) {
-            for (Usuarioacceso personarolList : e.getUsuarioaccesoList()) {
-                personarolList.setIdusuario(null);
-           }
+            List<Usuarioacceso> uaList = e.getUsuarioaccesoList();
+            uaList.stream().forEach((pr) -> {
+                Usuario us = new Usuario(e.getId());
+                pr.setIdusuario(us);
+            });
+            e.setUsuarioaccesoList(uaList);
+            if(e.getIdempresa()!=null && e.getIdempresa().getIdgerente()!=null){
+                Persona g = new Persona(e.getIdempresa().getIdgerente().getId());
+                e.getIdempresa().setIdgerente(g);
+            }
         }
         return e;
     }

@@ -5,6 +5,7 @@
  */
 package com.rivdu.controlador;
 
+import com.rivdu.dto.UsuarioEdicionDTO;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.rivdu.entidades.Usuario;
+import com.rivdu.entidades.Usuarioacceso;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.UsuarioServicio;
 import com.rivdu.util.BusquedaPaginada;
@@ -68,6 +70,27 @@ public class UsuarioControlador {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                 resp.setExtraInfo(usuario);
+            } else {
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+    
+    @RequestMapping(value = "obteneredicion", method = RequestMethod.POST)
+    public ResponseEntity obtenerEdicion(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        try {
+            Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
+            UsuarioEdicionDTO usuarioDto = usuarioServicio.obtenerParaEdicion(id);
+            if (usuarioDto!=null) {
+                usuarioDto.getUsuario().setUsuarioaccesoList(usuarioDto.getUsuarioaccesoList());
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(usuarioDto.getUsuario());
             } else {
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
