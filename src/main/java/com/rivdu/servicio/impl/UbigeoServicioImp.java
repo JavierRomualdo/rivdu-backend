@@ -13,7 +13,6 @@ import com.rivdu.util.BusquedaPaginada;
 import org.hibernate.criterion.Order;
 import com.rivdu.util.Criterio;
 import java.util.List;
-import java.util.Objects;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,13 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.rivdu.controlador;
 
-import com.rivdu.entidades.Centrocostos;
+import com.rivdu.entidades.Cuentabanco;
+import com.rivdu.entidades.Plandecuentas;
+import com.rivdu.entidades.Ubigeo;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.CentroCostoServicio;
+import com.rivdu.servicio.PlanCuentaServicio;
+import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
 import com.rivdu.util.RivduUtil;
@@ -28,47 +26,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author LUIS ORTIZ
+ * @author PCQUISPE
  */
 @RestController
-@RequestMapping("centrocosto")
-public class CentroCostosControlador {
-    
-      private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
+@RequestMapping("plancuenta")
+public class PlanCuentaControlador {
+
+    private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private CentroCostoServicio centrocostoservicio;
-    
-    @GetMapping("listar")
-    public ResponseEntity show() throws GeneralException {
-        Respuesta resp = new Respuesta();
-        List<Centrocostos> lista;
-        try {
-            lista = centrocostoservicio.listar();
-            if (lista != null) {
-                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                resp.setOperacionMensaje("");
-                resp.setExtraInfo(lista);
-            } else {
-                throw new GeneralException("Lista no disponible", "No hay datos", loggerControlador);
-            }
-            return new ResponseEntity<>(resp, HttpStatus.OK);
-        } catch (Exception e) {
-            loggerControlador.error(e.getMessage());
-            throw e;
-        }
-    };
-    
-        @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody Centrocostos entidad) throws GeneralException {
+    private PlanCuentaServicio plancuentaservicio;
+
+    //metedo padre
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity crear(HttpServletRequest request, @RequestBody Plandecuentas entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Centrocostos guardado;
+                Plandecuentas guardado;
                 if (entidad.getId() != null) {
-                    guardado = centrocostoservicio.actualizar(entidad);
+                    guardado = plancuentaservicio.actualizar(entidad);
                 } else {
-                    guardado = centrocostoservicio.crear(entidad);
+                    guardado = plancuentaservicio.crear(entidad);
                 }
                 if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
@@ -85,29 +64,35 @@ public class CentroCostosControlador {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
-    
-    @RequestMapping(value = "eliminarestadocosto/{id}", method = RequestMethod.GET)
-    public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
-        Respuesta resp = new Respuesta();
-        Centrocostos estadocliente=centrocostoservicio.obtener(Centrocostos.class,id);
-        if (estadocliente.isEstado()) {
-            estadocliente.setEstado(Boolean.FALSE);
-        }else{
-            estadocliente.setEstado(Boolean.TRUE);
+
+    //metodo listar busqueda
+    @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
+    public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina,
+            @PathVariable("cantidadPorPagina") Long cantidadPorPagina,
+            @RequestBody Map<String, Object> parametros) throws GeneralException {
+        try {
+            String codigo;
+            BusquedaPaginada busquedaPaginada = new BusquedaPaginada();
+            busquedaPaginada.setBuscar(parametros);
+            Plandecuentas entidadBuscar = new Plandecuentas();
+            codigo = busquedaPaginada.obtenerFiltroComoString("codigo");
+            busquedaPaginada.setPaginaActual(pagina);
+            busquedaPaginada.setCantidadPorPagina(cantidadPorPagina);
+            busquedaPaginada = plancuentaservicio.busquedaPaginada(entidadBuscar, busquedaPaginada, codigo);
+            return new ResponseEntity<>(busquedaPaginada, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
         }
-        centrocostoservicio.actualizar(estadocliente); 
-        resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-        resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-        resp.setExtraInfo(id);
-        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "obtener", method = RequestMethod.POST)
+    //metodo para btener datos de plan cuentas 
+   @RequestMapping(value = "obtener", method = RequestMethod.POST)
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
-            Centrocostos unidad = centrocostoservicio.obtener(Centrocostos.class, id);
+            Plandecuentas unidad =plancuentaservicio.obtener(Plandecuentas.class, id);
             if (unidad != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -121,5 +106,6 @@ public class CentroCostosControlador {
             throw e;
         }
     }
-
 }
+
+
