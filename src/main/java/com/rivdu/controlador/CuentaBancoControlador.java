@@ -39,7 +39,7 @@ public class CuentaBancoControlador {
     @Autowired
     private CuentaBancoServicio cuentabancoservicio;
     
-        @GetMapping("listar")
+    @GetMapping("listar")
     public ResponseEntity show() throws GeneralException {
         Respuesta resp = new Respuesta();
         List<Cuentabanco> lista;
@@ -86,7 +86,7 @@ public class CuentaBancoControlador {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
     
-     @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "eliminarestadocliente/{id}", method = RequestMethod.GET)
     public ResponseEntity eliminarestado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
         Respuesta resp = new Respuesta();
         Cuentabanco estadocliente=cuentabancoservicio.obtener(Cuentabanco.class, id);

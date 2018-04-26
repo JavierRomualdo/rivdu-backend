@@ -1,5 +1,6 @@
 package com.rivdu.controlador;
 
+import com.rivdu.dto.MenuUsuarioDTO;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +39,24 @@ public class MenuControlador {
             throw e;
         }
     }
-
+    @GetMapping("/menuselect/{id}")
+    public ResponseEntity taerMenuSelect(@PathVariable Long id) throws GeneralException{
+        Respuesta resp = new Respuesta();
+        try {
+            List<MenuUsuarioDTO> lm = menuServicio.listarMenuSelect(id);
+            if (lm!=null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje("");
+                resp.setExtraInfo(lm);
+            }else{
+                throw new GeneralException("Usuario No tiene menu asignado", "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
 }
+
+
