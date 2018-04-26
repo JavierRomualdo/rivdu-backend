@@ -39,7 +39,7 @@ public class CuentaBancoControlador {
     @Autowired
     private CuentaBancoServicio cuentabancoservicio;
     
-        @GetMapping("listar")
+    @GetMapping("listar")
     public ResponseEntity show() throws GeneralException {
         Respuesta resp = new Respuesta();
         List<Cuentabanco> lista;

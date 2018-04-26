@@ -5,6 +5,7 @@
  */
 package com.rivdu.servicio;
 
+import com.rivdu.dto.MenuUsuarioDTO;
 import java.util.List;
 import com.rivdu.entidades.Menu;
 import com.rivdu.excepcion.GeneralException;
@@ -15,4 +16,6 @@ import com.rivdu.excepcion.GeneralException;
  */
 public interface MenuServicio extends GenericoServicio<Menu, Long>{
     public List<Menu> listarMenus(String login) throws GeneralException;
+    public List<MenuUsuarioDTO> listarMenuSelect(Long idRol) throws GeneralException;
+    
 }

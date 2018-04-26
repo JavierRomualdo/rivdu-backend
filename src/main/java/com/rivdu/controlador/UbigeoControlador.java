@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UbigeoControlador {
      Tipoubigeo ubi;
      private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
+     
     @Autowired
     private UbigeoServicio ubigeoServicio;
     
@@ -66,7 +67,7 @@ public class UbigeoControlador {
     }
     
     //el otro método listar ubigeo
-        @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
+    @RequestMapping(value = "pagina/{pagina}/cantidadPorPagina/{cantidadPorPagina}", method = RequestMethod.POST)
     public ResponseEntity<BusquedaPaginada> busquedaPaginada(HttpServletRequest request, @PathVariable("pagina") Long pagina, 
                                                              @PathVariable("cantidadPorPagina") Long cantidadPorPagina, 
                                                              @RequestBody Map<String, Object> parametros) throws GeneralException{
@@ -114,7 +115,7 @@ public class UbigeoControlador {
         }
     }//fin del metodo eliminar
     
-        @RequestMapping(value="obtener", method = RequestMethod.POST)//metódo para editar
+    @RequestMapping(value="obtener", method = RequestMethod.POST)//metódo para editar
     public ResponseEntity obtener(HttpServletRequest request, @RequestBody Map<String, Object> parametros) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
