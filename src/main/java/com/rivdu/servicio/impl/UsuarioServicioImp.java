@@ -116,8 +116,6 @@ public class UsuarioServicioImp extends GenericoServicioImpl<Usuario, Long> impl
     
     @Override
     public Usuario actualizar(Usuario u) throws GeneralException {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        u.setPassword(encoder.encode(u.getPassword()));
         return usuarioDao.actualizar(u);
     }
 

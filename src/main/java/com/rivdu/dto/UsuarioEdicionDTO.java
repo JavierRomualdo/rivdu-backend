@@ -10,6 +10,7 @@ public class UsuarioEdicionDTO {
 
     private Usuario usuario;
     private List<Usuarioacceso> usuarioaccesoList;
+    private String password;
 
     public UsuarioEdicionDTO() {
     }

@@ -26,6 +26,7 @@ import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.RivduUtil;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 /**
  *
@@ -102,11 +103,19 @@ public class UsuarioControlador {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody Usuario entidad) throws GeneralException {
+    public ResponseEntity crear(HttpServletRequest request, @RequestBody UsuarioEdicionDTO entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Usuario guardado = usuarioServicio.insertar(entidad);
+                Usuario u = entidad.getUsuario();
+                String pw = entidad.getPassword();
+                if(pw!=null && !pw.equals("")){
+                    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                    u.setPassword(encoder.encode(pw));
+                } else {
+                    throw new GeneralException("Debe ingresar una clave.", "Guardar retorno nulo", loggerControlador);
+                }
+                Usuario guardado = usuarioServicio.insertar(u);
                 if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -125,11 +134,17 @@ public class UsuarioControlador {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody Usuario entidad) throws GeneralException {
+    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody UsuarioEdicionDTO entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Usuario guardado = usuarioServicio.actualizar(entidad);
+                Usuario u = entidad.getUsuario();
+                String pw = entidad.getPassword();
+                if(pw!=null && !pw.equals("")){
+                    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                    u.setPassword(encoder.encode(pw));
+                }
+                Usuario guardado = usuarioServicio.actualizar(u);
                 if (guardado != null) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
