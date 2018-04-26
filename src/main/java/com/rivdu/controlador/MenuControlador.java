@@ -39,7 +39,7 @@ public class MenuControlador {
             throw e;
         }
     }
-    @GetMapping("/menuselect/{id}")
+    @GetMapping("/menuselect/{id}/{estdaodo}")
     public ResponseEntity taerMenuSelect(@PathVariable Long id) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
