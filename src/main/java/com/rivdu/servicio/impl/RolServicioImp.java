@@ -31,4 +31,15 @@ public class RolServicioImp extends GenericoServicioImpl<Rol, Long> implements  
     public List<Rol>  listar() throws GeneralException {
      return  rolDao.listarTodosVigentes(Rol.class, "estado", true);
     }
+
+    @Override
+    public Rol crear(Rol entidad) throws GeneralException { //To change body of generated methods, choose Tools | Templates.
+        entidad.setEstado(true);
+        return rolDao.insertar(entidad);
+    }
+
+    @Override
+    public Rol actualizar(Rol entidad) throws GeneralException { //To change body of generated methods, choose Tools | Templates.
+        return rolDao.actualizar(entidad);
+    }
 }
