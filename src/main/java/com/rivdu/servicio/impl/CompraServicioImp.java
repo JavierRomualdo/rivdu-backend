@@ -94,18 +94,6 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         return compra.getId();
     }
 
-   /* @Override*/
-    /*public Compra actualizar(Compra producto) throws GeneralException {
-    /*    Compra compra = entidad.getCompra();
-        Predio predio = entidad.getPredio();
-        Colindante colindante = entidad.getColindante();
-        Servicios[] servicios = entidad.getServicios();
-        Captador captador = entidad.getCaptador();
-        List<Personacompra> personacompra = entidad.getPersonacompra();
-        List<Personacompra> personacompra2 = entidad.getPersonacompra2();*/
-    //    return null;
-    
-
     @Override
     public SaveCompraDTO obtener(Long id) throws GeneralException {
         SaveCompraDTO compradto = new SaveCompraDTO();
@@ -211,7 +199,8 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
                 .add(Projections.distinct(Projections.property("c.id")))
                 .add(Projections.property("c.id"), "id")
                 .add(Projections.property("p.nombre"), "nombre")
-                .add(Projections.property("p.apellido"), "apellido")
+                .add(Projections.property("p.appaterno"), "appaterno")
+                .add(Projections.property("p.apmaterno"), "apmaterno")
                 .add(Projections.property("p.dni"), "dni")
                 .add(Projections.property("p.nombre"), "persona")
                 .add(Projections.property("c.fecha"), "fecharegistro"));
