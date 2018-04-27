@@ -39,11 +39,13 @@ public class MenuControlador {
             throw e;
         }
     }
+       //lista menu roles
     @GetMapping("/menuselect/{id}")
     public ResponseEntity taerMenuSelect(@PathVariable Long id) throws GeneralException{
         Respuesta resp = new Respuesta();
         try {
             List<MenuUsuarioDTO> lm = menuServicio.listarMenuSelect(id);
+//          List<MenuUsuarioDTO> listestado=menuServicio.listarMenus()
             if (lm!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje("");
@@ -57,6 +59,8 @@ public class MenuControlador {
             throw e;
         }
     }
+    
+     
 }
 
 
