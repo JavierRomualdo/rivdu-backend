@@ -14,6 +14,8 @@ import java.util.List;
  * @author PROPIETARIO
  */
 public interface RolServicio extends GenericoServicio<Rol, Long> {
-     public List<Rol> listar() throws GeneralException;
-    
+
+    public List<Rol> listar() throws GeneralException;
+    public Rol crear(Rol entidad) throws GeneralException;
+    public Rol actualizar(Rol entidad) throws GeneralException;
 }

@@ -6,7 +6,8 @@ public class CompraDTO {
 
     private Long id;
     private String nombre;
-    private String apellido;
+    private String appaterno;
+    private String apmaterno;
     private String dni;
     private String serie;
     private String correlativo;
@@ -33,12 +34,20 @@ public class CompraDTO {
         this.nombre = nombre;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getAppaterno() {
+        return appaterno;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setAppaterno(String appaterno) {
+        this.appaterno = appaterno;
+    }
+
+    public String getApmaterno() {
+        return apmaterno;
+    }
+
+    public void setApmaterno(String apmaterno) {
+        this.apmaterno = apmaterno;
     }
 
     public String getDni() {
@@ -86,6 +95,6 @@ public class CompraDTO {
     }
 
     public void setPersona(String persona) {
-        this.persona = this.nombre + " " +this.apellido+ " - " +this.dni;
+        this.persona = this.nombre + " " +this.appaterno+ " " + this.apmaterno + " - " +this.dni;
     }
 }
