@@ -6,6 +6,9 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
+import com.rivdu.dto.RolMenuDTO;
+import com.rivdu.entidades.Menutipousuario;
+import com.rivdu.entidades.MenutipousuarioPK;
 import com.rivdu.entidades.Rol;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.RolServicio;
@@ -22,8 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class RolServicioImp extends GenericoServicioImpl<Rol, Long> implements  RolServicio {
-     @Autowired
+    
+    @Autowired
     private GenericoDao<Rol, Long> rolDao;
+    @Autowired
+    private GenericoDao<Menutipousuario, MenutipousuarioPK> menutipousuarioDao;
+     
     public RolServicioImp(GenericoDao<Rol, Long> genericoHibernate) {
         super(genericoHibernate);
     }
@@ -45,4 +52,27 @@ public class RolServicioImp extends GenericoServicioImpl<Rol, Long> implements  
     public Rol actualizar(Rol entidad) throws GeneralException { //To change body of generated methods, choose Tools | Templates.
         return rolDao.actualizar(entidad);
     }
+
+    @Override
+    public Boolean apilarmenu(RolMenuDTO entidad) throws GeneralException {
+        List<Long> ids = entidad.getIds();
+        for (int i = 0; i < ids.size(); i++) {
+            Menutipousuario mtu = new Menutipousuario(ids.get(i), entidad.getIdrol());
+            mtu.setEstado(Boolean.TRUE);
+            menutipousuarioDao.actualizar(mtu);
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean desapilarmenu(RolMenuDTO entidad) throws GeneralException {
+        List<Long> ids = entidad.getIds();
+        for (int i = 0; i < ids.size(); i++) {
+            Menutipousuario mtu = new Menutipousuario(ids.get(i), entidad.getIdrol());
+            mtu.setEstado(Boolean.FALSE);
+            menutipousuarioDao.actualizar(mtu);
+        }
+        return true;
+    }
+    
 }

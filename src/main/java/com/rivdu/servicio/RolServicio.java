@@ -5,6 +5,7 @@
  */
 package com.rivdu.servicio;
 
+import com.rivdu.dto.RolMenuDTO;
 import com.rivdu.entidades.Rol;
 import com.rivdu.excepcion.GeneralException;
 import java.util.List;
@@ -18,4 +19,6 @@ public interface RolServicio extends GenericoServicio<Rol, Long> {
     public List<Rol> listar() throws GeneralException;
     public Rol crear(Rol entidad) throws GeneralException;
     public Rol actualizar(Rol entidad) throws GeneralException;
+    public Boolean apilarmenu(RolMenuDTO entidad) throws GeneralException;
+    public Boolean desapilarmenu(RolMenuDTO entidad) throws GeneralException;
 }

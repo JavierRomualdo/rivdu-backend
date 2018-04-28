@@ -122,59 +122,30 @@ public class MenuServicioImp extends GenericoServicioImpl<Menu, Long> implements
     //lista de menu select
     @Override
     public List<MenuUsuarioDTO> listarMenuSelect(Long idRol) throws GeneralException {
-        //listarTodos
-        //listamosSelecciona2
-        //for todos
         List<MenuUsuarioDTO> mudtoList = new ArrayList<>();
         List<Menu> listaTodos=listarTodosMenus();
         List<Menu> listaSeleccionados=listarMenusSeleccionados(idRol);
-        
         //recorrer listado todos
         for (Menu menu : listaTodos) {
-            MenuUsuarioDTO mudtopadre=new MenuUsuarioDTO();
-            List<MenuUsuarioDTO> mudtohijoList=new ArrayList<>();
-            mudtopadre.setId(menu.getId());
-            mudtopadre.setLabel(menu.getNombre());
-            boolean compruebaestado=comprobarMenuSeleccionado(menu.getId(), listaSeleccionados);
-            mudtopadre.setEstado(compruebaestado);
-            for (Menu hijos : menu.getMenuList()) {
-                MenuUsuarioDTO mudtohijo=new MenuUsuarioDTO();
-                mudtohijo.setId(hijos.getId());
-                mudtohijo.setLabel(hijos.getNombre());  
-                boolean compruebaestadohijo=comprobarMenuSeleccionado(menu.getId(), listaSeleccionados);
-                mudtopadre.setEstado(compruebaestadohijo);
-                mudtohijoList.add(mudtohijo);
-            } 
-            mudtopadre.setChildren(mudtohijoList);
-            mudtoList.add(mudtopadre);
+            if(menu.getIdmenupadre()==null){
+                MenuUsuarioDTO mudtopadre=new MenuUsuarioDTO();
+                List<MenuUsuarioDTO> mudtohijoList=new ArrayList<>();
+                mudtopadre.setId(menu.getId());
+                mudtopadre.setLabel(menu.getNombre());
+                boolean compruebaestado=comprobarMenuSeleccionado(menu.getId(), listaSeleccionados);
+                mudtopadre.setEstado(compruebaestado);
+                for (Menu hijos : menu.getMenuList()) {
+                    MenuUsuarioDTO mudtohijo=new MenuUsuarioDTO();
+                    mudtohijo.setId(hijos.getId());
+                    mudtohijo.setLabel(hijos.getNombre());  
+                    boolean compruebaestadohijo=comprobarMenuSeleccionado(hijos.getId(), listaSeleccionados);
+                    mudtohijo.setEstado(compruebaestadohijo);
+                    mudtohijoList.add(mudtohijo);
+                } 
+                mudtopadre.setChildren(mudtohijoList);
+                mudtoList.add(mudtopadre);
+            }
         }
-        
-           
-//        List<MenuUsuarioDTO> mudtoList = new ArrayList<>();
-//        List<Long> ids = new ArrayList<>();
-//        ids.add(idRol);      
-//        //listar los menus padre
-//        List<Menu> listMenu = obtenerMenusPadresPorTipoDeRol(ids);
-//        obtenerSubmenus(listMenu, ids);
-//        for (int i = 0; i <listMenu.size(); i++) {
-//            MenuUsuarioDTO mudtopadre=new MenuUsuarioDTO();
-//            List<MenuUsuarioDTO> mudtohijoList=new ArrayList<>();
-//            mudtopadre.setId(listMenu.get(i).getId());
-//            mudtopadre.setLabel(listMenu.get(i).getNombre());
-//            mudtopadre.setEstado(true);
-//            //recorrer la lista  hijos
-//            for (Menu menuList : listMenu.get(i).getMenuList()) {
-//                MenuUsuarioDTO mudtohijo=new MenuUsuarioDTO();
-//                mudtohijo.setId(menuList.getId());
-//                mudtohijo.setLabel(menuList.getNombre());  
-//                mudtohijo.setEstado(true);  
-//                mudtohijoList.add(mudtohijo);
-//                
-//            } 
-//            mudtopadre.setChildren(mudtohijoList);
-//            mudtoList.add(mudtopadre);
-//            
-//        }
       return mudtoList;
     }
 
@@ -188,6 +159,7 @@ public class MenuServicioImp extends GenericoServicioImpl<Menu, Long> implements
         Criterio filtro;
         filtro = Criterio.forClass(Menutipousuario.class);
         filtro.add(Restrictions.eq("menutipousuarioPK.idrol", idRol));
+        filtro.add(Restrictions.eq("estado", true));
         filtro.createAlias("idmenu", "menu");
         filtro.setProjection(Projections.projectionList()
                     .add(Projections.distinct(Projections.property("menutipousuarioPK.idmenu")))
@@ -203,13 +175,12 @@ public class MenuServicioImp extends GenericoServicioImpl<Menu, Long> implements
     }
 
     private boolean comprobarMenuSeleccionado(Long id, List<Menu> listaSeleccionados) {
-        boolean respuesta=false;
         for (Menu listaSeleccionado : listaSeleccionados) {
             if (Long.compare(id, listaSeleccionado.getId())==0){
-                respuesta = true;
+                return true;
             }
         }
-        return respuesta;
+        return false;
     }
    
 }

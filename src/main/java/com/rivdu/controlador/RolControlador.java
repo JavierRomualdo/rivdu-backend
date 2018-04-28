@@ -5,7 +5,7 @@
  */
 package com.rivdu.controlador;
 
-import com.rivdu.entidades.Estadocliente;
+import com.rivdu.dto.RolMenuDTO;
 import com.rivdu.entidades.Rol;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.RolServicio;
@@ -66,6 +66,44 @@ public class RolControlador {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
             Rol r = rolservicio.obtener(Rol.class, id);
             if (r != null) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(r);
+            } else {
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+    
+    @RequestMapping(value = "apilarmenu", method = RequestMethod.POST)
+    public ResponseEntity apilarmenu(HttpServletRequest request, @RequestBody RolMenuDTO entidad) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        try {
+            Boolean r = rolservicio.apilarmenu(entidad);
+            if (r) {
+                resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
+                resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
+                resp.setExtraInfo(r);
+            } else {
+                throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
+            }
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            loggerControlador.error(e.getMessage());
+            throw e;
+        }
+    }
+    
+    @RequestMapping(value = "desapilarmenu", method = RequestMethod.POST)
+    public ResponseEntity desapilarmenu(HttpServletRequest request, @RequestBody RolMenuDTO entidad) throws GeneralException {
+        Respuesta resp = new Respuesta();
+        try {
+            Boolean r = rolservicio.desapilarmenu(entidad);
+            if (r) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                 resp.setExtraInfo(r);

@@ -45,7 +45,6 @@ public class MenuControlador {
         Respuesta resp = new Respuesta();
         try {
             List<MenuUsuarioDTO> lm = menuServicio.listarMenuSelect(id);
-//          List<MenuUsuarioDTO> listestado=menuServicio.listarMenus()
             if (lm!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje("");
