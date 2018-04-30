@@ -76,7 +76,7 @@ public class CompraControlador {
                     resp.setExtraInfo(id);
                 }
             } catch (Exception e) {
-                throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
+                throw e;
             }
         } else {
             resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.ERROR.getValor());

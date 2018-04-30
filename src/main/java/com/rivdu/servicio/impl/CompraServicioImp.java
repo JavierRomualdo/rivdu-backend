@@ -85,12 +85,16 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         }
         if (personacompra != null && personacompra.size() > 0) {
             guardarPersonaCompra(personacompra, compra);
+        } else {
+           throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio); 
         }
         if (personacompra2 != null && personacompra2.size() > 0) {
             guardarPersonaCompra(personacompra2, compra);
+        } else {
+           throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio); 
         }
         guardarCaptador(captador, compra);
-        guardarColindante(colindante, compra, predio);
+        guardarColindante(colindante, predio);
         return compra.getId();
     }
 
@@ -157,14 +161,14 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     private void guardarCaptador(Captador captador, Compra compra) {
-        if (captador != null) {
+        if (captador != null && captador.getNombre()!=null) {
             captador.setEstado(true);
             captador.setIdcompra(compra.getId());
             captadorDao.insertar(captador);
         }
     }
 
-    private void guardarColindante(Colindante colindante, Compra compra, Predio predio) {
+    private void guardarColindante(Colindante colindante, Predio predio) {
         if (colindante == null) {
             colindante = new Colindante();
         }

@@ -75,6 +75,7 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
                 .add(Projections.property("p.apmaterno"), "apmaterno")
                 .add(Projections.property("p.direccion"), "direccion")
                 .add(Projections.property("p.nombre"), "nombre")
+                .add(Projections.property("p.idestado"), "idestado")
                 .add(Projections.property("p.dni"), "dni"));
         filtro.calcularDatosParaPaginacion(busquedaPaginada);
         filtro.addOrder(Order.asc("p.nombre"));
