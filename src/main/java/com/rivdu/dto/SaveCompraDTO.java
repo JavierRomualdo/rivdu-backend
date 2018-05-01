@@ -10,7 +10,6 @@ import com.rivdu.entidades.Colindante;
 import com.rivdu.entidades.Compra;
 import com.rivdu.entidades.Personacompra;
 import com.rivdu.entidades.Predio;
-import com.rivdu.entidades.Servicios;
 import java.util.List;
 import lombok.Data;
 
@@ -24,7 +23,7 @@ public class SaveCompraDTO {
     private Compra compra;
     private Predio predio;
     private Colindante colindante;
-    private Servicios[] servicios;
+    private List<Long> servicios;
     private Captador captador;
     private List<Personacompra> personacompra;
     private List<Personacompra> personacompra2;

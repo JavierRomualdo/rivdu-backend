@@ -24,6 +24,7 @@ import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.CompraServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Order;
@@ -70,7 +71,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         Compra compra = entidad.getCompra();
         Predio predio = entidad.getPredio();
         Colindante colindante = entidad.getColindante();
-        Servicios[] servicios = entidad.getServicios();
+        List<Long> servicios = entidad.getServicios();
         Captador captador = entidad.getCaptador();
         List<Personacompra> personacompra = entidad.getPersonacompra();
         List<Personacompra> personacompra2 = entidad.getPersonacompra2();
@@ -80,18 +81,18 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         } else {
             throw new GeneralException("No existe predio", "No existe predio", loggerServicio);
         }
-        if (servicios != null && servicios.length > 0) {
+        if (servicios != null && servicios.size() > 0) {
             guardarPredioServicio(servicios, predio);
         }
         if (personacompra != null && personacompra.size() > 0) {
             guardarPersonaCompra(personacompra, compra);
         } else {
-           throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio); 
+            throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio);
         }
         if (personacompra2 != null && personacompra2.size() > 0) {
             guardarPersonaCompra(personacompra2, compra);
         } else {
-           throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio); 
+            throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio);
         }
         guardarCaptador(captador, compra);
         guardarColindante(colindante, predio);
@@ -108,9 +109,9 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
             Predio p = compra.getIdpredio();
             if (p != null) {
                 Colindante colindante = obtenerColindante(p.getId());
-               // Servicios[] ps = obtenerPrediosServicios(p.getId());
+                List<Long> ps = obtenerPrediosServicios(p.getId());
                 compradto.setColindante(colindante);
-              //  compradto.setServicios(ps);
+                compradto.setServicios(ps);
             }
             List<Personacompra> pclist = listarPersonasCompra(compra.getId());
             List<Personacompra> pclist2 = listarPersonasCompra2(compra.getId());
@@ -142,13 +143,14 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         return compraDao.insertar(compra);
     }
 
-    private void guardarPredioServicio(Servicios[] servicios, Predio predio) {
-        for (Servicios servicio : servicios) {
+    private void guardarPredioServicio(List<Long> servicios, Predio predio) {
+        for (Long servicio : servicios) {
             Predioservicio ps = new Predioservicio();
             ps.setEstado(true);
             ps.setIdpredio(predio);
-            ps.setIdservicio(servicio);
-            predioservicioDao.insertar(ps);
+            Servicios s = new Servicios(servicio);
+            ps.setIdservicio(s);
+            predioservicioDao.actualizar(ps);
         }
     }
 
@@ -161,7 +163,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     private void guardarCaptador(Captador captador, Compra compra) {
-        if (captador != null && captador.getNombre()!=null) {
+        if (captador != null && captador.getNombre() != null) {
             captador.setEstado(true);
             captador.setIdcompra(compra.getId());
             captadorDao.insertar(captador);
@@ -227,8 +229,17 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         return col;
     }
 
-    private Servicios[] obtenerPrediosServicios(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private List<Long> obtenerPrediosServicios(Long id) {
+        List<Long> s = new ArrayList<>();
+        Criterio filtro;
+        filtro = Criterio.forClass(Predioservicio.class);
+        filtro.add(Restrictions.eq("idpredio.id", id));
+        filtro.add(Restrictions.eq("estado", true));
+        List<Predioservicio> ps = predioservicioDao.buscarPorCriteriaConProyecciones(filtro);
+        for (int i = 0; i < ps.size(); i++) {
+            s.add(ps.get(i).getIdservicio().getId());
+        }
+        return s;
     }
 
     private Captador obtenerCaptador(Long idcompra) {
@@ -240,14 +251,14 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     private List<Personacompra> listarPersonasCompra(Long id) {
-       Criterio filtro;
-       filtro =Criterio.forClass(Personacompra.class);
-       filtro.add(Restrictions.isNull("idrelacion.id"));
-       filtro.add(Restrictions.eq("idcompra.id", id));
-       filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-       List<Personacompra> ps = personacompraDao.buscarPorCriteriaSinProyecciones(filtro);
-       ps.stream().forEach((p) -> {
-           p.getIdpersona().setPersonarolList(null);
+        Criterio filtro;
+        filtro = Criterio.forClass(Personacompra.class);
+        filtro.add(Restrictions.isNull("idrelacion.id"));
+        filtro.add(Restrictions.eq("idcompra.id", id));
+        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+        List<Personacompra> ps = personacompraDao.buscarPorCriteriaSinProyecciones(filtro);
+        ps.stream().forEach((p) -> {
+            p.getIdpersona().setPersonarolList(null);
         });
         return ps;
     }
@@ -291,41 +302,54 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
 
     private List<Personacompra> listarPersonasCompra2(Long id) {
         Criterio filtro;
-       filtro =Criterio.forClass(Personacompra.class);
-       filtro.add(Restrictions.isNotNull("idrelacion.id"));
-       filtro.add(Restrictions.eq("idcompra.id", id));
-       filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-       List<Personacompra> ps= personacompraDao.buscarPorCriteriaSinProyecciones(filtro);
-       ps.stream().forEach((p) -> {
-           p.getIdpersona().setPersonarolList(null);
+        filtro = Criterio.forClass(Personacompra.class);
+        filtro.add(Restrictions.isNotNull("idrelacion.id"));
+        filtro.add(Restrictions.eq("idcompra.id", id));
+        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
+        List<Personacompra> ps = personacompraDao.buscarPorCriteriaSinProyecciones(filtro);
+        ps.stream().forEach((p) -> {
+            p.getIdpersona().setPersonarolList(null);
         });
-       
-       return ps;
-}
+        return ps;
+    }
 
     @Override
     public Compra actualizar(SaveCompraDTO entidad) {
         Compra compra = entidad.getCompra();
         Predio predio = entidad.getPredio();
         Colindante colindante = entidad.getColindante();
-        Servicios[] servicios = entidad.getServicios();
+        List<Long> servicios = entidad.getServicios();
         Captador captador = entidad.getCaptador();
         List<Personacompra> personacompra = entidad.getPersonacompra();
         List<Personacompra> personacompra2 = entidad.getPersonacompra2();
-        
-        
         compra = compraDao.actualizar(compra);
         predioDao.actualizar(predio);
+        actualizarServicios(servicios, predio);
         colindanteDao.actualizar(colindante);
         captadorDao.actualizar(captador);
         personacompra.stream().forEach((personacompra1) -> {
             personacompraDao.actualizar(personacompra1);
         });
-        
         personacompra2.stream().forEach((personacompra21) -> {
             personacompraDao.actualizar(personacompra21);
         });
-        
         return compra;
     }
+
+    private void actualizarServicios(List<Long> servicios, Predio p) {
+        List<Predioservicio> serviciosOld = this.obtenerPrediosServiciosAntiguos(p.getId());
+        for (int i = 0; i < serviciosOld.size(); i++) {
+            predioservicioDao.eliminar(serviciosOld.get(i));
+        }
+        this.guardarPredioServicio(servicios, p);
+    }
+
+    private List<Predioservicio> obtenerPrediosServiciosAntiguos(Long id) {
+        Criterio filtro;
+        filtro = Criterio.forClass(Predioservicio.class);
+        filtro.add(Restrictions.eq("idpredio.id", id));
+        List<Predioservicio> ps = predioservicioDao.buscarPorCriteriaConProyecciones(filtro);
+        return ps;
+    }
+
 }

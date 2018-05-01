@@ -6,7 +6,6 @@
 
 package com.rivdu.dao;
 
-import com.rivdu.entidades.Usuarioacceso;
 import java.util.List;
 import org.hibernate.criterion.Projection;
 import org.springframework.transaction.annotation.Transactional;
