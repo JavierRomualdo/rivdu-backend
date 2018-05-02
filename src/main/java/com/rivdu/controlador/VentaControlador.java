@@ -7,11 +7,12 @@ package com.rivdu.controlador;
 
 import com.rivdu.dao.GenericoDao;
 import com.rivdu.dto.ExpedientesDTO;
-import com.rivdu.dto.SaveCompraDTO;
-import com.rivdu.entidades.Compra;
-import com.rivdu.entidades.Personacompra;
+import com.rivdu.dto.SaveVentaDTO;
+import com.rivdu.entidades.Venta;
+import com.rivdu.entidades.Personaventa;
+import com.rivdu.entidades.Venta;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.CompraServicio;
+import com.rivdu.servicio.VentaServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Mensaje;
 import com.rivdu.util.Respuesta;
@@ -35,28 +36,28 @@ import org.springframework.web.bind.annotation.RestController;
  * @author javie
  */
 @RestController
-@RequestMapping("/compra")
-public class CompraControlador {
+@RequestMapping("/venta")
+public class VentaControlador {
 
     private final Logger loggerControlador = LoggerFactory.getLogger(getClass());
     @Autowired
-    private CompraServicio compraservicio;
+    private VentaServicio ventaservicio;
     
     @Autowired
-    private GenericoDao<Compra,Long> compraDao;
+    private GenericoDao<Venta,Long> ventaDao;
     @Autowired
-    private GenericoDao<Personacompra,Long> personacompraDao;
+    private GenericoDao<Personaventa,Long> personaventaDao;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity crear(HttpServletRequest request, @RequestBody SaveCompraDTO entidad) throws GeneralException {
+    public ResponseEntity crear(HttpServletRequest request, @RequestBody SaveVentaDTO entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                long idCompra = compraservicio.insertar(entidad);
-                if (idCompra > 0) {
+                long idVenta = ventaservicio.insertar(entidad);
+                if (idVenta > 0) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-                    resp.setExtraInfo(idCompra);
+                    resp.setExtraInfo(idVenta);
                 } else {
                     throw new GeneralException(Mensaje.ERROR_CRUD_GUARDAR, "Guardar retorno nulo", loggerControlador);
                 }
@@ -68,11 +69,11 @@ public class CompraControlador {
     }
 
     @RequestMapping(value = "guardar", method = RequestMethod.POST)
-    public ResponseEntity guardar(HttpServletRequest request, @RequestBody SaveCompraDTO entidad) throws GeneralException {
+    public ResponseEntity guardar(HttpServletRequest request, @RequestBody SaveVentaDTO entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Long id = compraservicio.insertar(entidad);
+                Long id = ventaservicio.insertar(entidad);
                 if (id > 0) {
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -88,13 +89,13 @@ public class CompraControlador {
     };
     
     @RequestMapping(value = "actualizar", method = RequestMethod.PUT)
-    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody SaveCompraDTO entidad) throws GeneralException {
+    public ResponseEntity actualizar(HttpServletRequest request, @RequestBody SaveVentaDTO entidad) throws GeneralException {
         Respuesta resp = new Respuesta();
         if (entidad != null) {
             try {
-                Compra guardado = compraservicio.actualizar(entidad);
+                Venta guardado = ventaservicio.actualizar(entidad);
                 if (guardado != null) {
-                    compraservicio.guardarPredioServicio(entidad.getServicios(), entidad.getPredio());
+                    ventaservicio.guardarPredioServicio(entidad.getServicios(), entidad.getPredio());
                     resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                     resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
                     resp.setExtraInfo(guardado);
@@ -115,18 +116,18 @@ public class CompraControlador {
         Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
-            Compra compra = compraDao.obtener(Compra.class, id);
-            if(compra.isEstado()){
-            compra.setEstado(Boolean.FALSE);
+            Venta venta = ventaDao.obtener(Venta.class, id);
+            if(venta.isEstado()){
+            venta.setEstado(Boolean.FALSE);
             }
             else{
-            compra.setEstado(Boolean.TRUE);
+            venta.setEstado(Boolean.TRUE);
             }
-            compra = compraDao.actualizar(compra);
-            if (compra.getId() != null) {
+            venta = ventaDao.actualizar(venta);
+            if (venta.getId() != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-                resp.setExtraInfo(compra.getId());
+                resp.setExtraInfo(venta.getId());
             } else {
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
@@ -141,8 +142,8 @@ public class CompraControlador {
     public ResponseEntity quitarallegado(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
         Respuesta resp = new Respuesta();
         try {
-            Personacompra pc = personacompraDao.obtener(Personacompra.class, id);
-            personacompraDao.eliminar(pc);
+            Personaventa pc = personaventaDao.obtener(Personaventa.class, id);
+            personaventaDao.eliminar(pc);
             if (pc.getId() != null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
@@ -166,13 +167,13 @@ public class CompraControlador {
             String clientenombre,clientedoc,correlativo;
             BusquedaPaginada busquedaPaginada = new BusquedaPaginada();
             busquedaPaginada.setBuscar(parametros);
-            Compra entidadBuscar = new Compra();
+            Venta entidadBuscar = new Venta();
             clientenombre = busquedaPaginada.obtenerFiltroComoString("nombre");
             clientedoc = busquedaPaginada.obtenerFiltroComoString("dni");
             correlativo = busquedaPaginada.obtenerFiltroComoString("correlativo");
             busquedaPaginada.setPaginaActual(pagina);
             busquedaPaginada.setCantidadPorPagina(cantidadPorPagina);
-            busquedaPaginada = compraservicio.busquedaPaginada(entidadBuscar, busquedaPaginada, clientenombre,clientedoc,correlativo);
+            busquedaPaginada = ventaservicio.busquedaPaginada(entidadBuscar, busquedaPaginada, clientenombre,clientedoc,correlativo);
             return new ResponseEntity<>(busquedaPaginada, HttpStatus.OK);
         } catch (Exception e) {
             loggerControlador.error(e.getMessage());
@@ -185,11 +186,11 @@ public class CompraControlador {
       Respuesta resp = new Respuesta();
         try {
             Long id = RivduUtil.obtenerFiltroComoLong(parametros, "id");
-            SaveCompraDTO compra = compraservicio.obtener(id);
-            if (compra!=null) {
+            SaveVentaDTO venta = ventaservicio.obtener(id);
+            if (venta!=null) {
                 resp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
                 resp.setOperacionMensaje(Mensaje.OPERACION_CORRECTA);
-                resp.setExtraInfo(compra);
+                resp.setExtraInfo(venta);
             }else{
                 throw new GeneralException(Mensaje.ERROR_CRUD_LISTAR, "No hay datos", loggerControlador);
             }
@@ -199,26 +200,5 @@ public class CompraControlador {
             throw e;
         }
     }
-    
-    @RequestMapping(value = "expedienteslist/{id}", method = RequestMethod.GET)
-    public ResponseEntity listarExpedientes(HttpServletRequest request, @PathVariable("id") Long id) throws GeneralException {
-        Respuesta rsp = new Respuesta();
-        List<ExpedientesDTO> lista;
-        try {
-            lista = compraservicio.listarExpedientes(id);
-            if (lista != null) {
-                rsp.setEstadoOperacion(Respuesta.EstadoOperacionEnum.EXITO.getValor());
-                rsp.setOperacionMensaje("");
-                rsp.setExtraInfo(lista);
-            } else {
-                throw new GeneralException("Lista no disponible", "No hay datos", loggerControlador);
-            }
-            return new ResponseEntity<>(rsp, HttpStatus.OK);
-        } catch (Exception e) {
-            loggerControlador.error(e.getMessage());
-            throw e;
-        }
-    }
-    
     
 }

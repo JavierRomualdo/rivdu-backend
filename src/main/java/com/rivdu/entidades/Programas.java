@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,11 +73,9 @@ public class Programas implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "nombre")
     private String nombre;
-   /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
-    private List<Ahorroporprograma> ahorroporprogramaList;*/
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma", fetch = FetchType.LAZY)
     private List<Responsable> responsableList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma", fetch = FetchType.LAZY)
     private List<Programaespecificacion> programaespecificacionesList;
 
     public Programas() {

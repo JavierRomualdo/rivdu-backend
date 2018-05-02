@@ -43,6 +43,8 @@ public class Captador implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "comision")
     private Double comision;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "idcompra")
     private Long idcompra;
     @Column(name = "nombre")

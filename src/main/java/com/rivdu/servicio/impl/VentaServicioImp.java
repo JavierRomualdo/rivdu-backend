@@ -6,26 +6,22 @@
 package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
-import com.rivdu.dto.CompraDTO;
+import com.rivdu.dto.VentaDTO;
 import com.rivdu.dto.ExpedienteChildrenDTO;
 import com.rivdu.dto.ExpedientesDTO;
-import com.rivdu.dto.SaveCompraDTO;
+import com.rivdu.dto.SaveVentaDTO;
 import com.rivdu.entidades.Captador;
 import com.rivdu.entidades.Colindante;
-import com.rivdu.entidades.Compra;
-import com.rivdu.entidades.Compraexpediente;
-import com.rivdu.entidades.CompraexpedientePK;
-import com.rivdu.entidades.Personacompra;
+import com.rivdu.entidades.Personaventa;
 import com.rivdu.entidades.Predio;
 import com.rivdu.entidades.Predioservicio;
-import com.rivdu.entidades.Servicios;
 import com.rivdu.entidades.Tipoexpediente;
+import com.rivdu.entidades.Venta;
 import com.rivdu.excepcion.GeneralException;
-import com.rivdu.servicio.CompraServicio;
+import com.rivdu.servicio.VentaServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -41,12 +37,12 @@ import org.springframework.stereotype.Service;
  * @author javie
  */
 @Service
-public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implements CompraServicio {
+public class VentaServicioImp extends GenericoServicioImpl<Venta, Long> implements VentaServicio {
 
     private final Logger loggerServicio = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private GenericoDao<Compra, Long> compraDao;
+    private GenericoDao<Venta, Long> ventaDao;
     @Autowired
     private GenericoDao<Predio, Long> predioDao;
     @Autowired
@@ -56,28 +52,25 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     @Autowired
     private GenericoDao<Captador, Long> captadorDao;
     @Autowired
-    private GenericoDao<Personacompra, Long> personacompraDao;
+    private GenericoDao<Personaventa, Long> personaventaDao;
     @Autowired
     private GenericoDao<Tipoexpediente, Long> tipoExpedientesDao;
-    @Autowired
-    private GenericoDao<Compraexpediente, CompraexpedientePK> compraExpedienteDao;
 
-    public CompraServicioImp(GenericoDao<Compra, Long> genericoHibernate) {
+    public VentaServicioImp(GenericoDao<Venta, Long> genericoHibernate) {
         super(genericoHibernate);
     }
 
     @Override
-    public long insertar(SaveCompraDTO entidad) throws GeneralException {
-        Compra compra = entidad.getCompra();
+    public long insertar(SaveVentaDTO entidad) throws GeneralException {
+        Venta venta = entidad.getVenta();
         Predio predio = entidad.getPredio();
         Colindante colindante = entidad.getColindante();
         List<Long> servicios = entidad.getServicios();
-        Captador captador = entidad.getCaptador();
-        List<Personacompra> propietarioList = entidad.getPropietarioList();
-        List<Personacompra> allegadosList = entidad.getAllegadosList();
+        List<Personaventa> propietarioList = entidad.getPropietarioList();
+        List<Personaventa> allegadosList = entidad.getAllegadosList();
         predio = guardarPredio(predio);
         if (predio != null) {
-            compra = guardarcompra(compra, predio);
+            venta = guardarventa(venta, predio);
         } else {
             throw new GeneralException("No existe predio", "No existe predio", loggerServicio);
         }
@@ -85,43 +78,41 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
             guardarPredioServicio(servicios, predio);
         }
         if (propietarioList != null && propietarioList.size() > 0) {
-            guardarPersonaCompra(propietarioList, compra);
+            guardarPersonaVenta(propietarioList, venta);
         } else {
             throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio);
         }
         if (allegadosList != null && allegadosList.size() > 0) {
-            guardarPersonaCompra(allegadosList, compra);
+            guardarPersonaVenta(allegadosList, venta);
         } else {
             throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio);
         }
-        guardarCaptador(captador, compra);
         guardarColindante(colindante, predio);
-        return compra.getId();
+        return venta.getId();
     }
 
     @Override
-    public SaveCompraDTO obtener(Long id) throws GeneralException {
-        SaveCompraDTO compradto = new SaveCompraDTO();
-        Compra compra = obtenerCompra(id);
-        if (compra != null) {
-            compra.setCompraexpedienteList(null);
-            Captador c = obtenerCaptador(compra.getId());
-            Predio p = compra.getIdpredio();
+    public SaveVentaDTO obtener(Long id) throws GeneralException {
+        SaveVentaDTO ventadto = new SaveVentaDTO();
+        Venta venta = null;
+        if (venta != null) {
+//            venta.setVentaexpedienteList(null);
+            Captador c = obtenerCaptador(venta.getId());
+            Predio p = venta.getIdpredio();
             if (p != null) {
                 Colindante colindante = obtenerColindante(p.getId());
                 List<Long> ps = obtenerPrediosServicios(p.getId());
-                compradto.setColindante(colindante);
-                compradto.setServicios(ps);
+                ventadto.setColindante(colindante);
+                ventadto.setServicios(ps);
             }
-            List<Personacompra> propietarioList = listarPropietario(compra.getId());
-            List<Personacompra> allegadosList = listarAllegados(compra.getId());
-            compradto.setCompra(compra);
-            compradto.setPredio(p);
-            compradto.setCaptador(c);
-            compradto.setPropietarioList(propietarioList);
-            compradto.setAllegadosList(allegadosList);
+            List<Personaventa> propietarioList = listarPropietario(venta.getId());
+            List<Personaventa> allegadosList = listarAllegados(venta.getId());
+            ventadto.setVenta(venta);
+            ventadto.setPredio(p);
+            ventadto.setPropietarioList(propietarioList);
+            ventadto.setAllegadosList(allegadosList);
         }
-        return compradto;
+        return ventadto;
     }
 
     private Predio guardarPredio(Predio predio) {
@@ -133,14 +124,14 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         }
     }
 
-    private Compra guardarcompra(Compra compra, Predio predio) {
-        if (compra == null) {
-            compra = new Compra();
+    private Venta guardarventa(Venta venta, Predio predio) {
+        if (venta == null) {
+            venta = new Venta();
         }
-        compra.setIdpredio(predio);
-        compra.setFecha(new Date());
-        compra.setEstado(true);
-        return compraDao.insertar(compra);
+        venta.setIdpredio(predio);
+//        venta.s(new Date());
+        venta.setEstado(true);
+        return ventaDao.insertar(venta);
     }
 
     @Override
@@ -152,19 +143,11 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         }
     }
 
-    private void guardarPersonaCompra(List<Personacompra> personacompra, Compra compra) {
-        for (Personacompra personacompra1 : personacompra) {
-            personacompra1.setIdcompra(compra);
-            personacompra1.setEstado(true);
-            personacompraDao.insertar(personacompra1);
-        }
-    }
-
-    private void guardarCaptador(Captador captador, Compra compra) {
-        if (captador != null && captador.getNombre() != null) {
-            captador.setEstado(true);
-            captador.setIdcompra(compra.getId());
-            captadorDao.actualizar(captador);
+    private void guardarPersonaVenta(List<Personaventa> personaventa, Venta venta) {
+        for (Personaventa personaventa1 : personaventa) {
+            personaventa1.setIdventa(venta.getId());
+            personaventa1.setEstado(true);
+            personaventaDao.insertar(personaventa1);
         }
     }
 
@@ -178,11 +161,11 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     @Override
-    public BusquedaPaginada busquedaPaginada(Compra entidadBuscar, BusquedaPaginada busquedaPaginada, String clientenombre, String clientedoc, String correlativo) {
+    public BusquedaPaginada busquedaPaginada(Venta entidadBuscar, BusquedaPaginada busquedaPaginada, String clientenombre, String clientedoc, String correlativo) {
         Criterio filtro;
-        filtro = Criterio.forClass(Personacompra.class);
+        filtro = Criterio.forClass(Personaventa.class);
         filtro.createAlias("idpersona", "p");
-        filtro.createAlias("idcompra", "c", JoinType.RIGHT_OUTER_JOIN);
+        filtro.createAlias("idventa", "c", JoinType.RIGHT_OUTER_JOIN);
         filtro.add(Restrictions.eq("c.estado", true));
         filtro.add(Restrictions.eq("estado", true));
         filtro.add(Restrictions.isNull("idrelacion"));
@@ -198,7 +181,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         if (correlativo != null && !correlativo.equals("")) {
             filtro.add(Restrictions.ilike("c.correlativo1", '%' + correlativo + '%'));
         }
-        busquedaPaginada.setTotalRegistros(compraDao.cantidadPorCriteria(filtro, "c.id"));
+        busquedaPaginada.setTotalRegistros(ventaDao.cantidadPorCriteria(filtro, "c.id"));
         busquedaPaginada.calcularCantidadDePaginas();
         busquedaPaginada.validarPaginaActual();
         filtro.setProjection(Projections.projectionList()
@@ -212,12 +195,12 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
                 .add(Projections.property("c.fecha"), "fecharegistro"));
         filtro.calcularDatosParaPaginacion(busquedaPaginada);
         filtro.addOrder(Order.asc("c.id"));
-        busquedaPaginada.setRegistros(compraDao.proyeccionPorCriteria(filtro, CompraDTO.class));
+        busquedaPaginada.setRegistros(ventaDao.proyeccionPorCriteria(filtro, VentaDTO.class));
         return busquedaPaginada;
     }
 
-    private Compra obtenerCompra(Long id) {
-        Compra comp = obtener(Compra.class, id);
+    private Venta obtenerventa(Long id) {
+        Venta comp = obtener(Venta.class, id);
         return comp;
     }
 
@@ -242,71 +225,34 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         return s;
     }
 
-    private Captador obtenerCaptador(Long idcompra) {
+    private Captador obtenerCaptador(Long idventa) {
         Criterio filtro;
         filtro = Criterio.forClass(Captador.class);
-        filtro.add(Restrictions.eq("idcompra", idcompra));
+        filtro.add(Restrictions.eq("idventa", idventa));
         Captador cap = captadorDao.obtenerPorCriteriaSinProyecciones(filtro);
         return cap;
     }
 
-    private List<Personacompra> listarPropietario(Long id) {
+    private List<Personaventa> listarPropietario(Long id) {
         Criterio filtro;
-        filtro = Criterio.forClass(Personacompra.class);
+        filtro = Criterio.forClass(Personaventa.class);
         filtro.add(Restrictions.isNull("idrelacion.id"));
-        filtro.add(Restrictions.eq("idcompra.id", id));
+        filtro.add(Restrictions.eq("idventa.id", id));
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        List<Personacompra> ps = personacompraDao.buscarPorCriteriaSinProyecciones(filtro);
+        List<Personaventa> ps = personaventaDao.buscarPorCriteriaSinProyecciones(filtro);
         ps.stream().forEach((p) -> {
             p.getIdpersona().setPersonarolList(null);
         });
         return ps;
     }
 
-    @Override
-    public List<ExpedientesDTO> listarExpedientes(Long id) {
-        List<ExpedientesDTO> lista = listarCarpetas();
-        for (int i = 0; i < lista.size(); i++) {
-            lista.get(i).setIdcompra(id);
-            obtenerDocumentos(lista.get(i), id);
-        }
-        return lista;
-    }
-
-    private List<ExpedientesDTO> listarCarpetas() {
+    private List<Personaventa> listarAllegados(Long id) {
         Criterio filtro;
-        filtro = Criterio.forClass(Tipoexpediente.class);
-        filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        filtro.setProjection(Projections.projectionList()
-                .add(Projections.property("id"), "id")
-                .add(Projections.property("nombre"), "label"));
-        return tipoExpedientesDao.proyeccionPorCriteria(filtro, ExpedientesDTO.class);
-    }
-
-    private void obtenerDocumentos(ExpedientesDTO get, Long id) {
-        Criterio filtro;
-        filtro = Criterio.forClass(Compraexpediente.class);
-        filtro.createAlias("compra", "c");
-        filtro.createAlias("expediente", "e");
-        filtro.createAlias("e.idtipoexpediente", "te");
-        filtro.add(Restrictions.eq("estado", true));
-        filtro.add(Restrictions.eq("c.id", id));
-        filtro.add(Restrictions.eq("te.id", get.getId()));
-        filtro.setProjection(Projections.projectionList()
-                .add(Projections.property("e.id"), "id")
-                .add(Projections.property("e.nombre"), "nombre")
-                .add(Projections.property("e.contenttype"), "contenttype")
-                .add(Projections.property("e.tipofile"), "tipo"));
-        get.setChildren(compraExpedienteDao.proyeccionPorCriteria(filtro, ExpedienteChildrenDTO.class));
-    }
-
-    private List<Personacompra> listarAllegados(Long id) {
-        Criterio filtro;
-        filtro = Criterio.forClass(Personacompra.class);
+        filtro = Criterio.forClass(Personaventa.class);
         filtro.add(Restrictions.isNotNull("idrelacion.id"));
-        filtro.add(Restrictions.eq("idcompra.id", id));
+        filtro.add(Restrictions.eq("idventa.id", id));
         filtro.add(Restrictions.eq("estado", Boolean.TRUE));
-        List<Personacompra> ps = personacompraDao.buscarPorCriteriaSinProyecciones(filtro);
+        List<Personaventa> ps = personaventaDao.buscarPorCriteriaSinProyecciones(filtro);
         ps.stream().forEach((p) -> {
             p.getIdpersona().setPersonarolList(null);
         });
@@ -314,23 +260,21 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
     }
 
     @Override
-    public Compra actualizar(SaveCompraDTO entidad) {
-        Compra compra = entidad.getCompra();
+    public Venta actualizar(SaveVentaDTO entidad) {
+        Venta venta = entidad.getVenta();
         Predio predio = entidad.getPredio();
         Colindante colindante = entidad.getColindante();
-        Captador captador = entidad.getCaptador();
-        List<Personacompra> propietarioList = entidad.getPropietarioList();
-        List<Personacompra> allegadosList = entidad.getAllegadosList();
-        compra = compraDao.actualizar(compra);
+        List<Personaventa> propietarioList = entidad.getPropietarioList();
+        List<Personaventa> allegadosList = entidad.getAllegadosList();
+        venta = ventaDao.actualizar(venta);
         predioDao.actualizar(predio);
         actualizarServicios(predio);
         this.guardarColindante(colindante, predio);
-        this.guardarCaptador(captador, compra);
-        actualizarPropietarios(propietarioList, compra.getId());
-        allegadosList.stream().forEach((personacompra21) -> {
-            personacompraDao.actualizar(personacompra21);
+        actualizarPropietarios(propietarioList, venta.getId());
+        allegadosList.stream().forEach((personaventa21) -> {
+            personaventaDao.actualizar(personaventa21);
         });
-        return compra;
+        return venta;
     }
 
     private void actualizarServicios(Predio p) {
@@ -348,13 +292,13 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         return ps;
     }
 
-    private void actualizarPropietarios(List<Personacompra> propietarioList, Long id) {
-        List<Personacompra> propietarioOld = this.listarPropietario(id);
+    private void actualizarPropietarios(List<Personaventa> propietarioList, Long id) {
+        List<Personaventa> propietarioOld = this.listarPropietario(id);
         for (int i = 0; i < propietarioOld.size(); i++) {
-            personacompraDao.eliminar(propietarioOld.get(i));
+            personaventaDao.eliminar(propietarioOld.get(i));
         }
-        propietarioList.stream().forEach((personacompra1) -> {
-            personacompraDao.actualizar(personacompra1);
+        propietarioList.stream().forEach((personaventa1) -> {
+            personaventaDao.actualizar(personaventa1);
         });
     }
 

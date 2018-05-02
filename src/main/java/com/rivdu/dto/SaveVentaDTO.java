@@ -7,10 +7,10 @@ package com.rivdu.dto;
 
 import com.rivdu.entidades.Usuario;
 import com.rivdu.entidades.Colindante;
-import com.rivdu.entidades.Compra;
 import com.rivdu.entidades.Personaventa;
 import com.rivdu.entidades.Predio;
-import com.rivdu.entidades.Servicios;
+import com.rivdu.entidades.Venta;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -24,12 +24,12 @@ public class SaveVentaDTO {
         
     }
     
-    private Compra compra;
+    private Venta venta;
     private Predio predio;
     private Colindante colindante;
-    private Servicios[] servicios;
+    private List<Long> servicios;
     private Usuario usuario;
-    private Personaventa [] personaventa;
-    private Personaventa [] personaventa2;
+    private List<Personaventa> propietarioList;
+    private List<Personaventa> allegadosList;
     
 }

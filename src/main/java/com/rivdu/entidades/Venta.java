@@ -6,11 +6,10 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +17,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -59,21 +57,29 @@ public class Venta implements Serializable {
     @NotNull
     @Column(name = "estado")
     private boolean estado;
+    @Size(min=1, max = 90)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "usuariocrea")
+    private String usuariocrea;
+    @Size(min=1, max = 90)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "usuarioeditaa")
+    private String usuarioedita;
     @Basic(optional = false)
     @NotNull
     @Column(name = "copialiteral")
     private boolean copialiteral;
     @JoinColumn(name = "idpredio", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Predio idpredio;
     @JoinColumn(name = "idprograma", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Programas idprograma;
-    @JoinColumn(name = "idusuario", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Usuario idusuario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idventa")
-    private List<Personaventa> personaventaList;
+    @JoinColumn(name = "idusuariovende", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Usuario idusuariovende;
 
     public Venta() {
     }

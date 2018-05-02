@@ -8,6 +8,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,12 +45,12 @@ public class Responsable implements Serializable {
     @Column(name = "estado")
     private boolean estado;
     @JoinColumn(name = "idpersona", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Persona idpersona;
     @Column(name = "idprograma")
     private Long idprograma;
     @JoinColumn(name = "idrol", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Rol idrol;
     public Responsable() {
     }

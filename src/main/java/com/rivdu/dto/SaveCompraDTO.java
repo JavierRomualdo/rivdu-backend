@@ -25,8 +25,8 @@ public class SaveCompraDTO {
     private Colindante colindante;
     private List<Long> servicios;
     private Captador captador;
-    private List<Personacompra> personacompra;
-    private List<Personacompra> personacompra2;
+    private List<Personacompra> propietarioList;
+    private List<Personacompra> allegadosList;
 
     public SaveCompraDTO() {
     }

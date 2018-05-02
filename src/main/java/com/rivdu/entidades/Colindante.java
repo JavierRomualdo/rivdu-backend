@@ -70,6 +70,8 @@ public class Colindante implements Serializable {
     @Size(max = 30)
     @Column(name = "fondo2")
     private String fondo2;
+    @Basic(optional = false)
+    @NotNull
     @JoinColumn(name = "idpredio", referencedColumnName = "id")
     @ManyToOne
     private Predio idpredio;

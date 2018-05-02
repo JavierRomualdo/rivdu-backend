@@ -10,6 +10,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -37,7 +38,7 @@ public class Programaespecificacion implements Serializable {
     @Column(name = "estado")
     private boolean estado;
     @JoinColumn(name = "idespecificacion", referencedColumnName = "id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Especificaciones idespecificacion;
     @Column(name = "idprograma", insertable = false, updatable = false)
     private Long idprograma;

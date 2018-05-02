@@ -36,6 +36,8 @@ public class Personacompra implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
+    @Basic(optional = false)
+    @NotNull
     @JoinColumn(name = "idcompra", referencedColumnName = "id")
     @ManyToOne
     private Compra idcompra;
@@ -49,9 +51,6 @@ public class Personacompra implements Serializable {
     @JoinColumn(name = "idrelacion", referencedColumnName = "id")
     @ManyToOne
     private Relacion idrelacion;
-    @JoinColumn(name = "idestadocliente", referencedColumnName = "id")
-    @ManyToOne
-    private Estadocliente idestadocliente;
 
     public Personacompra() {
     }

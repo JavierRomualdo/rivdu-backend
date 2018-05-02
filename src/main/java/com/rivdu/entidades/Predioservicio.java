@@ -8,10 +8,8 @@ package com.rivdu.entidades;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -22,7 +20,7 @@ import lombok.Data;
 
 /**
  *
- * @author javie
+ * @author MarioMario
  */
 @Data
 @Entity
@@ -30,52 +28,55 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "Predioservicio.findAll", query = "SELECT p FROM Predioservicio p")})
 public class Predioservicio implements Serializable {
-
+    private static final long serialVersionUID = 1L;
+    @EmbeddedId
+    protected PredioservicioPK predioservicioPK;
     @Basic(optional = false)
     @NotNull
     @Column(name = "estado")
     private boolean estado;
-    
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
-    @JoinColumn(name = "idpredio", referencedColumnName = "id")
-    @ManyToOne
-    private Predio idpredio;
-    @JoinColumn(name = "idservicio", referencedColumnName = "id")
-    @ManyToOne
-    private Servicios idservicio;
+    @JoinColumn(name = "idpredio", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Predio predio;
+    @JoinColumn(name = "idservicio", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Servicios servicios;
 
     public Predioservicio() {
     }
 
-    public Predioservicio(Long id) {
-        this.id = id;
+    public Predioservicio(PredioservicioPK predioservicioPK) {
+        this.predioservicioPK = predioservicioPK;
+    }
+
+    public Predioservicio(PredioservicioPK predioservicioPK, boolean estado) {
+        this.predioservicioPK = predioservicioPK;
+        this.estado = estado;
+    }
+
+    public Predioservicio(long idpredio, long idservicio) {
+        this.predioservicioPK = new PredioservicioPK(idpredio, idservicio);
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (predioservicioPK != null ? predioservicioPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Predioservicio)) {
             return false;
         }
         Predioservicio other = (Predioservicio) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        return !((this.predioservicioPK == null && other.predioservicioPK != null) || (this.predioservicioPK != null && !this.predioservicioPK.equals(other.predioservicioPK)));
     }
 
     @Override
     public String toString() {
-        return "com.rivdu.entidades.Predioservicio[ id=" + id + " ]";
+        return "com.rivdu.entidades.Predioservicio[ predioservicioPK=" + predioservicioPK + " ]";
     }
     
 }

@@ -24,6 +24,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
 
 /**
@@ -55,6 +56,16 @@ public class Compra implements Serializable {
     @NotNull
     @Column(name = "estado")
     private boolean estado;
+    @Size(min=1, max = 90)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "usuariocrea")
+    private String usuariocrea;
+    @Size(min=1, max = 90)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "usuarioeditaa")
+    private String usuarioedita;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
     private List<Compraexpediente> compraexpedienteList;
 
