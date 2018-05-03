@@ -53,7 +53,7 @@ public class Ubigeo implements Serializable {
     @Column(name = "nombre")
     private String nombre;
     @JoinColumn(name = "idtipoubigeo", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Tipoubigeo idtipoubigeo;
     /*ADICIONALES*/
     private String departamento;

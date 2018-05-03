@@ -38,7 +38,7 @@ public class Programaespecificacion implements Serializable {
     @Column(name = "estado")
     private boolean estado;
     @JoinColumn(name = "idespecificacion", referencedColumnName = "id", insertable = false, updatable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Especificaciones idespecificacion;
     @Column(name = "idprograma", insertable = false, updatable = false)
     private Long idprograma;

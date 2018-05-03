@@ -61,10 +61,8 @@ public class Compra implements Serializable {
     @NotNull
     @Column(name = "usuariocrea")
     private String usuariocrea;
-    @Size(min=1, max = 90)
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "usuarioeditaa")
+    @Size(max = 90)
+    @Column(name = "usuarioedita")
     private String usuarioedita;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
     private List<Compraexpediente> compraexpedienteList;

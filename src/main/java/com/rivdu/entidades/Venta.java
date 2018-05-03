@@ -6,6 +6,7 @@
 package com.rivdu.entidades;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
@@ -62,23 +65,25 @@ public class Venta implements Serializable {
     @NotNull
     @Column(name = "usuariocrea")
     private String usuariocrea;
-    @Size(min=1, max = 90)
+    @Size(max = 90)
+    @Column(name = "usuarioedita")
+    private String usuarioedita;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "usuarioeditaa")
-    private String usuarioedita;
+    @Column(name = "fecha")
+    private Timestamp fecha;
     @Basic(optional = false)
     @NotNull
     @Column(name = "copialiteral")
     private boolean copialiteral;
     @JoinColumn(name = "idpredio", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     private Predio idpredio;
     @JoinColumn(name = "idprograma", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     private Programas idprograma;
     @JoinColumn(name = "idusuariovende", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     private Usuario idusuariovende;
 
     public Venta() {

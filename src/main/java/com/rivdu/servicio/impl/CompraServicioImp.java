@@ -18,7 +18,6 @@ import com.rivdu.entidades.CompraexpedientePK;
 import com.rivdu.entidades.Personacompra;
 import com.rivdu.entidades.Predio;
 import com.rivdu.entidades.Predioservicio;
-import com.rivdu.entidades.Servicios;
 import com.rivdu.entidades.Tipoexpediente;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.CompraServicio;

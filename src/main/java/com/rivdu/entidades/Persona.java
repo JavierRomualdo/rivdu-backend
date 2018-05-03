@@ -35,7 +35,6 @@ import lombok.Data;
     @NamedQuery(name = "Persona.findAll", query = "SELECT p FROM Persona p")})
 public class Persona implements Serializable {
 
-    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,10 +81,9 @@ public class Persona implements Serializable {
     private Ubigeo idubigeo;
     @OneToMany(mappedBy = "idpersona", fetch = FetchType.LAZY)
     private List<Personarol> personarolList;
-     @JoinColumn(name = "idestado", referencedColumnName = "id")
+    @JoinColumn(name = "idestado", referencedColumnName = "id")
     @ManyToOne(optional = true)
-     private Estadocliente idestado;
-    
+    private Estadocliente idestado;
 
     public Persona() {
     }

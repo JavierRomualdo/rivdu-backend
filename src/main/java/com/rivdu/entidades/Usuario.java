@@ -84,7 +84,7 @@ public class Usuario implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario", fetch = FetchType.LAZY)
     private List<Usuarioacceso> usuarioaccesoList;
     @JoinColumn(name = "idempresa", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Empresa idempresa;
 
     public Usuario() {

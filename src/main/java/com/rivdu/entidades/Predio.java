@@ -64,7 +64,7 @@ public class Predio implements Serializable {
     @Column(name = "codigosnip")
     private String codigosnip;
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Ubigeo idubigeo;
 
     public Predio() {

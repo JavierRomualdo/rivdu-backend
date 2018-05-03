@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -73,8 +74,7 @@ public class Empresa implements Serializable {
     @JoinColumn(name = "idubigeo", referencedColumnName = "id")
     @ManyToOne(optional = true)
     private Ubigeo idubigeo;
-    
-     @JoinColumn(name = "idgerente", referencedColumnName = "id")
+    @JoinColumn(name = "idgerente", referencedColumnName = "id")
     @ManyToOne(optional = true)
     private Persona idgerente;
      

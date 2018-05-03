@@ -7,8 +7,6 @@ package com.rivdu.servicio.impl;
 
 import com.rivdu.dao.GenericoDao;
 import com.rivdu.dto.VentaDTO;
-import com.rivdu.dto.ExpedienteChildrenDTO;
-import com.rivdu.dto.ExpedientesDTO;
 import com.rivdu.dto.SaveVentaDTO;
 import com.rivdu.entidades.Captador;
 import com.rivdu.entidades.Colindante;
@@ -21,7 +19,9 @@ import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.VentaServicio;
 import com.rivdu.util.BusquedaPaginada;
 import com.rivdu.util.Criterio;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -129,7 +129,7 @@ public class VentaServicioImp extends GenericoServicioImpl<Venta, Long> implemen
             venta = new Venta();
         }
         venta.setIdpredio(predio);
-//        venta.s(new Date());
+        venta.setFecha((Timestamp) new Date());
         venta.setEstado(true);
         return ventaDao.insertar(venta);
     }

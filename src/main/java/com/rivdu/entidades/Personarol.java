@@ -10,6 +10,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -38,7 +39,7 @@ public class Personarol implements Serializable {
     private boolean estado;
     @JoinColumn(name = "idrol", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private     Rol idrol;
+    private Rol idrol;
     @JoinColumn(name = "idpersona", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Persona idpersona;

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.rivdu.dao.GenericoDao;
 import com.rivdu.entidades.Empresa;
-import com.rivdu.entidades.Usuario;
 import com.rivdu.excepcion.GeneralException;
 import com.rivdu.servicio.EmpresaServicio;
 import com.rivdu.util.Criterio;

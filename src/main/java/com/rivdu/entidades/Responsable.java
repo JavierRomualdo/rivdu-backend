@@ -45,13 +45,14 @@ public class Responsable implements Serializable {
     @Column(name = "estado")
     private boolean estado;
     @JoinColumn(name = "idpersona", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Persona idpersona;
     @Column(name = "idprograma")
     private Long idprograma;
     @JoinColumn(name = "idrol", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Rol idrol;
+    
     public Responsable() {
     }
 
