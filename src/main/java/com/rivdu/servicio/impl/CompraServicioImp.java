@@ -320,6 +320,11 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         Captador captador = entidad.getCaptador();
         List<Personacompra> propietarioList = entidad.getPropietarioList();
         List<Personacompra> allegadosList = entidad.getAllegadosList();
+        compra = compraDao.actualizar(compra);
+        predioDao.actualizar(predio);
+        actualizarServicios(predio);
+        this.guardarColindante(colindante, predio);
+        this.guardarCaptador(captador, compra);
         if (propietarioList != null && propietarioList.size() > 0) {
             actualizarPropietarios(propietarioList, compra.getId());
         } else {
@@ -332,11 +337,6 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         } else {
             throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio);
         }
-        compra = compraDao.actualizar(compra);
-        predioDao.actualizar(predio);
-        actualizarServicios(predio);
-        this.guardarColindante(colindante, predio);
-        this.guardarCaptador(captador, compra);
         return compra;
     }
 
@@ -361,7 +361,7 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
             personacompraDao.eliminar(propietarioOld.get(i));
         }
         propietarioList.stream().forEach((personacompra1) -> {
-            personacompraDao.actualizar(personacompra1);
+            personacompraDao.insertar(personacompra1);
         });
     }
 
