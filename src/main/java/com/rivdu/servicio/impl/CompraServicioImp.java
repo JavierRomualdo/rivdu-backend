@@ -187,9 +187,9 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         filtro.add(Restrictions.isNull("idrelacion"));
         if (clientenombre != null && !clientenombre.equals("")) {
             filtro.add(Restrictions.or(
-                Restrictions.ilike("p.nombre", '%' + clientenombre + '%'),
-                Restrictions.ilike("p.appaterno", '%' + clientenombre + '%'),
-                Restrictions.ilike("p.apmaterno", '%' + clientenombre + '%')));
+                    Restrictions.ilike("p.nombre", '%' + clientenombre + '%'),
+                    Restrictions.ilike("p.appaterno", '%' + clientenombre + '%'),
+                    Restrictions.ilike("p.apmaterno", '%' + clientenombre + '%')));
         }
         if (clientedoc != null && !clientedoc.equals("")) {
             filtro.add(Restrictions.ilike("p.dni", '%' + clientedoc + '%'));
@@ -320,15 +320,23 @@ public class CompraServicioImp extends GenericoServicioImpl<Compra, Long> implem
         Captador captador = entidad.getCaptador();
         List<Personacompra> propietarioList = entidad.getPropietarioList();
         List<Personacompra> allegadosList = entidad.getAllegadosList();
+        if (propietarioList != null && propietarioList.size() > 0) {
+            actualizarPropietarios(propietarioList, compra.getId());
+        } else {
+            throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio);
+        }
+        if (allegadosList != null && allegadosList.size() > 0) {
+            allegadosList.stream().forEach((personacompra21) -> {
+                personacompraDao.actualizar(personacompra21);
+            });
+        } else {
+            throw new GeneralException("No existen representantes", "No existen representantes", loggerServicio);
+        }
         compra = compraDao.actualizar(compra);
         predioDao.actualizar(predio);
         actualizarServicios(predio);
         this.guardarColindante(colindante, predio);
         this.guardarCaptador(captador, compra);
-        actualizarPropietarios(propietarioList, compra.getId());
-        allegadosList.stream().forEach((personacompra21) -> {
-            personacompraDao.actualizar(personacompra21);
-        });
         return compra;
     }
 

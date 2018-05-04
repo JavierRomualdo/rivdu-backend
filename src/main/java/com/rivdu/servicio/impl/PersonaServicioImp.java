@@ -59,9 +59,12 @@ public class PersonaServicioImp extends GenericoServicioImpl<Persona, Long> impl
             filtro.add(Restrictions.ilike("p.dni", '%'+dni+'%'));
         }
         if (nombre!=null && !"".equals(nombre)) {
-            filtro.add(Restrictions.ilike("p.nombre",'%' +nombre+'%'));
+            filtro.add(Restrictions.or(
+                    Restrictions.ilike("p.nombre", '%' + nombre + '%'),
+                    Restrictions.ilike("p.appaterno", '%' + nombre + '%'),
+                    Restrictions.ilike("p.apmaterno", '%' + nombre + '%')));
         }
-        if(idrol>0){
+        if(idrol!=null && idrol>0){
            filtro.add(Restrictions.eq("personarolPK.idrol", idrol));
         }
         busquedaPaginada.setTotalRegistros(ingenieroDao.cantidadPorCriteria(filtro, "p.id"));
